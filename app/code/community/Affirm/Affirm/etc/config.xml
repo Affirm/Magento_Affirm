@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Affirm_Affirm>
+            <version>0.1.0.0</version>
+        </Affirm_Affirm>
+    </modules>
+    <global>
+        <models>
+            <affirm>
+                <class>Affirm_Affirm_Model</class>
+            </affirm>
+        </models>
+        <blocks>
+            <affirm>
+                <class>Affirm_Affirm_Block</class>
+            </affirm>
+        </blocks>
+        <helpers>
+            <affirm>
+                <class>Affirm_Affirm_Helper</class>
+            </affirm>
+        </helpers>
+    </global>
+    <frontend>
+        <routers>
+            <affirm>
+                <use>standard</use>
+                <args>
+                    <module>Affirm_Affirm</module>
+                    <frontName>affirm</frontName>
+                </args>
+            </affirm>
+        </routers>
+    </frontend>
+    <default>
+        <payment>
+            <affirm>
+                <active>0</active>
+                <model>affirm/payment</model>
+                <title>Affirm Payment</title>
+                <payment_action>Sale</payment_action>
+                <api_url>https://www.affirm.com/</api_url>
+                <api_key />
+                <secret_key backend_model="adminhtml/system_config_backend_encrypted"/>
+                <line_items_enabled>1</line_items_enabled>
+                <visible_on_cart>1</visible_on_cart>
+                <visible_on_product>1</visible_on_product>
+                <currency>USD</currency>
+            </affirm>
+        </payment>
+    </default>
+</config>

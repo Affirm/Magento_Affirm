@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Affirm_Affirm>
+      <active>true</active>
+      <codePool>community</codePool>
+    </Affirm_Affirm>
+  </modules>
+</config>
+
