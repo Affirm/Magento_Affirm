@@ -28,7 +28,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected $_canCapture              = true;
     protected $_canCapturePartial       = false;
     protected $_canRefund               = true;
-    protected $_canRefundInvoicePartial = true;
+    protected $_canRefundInvoicePartial = false;
     protected $_canVoid                 = true;
     protected $_canUseInternal          = true;
     protected $_canUseCheckout          = true;
@@ -84,7 +84,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     public function _api_request($method, $path, $data=null)
     {
-        $url = $this->getBaseApiUrl() . self::API_CHARGES_PATH . $path;
+        $url = trim($this->getBaseApiUrl(), "/") . self::API_CHARGES_PATH . $path;
 
         $client = new Zend_Http_Client($url);
 
@@ -96,7 +96,14 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         
         $client->setAuth($this->getConfigData('api_key'), $this->getConfigData('secret_key'), Zend_Http_Client::AUTH_BASIC);
 
-        $ret_json = Zend_Json::decode($client->request($method)->getRawBody(), Zend_Json::TYPE_ARRAY);
+        $raw_result = $client->request($method)->getRawBody();
+        try{
+            $ret_json = Zend_Json::decode($raw_result, Zend_Json::TYPE_ARRAY);
+        } catch(Zend_Json_Exception $e)
+        {
+            Mage::log("Undecodable result:" . $raw_result);
+            Mage::throwException(Mage::helper('affirm')->__('Invalid affirm response: '. $raw_result));
+        }
 
         //validate to make sure there are no errors here
         if (isset($ret_json["status_code"]))
@@ -178,7 +185,18 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         return $this;
     }
 
-
+    public function void(Varien_Object $payment)
+    {
+        if (!$this->canVoid($payment)) {
+            Mage::throwException(Mage::helper('payment')->__('Void action is not available.'));
+        }
+        $charge_id = $this->getChargeId();
+        if (!$charge_id) {
+            Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
+        }
+        $result = $this->_api_request(Varien_Http_Client::POST, "{$charge_id}/void");
+        return $this;
+    }
 
     /**
      * Send authorize request to gateway
@@ -202,8 +220,8 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 					);
 
         $this->_set_charge_result($result);
-        $payment->setTransactionId($this->getChargeId());
         $this->_validate_amount_result($amount_cents, $result);
+        $payment->setTransactionId($this->getChargeId())->setIsTransactionClosed(0);
         return $this;
     }
 
@@ -233,7 +251,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $payment->setAmountAuthorized($order->getTotalDue());
         $order->save();
         //can capture as well..
-        if ($action == Mage_Payment_Model_Method_Abstract::ACTION_AUTHORIZE_CAPTURE)
+        if ($action == self::ACTION_AUTHORIZE_CAPTURE)
         {
             $payment->setAmountAuthorized($order->getTotalDue());
             $payment->setBaseAmountAuthorized($order->getBaseTotalDue());

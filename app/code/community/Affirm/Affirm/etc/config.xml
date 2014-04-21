@@ -39,7 +39,7 @@
                 <active>0</active>
                 <model>affirm/payment</model>
                 <title>Affirm Payment</title>
-                <payment_action>Sale</payment_action>
+                <payment_action>authorize</payment_action>
                 <api_url>https://www.affirm.com/</api_url>
                 <api_key />
                 <secret_key backend_model="adminhtml/system_config_backend_encrypted"/>
