@@ -38,7 +38,9 @@
             <affirm>
                 <active>0</active>
                 <model>affirm/payment</model>
-                <title>Affirm Payment</title>
+                <!-- WARNING: default value for title removed to prevent it from appearing on checkout page on MCE 1.4.0.1 -->
+                <!-- TODO(brian): fix rendering of payment method block so that adding a title here doesn't break presentation there -->
+                <title></title>
                 <payment_action>authorize</payment_action>
                 <api_url>https://www.affirm.com/</api_url>
                 <api_key />
