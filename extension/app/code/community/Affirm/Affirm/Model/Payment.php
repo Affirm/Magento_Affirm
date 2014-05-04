@@ -318,13 +318,17 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         $items = array();
         $currency = $order->getOrderCurrency();
+        $products = Mage::getModel('catalog/product');
         foreach($order->getAllItems() as $order_item)
         {
+            $productId = $order_item->getProductOptions()["info_buyRequest"]["product"];
+            $product = $products->load($productId);
+
             $items[] = array(
                 "sku" => $order_item->getSku(),
                 "display_name" => $order_item->getName(),
-                "item_url" => $order_item->getProduct()->getProductUrl(),
-                "item_image_url" => $order_item->getProduct()->getImageUrl(),
+                "item_url" => $product->getProductUrl(),
+                "item_image_url" => $product->getImageUrl(),
                 "qty" => intval($order_item->getQtyOrdered()),
                 "unit_price" => $this->formatCents($currency, $order_item->getPrice())
             );
