@@ -1,1 +1,0 @@
-TODO(brian): Presently, the magento tar.gz is stored locally. Store it somewhere else.

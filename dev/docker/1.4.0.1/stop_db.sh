@@ -1,1 +1,0 @@
-mysqladmin -uroot shutdown
