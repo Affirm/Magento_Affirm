@@ -8,8 +8,8 @@ class Affirm_Affirm_Block_Payment_Redirect extends Mage_Core_Block_Abstract
 
         $html = '<html><body>';
         $html.= '<script type="text/javascript" src="'. trim($payment_method->getBaseApiUrl(), "/") . '/js/v2/affirm.js"></script>';
-        $html.= '<script type="text/javascript">affirm.checkout('.json_encode($payment_method->getCheckoutObject($order)).'); affirm.checkout.open();</script>';
-	// TODO(brian): pass information to form (mobile number, first and last name, and birthdate [if available])
+        $html.= '<script type="text/javascript">affirm.checkout(' . json_encode($payment_method->getCheckoutObject($order)) . '); affirm.checkout.open();</script>';
+        // TODO(brian): pass information to form (mobile number, first and last name, and birthdate [if available])
         $html.= '</body></html>';
         return $html;
     }
