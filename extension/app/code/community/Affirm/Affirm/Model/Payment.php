@@ -247,7 +247,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $action = $this->getConfigData('payment_action');
 
         //authorize the total amount.
-        $payment->authorize(true, $order->getBaseTotalDue());
+        Affirm_Affirm_Model_Payment::authorizePaymentForOrder($payment, $order);
         $payment->setAmountAuthorized($order->getTotalDue());
         $order->save();
         //can capture as well..
@@ -358,5 +358,38 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $checkout["shipping"] = $shipping;
         }
         return $checkout;
+    }
+
+    /* A hacky thing used to access a private method (authorize(...)) on the
+     * payment object in order to provide compatibility with version 1.4.0.1 CE.
+     *
+     * FIXME(brian): take a closer look at the payment class at version 1.4.
+     * Surely, there _must_ be a way to accomplish this without reflection.
+     *
+     * TODO(brian): Write a regression test to catch incompatibilities with
+     * other Magento versions.
+     */
+    private static function authorizePaymentForOrder($payment, $order)
+    {
+      $moduleVersion = Mage::getConfig()->getModuleConfig("Mage_Sales")->version;
+      $incompatibleVersions = array(
+        "0.9.56"
+      );
+      if (in_array($moduleVersion, $incompatibleVersions)) {
+        Affirm_Affirm_Model_Payment::callPrivateMethod($payment, "_authorize", true, $order->getBaseTotalDue());
+      } else {
+        $payment->authorize(true, $order->getBaseTotalDue());
+      }
+    }
+
+    // TODO(brian): move this function to a helper library
+    private static function callPrivateMethod($object, $methodName)
+    {
+      $reflectionClass = new \ReflectionClass($object);
+      $reflectionMethod = $reflectionClass->getMethod($methodName);
+      $reflectionMethod->setAccessible(true);
+
+      $params = array_slice(func_get_args(), 2); //get all the parameters after $methodName
+      return $reflectionMethod->invokeArgs($object, $params);
     }
 }
