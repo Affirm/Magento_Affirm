@@ -357,6 +357,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         {
             $checkout["shipping"] = $shipping;
         }
+        $checkout['financial_product_key'] = $this->getConfigData('financial_product_key');
         return $checkout;
     }
 

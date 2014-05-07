@@ -54,6 +54,14 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </secret_key>
+                        <financial_product_key translate="label">
+                            <label>Financial Product Key</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </financial_product_key>
                         <currency translate="label">
                             <label>Accepted Currency</label>
                             <frontend_type>select</frontend_type>

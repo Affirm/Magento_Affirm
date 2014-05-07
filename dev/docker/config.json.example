@@ -3,6 +3,7 @@
         "payment/affirm/active": "1",
             "payment/affirm/api_key": "REPLACEME",
             "payment/affirm/api_url": "https://sandbox.affirm.com/",
+            "payment/affirm/financial_product_key": "REPLACEME",
             "payment/affirm/currency": "USD",
             "payment/affirm/max_order_total": "10000",
             "payment/affirm/min_order_total": "0.01",
