@@ -321,7 +321,8 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $products = Mage::getModel('catalog/product');
         foreach($order->getAllItems() as $order_item)
         {
-            $productId = $order_item->getProductOptions()["info_buyRequest"]["product"];
+            $options = $order_item->getProductOptions();
+            $productId = $options["info_buyRequest"]["product"];
             $product = $products->load($productId);
 
             $items[] = array(
