@@ -31,10 +31,10 @@ class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
         $html = "<img src=\"" . $logoSrc . "\" class=\"v-middle\" />&nbsp;";
 
         // TODO(brian): conditionally display based on payment type
-        if (true) {
+        if (false) {
           $html.= "Buy Now and Pay Later";
         } else {
-          $html.= "Buy with monthly payments";
+          $html.= "3 Monthly Payments with Split Pay";
         }
 
         $this->setMethodLabelAfterHtml($html);
