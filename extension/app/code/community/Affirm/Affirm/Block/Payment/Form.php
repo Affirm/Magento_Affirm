@@ -10,7 +10,7 @@ class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
     protected function _toHtml()
     {
       // TODO(brian): extract this html block to a template
-      $msg = "You will be sent to the Affirm website to complete your payment.";
+      $msg = "You'll complete your payment after you place your order.";
       $html = "<ul class=\"form-list\" id=\"payment_form_affirm\" style=\"display:none;\">";
       $html .= "<li class=\"form-alt\">" . $msg . "</li>";
       $html .= "</ul>";
