@@ -15,6 +15,9 @@ build:
 run_1401: build
 	docker run -i -t -p 8080:80 $(NAME)-1401:$(VERSION)
 
+run_1810: build
+	docker run -i -t -p 8080:80 $(NAME)-1810:$(VERSION)
+
 tag_latest:
 	docker tag $(NAME)-1401:$(VERSION) $(NAME)-1401:latest
 	docker tag $(NAME)-1810:$(VERSION) $(NAME)-1810:latest
