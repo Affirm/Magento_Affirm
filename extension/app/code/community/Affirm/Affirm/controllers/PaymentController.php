@@ -8,6 +8,7 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
         return Mage::getSingleton('checkout/session');
     }
 
+    // TODO why is this still here?
     private function _getQuote()
     {
         if (!$this->_quote) {
@@ -42,7 +43,7 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
         }
 
         if ($session->getLastRealOrderId()) {
-            $data = $this->getRequest()->getPost();
+            $data = $this->getRequest()->getPost(); // TODO(brian): remove dead code
             $order = Mage::getModel('sales/order')->loadByIncrementId($session->getLastRealOrderId());
             $order->getPayment()->getMethodInstance()->processConfirmOrder($order, $checkout_token);
             $this->_redirect('checkout/onepage/success');
@@ -51,4 +52,5 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
         $this->_redirect('checkout/onepage');
     }
 
+    // TODO(brian): implement cancel action
 }

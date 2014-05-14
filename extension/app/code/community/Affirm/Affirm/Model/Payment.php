@@ -82,6 +82,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         return $this->getConfigData('api_url');
     }
 
+    // TODO(brian): extract to a separate class and use DI to make it testable/mockable
     public function _api_request($method, $path, $data=null)
     {
         $url = trim($this->getBaseApiUrl(), "/") . self::API_CHARGES_PATH . $path;
@@ -286,7 +287,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     public function getCheckoutObject($order)
     {
-        $info = $this->getInfoInstance();
+        $info = $this->getInfoInstance(); // TODO(brian): remove unused variable
         $shipping_address = $order->getShippingAddress();
         $shipping = null;
         if ($shipping_address)
