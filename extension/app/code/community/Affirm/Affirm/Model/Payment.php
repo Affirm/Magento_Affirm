@@ -336,6 +336,9 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             );
         }
 
+        // TODO(brian): test checkout/onepage urls. it's unclear whether this
+        // is enabled for all merchants or whether merchant customization could
+        // cause this to be an invalid destination
         $checkout = array(
             'checkout_id'=>$order->getIncrementId(),
             'currency'=>$order->getOrderCurrencyCode(),
@@ -345,7 +348,9 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             "merchant" => array(
                     "public_api_key"=>$this->getConfigData('api_key'), 
                     "user_confirmation_url"=>Mage::getUrl("affirm/payment/confirm"),
-                    "user_cancel_url"=>Mage::getUrl("affirm/payment/cancel")),
+                    "user_cancel_url"=>Mage::helper('checkout/url')->getCheckoutUrl(),
+                    "charge_declined_url"=>Mage::helper('checkout/url')->getCheckoutUrl()
+                  ),
             "config" => array("required_billing_fields"=> "name,address,email"),
             "items" => $items,
             "billing" => $billing);
