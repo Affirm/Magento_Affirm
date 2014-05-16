@@ -38,6 +38,45 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     protected $_allowCurrencyCode = array('USD');
 
+    // TODO(brian): replace with a dynamically loaded list of states
+    // TODO(brian): use region ids instead of state names, but be careful to associate
+    // states and ids correctly!
+    private static $regions_where_affirm_cannot_loan = array(
+      'Alabama',
+      'Delaware',
+      'Idaho',
+      'Maryland',
+      'Mississippi',
+      'Missouri',
+      'Nevada',
+      'New Mexico',
+      'North Dakota',
+      'Rhode Island',
+      'South Dakota'
+    );
+
+    /* Determines whether this payment method is available for the purchase
+     * given by |quote|.
+     */
+    public function isAvailable($quote = null)
+    {
+      if (!parent::isAvailable($quote) || empty($quote)) {
+        return false;
+      }
+
+      if (static::isInDisallowedRegions($quote->getBillingAddress()->getRegion())) {
+        return false;
+      }
+
+      // additional validations may be added here
+
+      return true;
+    }
+
+    private static function isInDisallowedRegions($region) {
+      return in_array($region, self::$regions_where_affirm_cannot_loan);
+    }
+
     /**
      * Check method for processing with base currency
      *
