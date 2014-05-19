@@ -192,7 +192,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             Mage::throwException(Mage::helper('affirm')->__('Invalid amount for capture.'));
         }
         $charge_id = $this->getChargeId();
-        $amount_cents = $amount * 100;
+        $amount_cents = Affirm_Util::formatCents($amount);
         Mage::log("capturing amount: $amount");
         if (!$charge_id) {
             Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
@@ -214,7 +214,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             Mage::throwException(Mage::helper('affirm')->__('Invalid amount for refund.'));
         }
         $charge_id = $this->getChargeId();
-        $amount_cents = $amount * 100;
+        $amount_cents = Affirm_Util::formatCents($amount);
         Mage::log("refunding amount: $amount");
         if (!$charge_id) {
             Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
@@ -253,7 +253,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             Mage::throwException(Mage::helper('affirm')->__('Invalid amount for authorization.'));
         }
 
-        $amount_cents = $amount * 100;
+        $amount_cents = Affirm_Util::formatCents($amount);
         $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
         Mage::log("authorizing amount: $amount");
 
