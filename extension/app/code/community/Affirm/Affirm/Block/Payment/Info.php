@@ -22,8 +22,8 @@ class Affirm_Affirm_Block_Payment_Info extends Mage_Payment_Block_Info_Cc
     protected function _prepareSpecificInformation($transport = null)
     {
         $transport = parent::_prepareSpecificInformation($transport);
-        //$payment = $this->getInfo();
-        $info = array("method"=>"Payment via affirm website");
+        // TODO(brian): Extract to localized config file
+        $info = array("method"=>"Affirm");
         return $transport->addData($info);
     }
 }
