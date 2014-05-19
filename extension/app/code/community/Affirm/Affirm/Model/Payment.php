@@ -388,9 +388,16 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             "items" => $items,
             "billing" => $billing);
 
-        if ($order->getDiscountAmount() > 0.001)
+        // By convention, Affirm expects positive value for discount amount.
+        // Magento provides negative.
+        $discountAmtAffirm = -1 * $order->getDiscountAmount();
+        if ($discountAmtAffirm > 0.001)
         {
-            $checkout["discounts"] = array(array("code"=> $order->getCouponCode(),"amount"=>$this->formatCents($currency, $order->getDiscountAmount())));
+          $checkout["discounts"] = array(
+            $order->getCouponCode()=>array(
+              "discount_amount"=>$this->formatCents($currency, $discountAmtAffirm)
+            )
+          );
         }
 
         if ($shipping)
