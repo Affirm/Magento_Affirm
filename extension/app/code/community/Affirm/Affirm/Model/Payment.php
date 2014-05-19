@@ -1,5 +1,7 @@
 <?php
 
+require_once Mage::getBaseDir('lib').DS.'Affirm'.DS.'Affirm.php';
+
 class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 {
     const API_CHARGES_PATH = '/api/v2/charges/';
@@ -312,17 +314,8 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
     public function formatCents($currency, $amount)
     {
-        $parts = explode(".", $amount, 2);
-        if ($parts[0] == 0 && $parts[1] == 0)
-        {
-            return "0";
-        }
-        else
-        {
-            return $parts[0] . substr($parts[1], 0, 2);
-        }
+        return Affirm_Util::formatCents($amount);
     }
-
 
     public function getCheckoutObject($order)
     {

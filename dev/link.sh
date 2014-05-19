@@ -12,3 +12,7 @@
 ln -s -t $*/app/code/community/ $(cd ../extension && pwd)/app/code/community/Affirm/
 ln -s -t $*/skin/frontend/base/default/images/ $(cd ../extension && pwd)/skin/frontend/base/default/images/affirm/
 ln -s $(cd ../extension && pwd)/app/etc/modules/Affirm_Affirm.xml $*/app/etc/modules 
+
+# affirm-php
+ln -s -t $*/lib/ $(cd ../extension && pwd)/lib/Affirm/
+ln -s $(cd ../extension && pwd)/lib/Affirm.php $*/lib
