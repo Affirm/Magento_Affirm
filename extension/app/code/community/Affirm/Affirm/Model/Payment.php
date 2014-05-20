@@ -352,6 +352,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $items = array();
         $currency = $order->getOrderCurrency();
         $products = Mage::getModel('catalog/product');
+        // TODO(brian): instantiate |pricer| upon construction
         $pricer = Mage::getModel('affirm/pricer');
         foreach($order->getAllVisibleItems() as $order_item)
         {
