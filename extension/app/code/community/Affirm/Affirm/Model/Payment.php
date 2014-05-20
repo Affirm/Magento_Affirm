@@ -352,6 +352,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $items = array();
         $currency = $order->getOrderCurrency();
         $products = Mage::getModel('catalog/product');
+        $pricer = Mage::getModel('affirm/pricer');
         foreach($order->getAllVisibleItems() as $order_item)
         {
             $options = $order_item->getProductOptions();
@@ -364,7 +365,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 "item_url" => $product->getProductUrl(),
                 "item_image_url" => $product->getImageUrl(),
                 "qty" => intval($order_item->getQtyOrdered()),
-                "unit_price" => $this->formatCents($currency, $order_item->getPrice())
+                "unit_price" => $this->formatCents($currency, $pricer->getPrice($order_item))
             );
         }
 
