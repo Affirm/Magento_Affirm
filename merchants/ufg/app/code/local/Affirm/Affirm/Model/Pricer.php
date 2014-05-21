@@ -1,21 +1,25 @@
 <?php
 
+require_once Mage::getBaseDir('lib').DS.'Affirm'.DS.'Affirm.php';
+
 /*
  * Pricer for UFG's custom price model for bundled products.
  */
 class Affirm_Affirm_Model_Pricer
 {
-    public function getPrice($order_item)
+    public function getPriceInCents($order_item)
     {
         if ($order_item->getProductType() ===
             Mage_Catalog_Model_Product_Type::TYPE_BUNDLE)
         {
-            $bundle_product = $this->_getProduct($order_item);
-            list($list_price, $our_price) =
-                $bundle_product->getPriceModel()->getTypicalPrices($bundle_product);
-            return $our_price;
+            $sum = 0;
+            foreach ($order_item->getChildrenItems() as $ch) {
+                $cents = Affirm_Util::formatCents($ch->getPrice());
+                $sum = $sum + $ch->getQtyToInvoice() * $cents;
+            }
+            return $sum;
         }
-        return $order_item->getPrice();
+        return Affirm_Util::formatCents($order_item->getPrice());
     }
 
     private function _getProduct($order_item)
