@@ -356,9 +356,8 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $pricer = Mage::getModel('affirm/pricer');
         foreach($order->getAllVisibleItems() as $order_item)
         {
-            $options = $order_item->getProductOptions();
-            $productId = $options["info_buyRequest"]["product"];
-            $product = $products->load($productId);
+	    $productId = $order_item->getProductId();
+	    $product = $products->load($productId);
 
             $items[] = array(
                 "sku" => $order_item->getSku(),
