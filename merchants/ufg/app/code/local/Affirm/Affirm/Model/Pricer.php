@@ -24,7 +24,7 @@ class Affirm_Affirm_Model_Pricer
         // variable. This is expensive to call for each item.
         $products = Mage::getModel('catalog/product');
 
-	$productId = $order_item->getProductId();
+        $productId = $order_item->getProductId();
         return $products->load($productId);
     }
 }
