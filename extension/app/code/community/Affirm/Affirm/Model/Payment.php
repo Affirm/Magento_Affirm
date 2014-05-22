@@ -104,7 +104,6 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $ret_json = Zend_Json::decode($raw_result, Zend_Json::TYPE_ARRAY);
         } catch(Zend_Json_Exception $e)
         {
-            Mage::log("Undecodable result:" . $raw_result);
             Mage::throwException(Mage::helper('affirm')->__('Invalid affirm response: '. $raw_result));
         }
 
@@ -113,10 +112,6 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         {
             Mage::throwException(Mage::helper('affirm')->__('Affirm error code:'. $ret_json["status_code"] . ' error: '. @$ret_json["message"]));
         }
-        Mage::log("Making a request to:". $url. " with data:");
-        Mage::log($data);
-        Mage::log("Response:");
-        Mage::log($ret_json);
         return $ret_json;
     }
 
@@ -154,7 +149,6 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         }
         $charge_id = $this->getChargeId();
         $amount_cents = Affirm_Util::formatCents($amount);
-        Mage::log("capturing amount: $amount");
         if (!$charge_id) {
             Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
         }
@@ -176,7 +170,6 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         }
         $charge_id = $this->getChargeId();
         $amount_cents = Affirm_Util::formatCents($amount);
-        Mage::log("refunding amount: $amount");
         if (!$charge_id) {
             Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
         }
@@ -216,7 +209,6 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         $amount_cents = Affirm_Util::formatCents($amount);
         $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
-        Mage::log("authorizing amount: $amount");
 
         $result = $this->_api_request(Varien_Http_Client::POST, "", array(
 									self::CHECKOUT_TOKEN=>$token)
