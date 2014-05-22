@@ -46,7 +46,12 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
             $data = $this->getRequest()->getPost(); // TODO(brian): remove dead code
             $order = Mage::getModel('sales/order')->loadByIncrementId($session->getLastRealOrderId());
             $order->getPayment()->getMethodInstance()->processConfirmOrder($order, $checkout_token);
+
+            // TODO(brian): add a boolean configuration option to allow
+            // merchants to decide whether affirm should send emails upon email
+            // confirmation.
             $order->sendNewOrderEmail();
+
             $this->_redirect('checkout/onepage/success');
             return;
         }
