@@ -1,0 +1,29 @@
+{
+  "name": "affirm/affirm-php",
+  "description": "Affirm PHP bindings",
+  "keywords": [
+    "affirm",
+    "api",
+    "consumer finance",
+    "credit",
+    "e-commerce",
+    "payment method"
+  ],
+  "homepage": "https://affirm.com/",
+  "authors": [
+    {
+      "name": "The Affirm Technology Team",
+      "homepage": "https://www.affirm.com/company"
+    }
+  ],
+  "require": {
+    "php": ">=5.2"
+  },
+  "require-dev": {
+    "zendframework/zendframework1": "1.12.6",
+    "simpletest/simpletest": "1.1.*"
+  },
+  "autoload": {
+    "classmap": ["extension/lib/Affirm/"]
+  }
+}

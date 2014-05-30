@@ -1,0 +1,3 @@
+extension/app/code/community/Affirm                     app/code/community/Affirm
+extension/lib/Affirm                                    lib/Affirm
+extension/app/etc/modules/Affirm_Affirm.xml             app/etc/modules/Affirm_Affirm.xml
