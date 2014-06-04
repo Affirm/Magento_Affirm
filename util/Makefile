@@ -13,7 +13,7 @@
 
 NAME = Magento_Affirm
 
-REPO = git@github.com:Affirm/Magento_Affirm.git
+REPO = https://github.com/Affirm/Magento_Affirm.git
 BRANCH = master
 
 SRC = extension/
