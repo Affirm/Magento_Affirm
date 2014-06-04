@@ -25,7 +25,7 @@ CMD = ./$(SCRIPT)
 .modgit: $(SCRIPT)
 	$(CMD) init
 
-install: $(SCRIPT) 
+install: $(SCRIPT) .modgit
 	$(CMD) -i $(SRC):$(DEST) -b $(BRANCH) add $(NAME) $(REPO) 
 
 update: $(SCRIPT)
@@ -36,3 +36,4 @@ remove: $(SCRIPT)
 
 $(SCRIPT):
 	wget --no-check-certificate -O $(SCRIPT) https://raw.githubusercontent.com/Affirm/modgit/master/modgit
+	chmod +x $(CMD)
