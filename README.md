@@ -31,7 +31,7 @@ modman update Magento_Affirm
 
 **To install using Affirm's deploy script:**
 
-1. Download the [Makefile](https://gist.githubusercontent.com/perfmode/ad8cf189bbbaeeae1181/raw/a4b189f5739f9b2582e4429911c57142cb94d744/Makefile) (requires wget)
+1. Download the [Makefile](https://raw.githubusercontent.com/Affirm/Magento_Affirm/master/util/Makefile) (requires wget)
 2. Copy to MAGENTO_ROOT
 3. To install, run `make install`
 4. To update, run `make update`
