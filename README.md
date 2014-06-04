@@ -11,6 +11,7 @@ Install
 
 ```
 cd MAGENTO_ROOT
+modgit init
 modgit -i extension/:. add Magento_Affirm git@github.com:Affirm/Magento_Affirm.git
 ```
 to update:
