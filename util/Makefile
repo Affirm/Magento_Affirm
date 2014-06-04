@@ -35,4 +35,4 @@ remove: $(SCRIPT)
 	$(CMD) rm $(NAME)
 
 $(SCRIPT):
-	wget -O $(SCRIPT) https://raw.githubusercontent.com/Affirm/modgit/master/modgit
+	wget --no-check-certificate -O $(SCRIPT) https://raw.githubusercontent.com/Affirm/modgit/master/modgit
