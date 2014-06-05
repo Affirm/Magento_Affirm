@@ -12,7 +12,7 @@ Install
 ```
 cd MAGENTO_ROOT
 modgit init
-modgit -i extension/:. add Magento_Affirm git@github.com:Affirm/Magento_Affirm.git
+modgit -i extension/:. add Magento_Affirm https://github.com/Affirm/Magento_Affirm.git
 ```
 to update:
 ```
@@ -23,7 +23,7 @@ modgit update Magento_Affirm
 
 ```
 cd MAGENTO_ROOT
-modman clone git@github.com:Affirm/Magento_Affirm.git
+modman clone https://github.com/Affirm/Magento_Affirm.git
 ```
 to update:
 ```
