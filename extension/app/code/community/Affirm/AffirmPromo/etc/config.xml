@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Affirm_AffirmPromo>
+            <version>1.0.2</version>
+        </Affirm_AffirmPromo>
+    </modules>
+    <global>
+        <helpers>
+            <affirmpromo>
+                <class>Affirm_AffirmPromo_Helper</class>
+            </affirmpromo>
+        </helpers>
+        <blocks>
+            <affirmpromo>
+                <class>Affirm_AffirmPromo_Block</class>
+            </affirmpromo>
+        </blocks>
+        <models>
+            <affirmpromo>
+                <class>Affirm_AffirmPromo_Model</class>
+            </affirmpromo>
+        </models>
+        <events>
+            <controller_action_layout_generate_xml_before>
+                <observers>
+                    <affirm_affirmpromo>
+                        <class>affirmpromo/observer</class>
+                        <method>layoutGenerateBlocksBefore</method>
+                    </affirm_affirmpromo>
+                </observers>
+            </controller_action_layout_generate_xml_before>
+        </events>
+    </global>
+    <default>
+        <affirmpromo>
+            <settings>
+                <container><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container>
+            </settings>
+        </affirmpromo>
+    </default>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Affirm_AffirmPromo before="Mage_Adminhtml">Affirm_AffirmPromo</Affirm_AffirmPromo>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <adminhtml>
+        <acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <affirmpromo translate="title" module="affirmpromo">
+                                            <title>Affirm Promo Settings</title>
+                                        </affirmpromo>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+</config>

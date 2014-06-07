@@ -1,3 +1,7 @@
 extension/app/code/community/Affirm                     app/code/community/Affirm
 extension/lib/Affirm                                    lib/Affirm
 extension/app/etc/modules/Affirm_Affirm.xml             app/etc/modules/Affirm_Affirm.xml
+
+extension/app/code/community/Affirm/AffirmPromo 				        app/code/community/Affirm/AffirmPromo
+extension/app/design/frontend/default/default/template/affirmpromo 		app/design/frontend/default/default/template/affirmpromo
+extension/app/etc/modules/Affirm_AffirmPromo.xml  						app/etc/modules/Affirm_AffirmPromo.xml
