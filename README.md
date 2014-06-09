@@ -40,6 +40,8 @@ modman update Magento_Affirm
 Configure
 ---------
 
+**Payment Method**
+
 1. Log in to your Magento Admin portal.
 2. Visit System > Cache Management. Then, click _Flush Magento Cache_
 2. Visit System > Configuration > Payment Methods (under Sales) > Affirm
@@ -48,7 +50,15 @@ Configure
 5. Adjust the order total minimum and maximum options to control when Affirm is
    shown to your customers.
  
-![](docs/config.png)
+	![](docs/config.png)
+
+**Promos**
+
+1. Visit System > Configuration > Affirm Promos (under General)
+1. Set the Promo Key and enable the extension.
+1. (optional) Customize the size and position of your promos.
+	
+	![](docs/promo-config.png)
 
 
 Contribute
