@@ -286,6 +286,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         {
             $shipping = array(
                 "name"=> array("full"=>$shipping_address->getName()),
+                "phone_number"=> $shipping_address->getTelephone(),
                 "address"=> array(
                         "line1" => $shipping_address->getStreet(1),
                         "line2" => $shipping_address->getStreet(2),
@@ -295,11 +296,13 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                         "zipcode" => $shipping_address->getPostcode(),
                       ));
         }
+        // TODO(brian): include phone_number_alternate if present
 
         $billing_address = $order->getBillingAddress();
         $billing = array(
                 "email"=>$order->getCustomerEmail(),
                 "name"=> array("full"=>$billing_address->getName()),
+                "phone_number"=> $billing_address->getTelephone(),
                 "address"=> array(
                         "line1" => $billing_address->getStreet(1),
                         "line2" => $billing_address->getStreet(2),
@@ -308,6 +311,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                         "country" => $billing_address->getCountryModel()->getIso2Code(),
                         "zipcode" => $billing_address->getPostcode(),
                       ));
+        // TODO(brian): include phone_number_alternate if present
 
         $items = array();
         $currency = $order->getOrderCurrency();
