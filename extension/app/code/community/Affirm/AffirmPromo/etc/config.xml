@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_AffirmPromo>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
         </Affirm_AffirmPromo>
     </modules>
     <global>
