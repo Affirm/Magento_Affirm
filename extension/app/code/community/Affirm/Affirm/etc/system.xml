@@ -4,7 +4,7 @@
         <payment>
             <groups>
                 <affirm translate="label" module="affirm">
-                    <label>Affirm: Pay over Time</label>
+                    <label>Affirm</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
