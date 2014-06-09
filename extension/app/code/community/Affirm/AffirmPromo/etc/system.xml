@@ -49,7 +49,7 @@
                     </fields>
                 </settings>
                 <homepage>
-                    <label>Home Page</label>
+                    <label>Home Page Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>20</sort_order>
                     <show_in_default>1</show_in_default>
@@ -87,7 +87,7 @@
                     </fields>
                 </homepage>
                 <catalog_category>
-                    <label>Catalog Category Page</label>
+                    <label>Catalog Category Page Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>30</sort_order>
                     <show_in_default>1</show_in_default>
@@ -125,7 +125,7 @@
                     </fields>
                 </catalog_category>
                 <catalog_product>
-                    <label>Catalog Product Page</label>
+                    <label>Catalog Product Page Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>40</sort_order>
                     <show_in_default>1</show_in_default>
@@ -163,7 +163,7 @@
                     </fields>
                 </catalog_product>
                 <checkout_cart>
-                    <label>Checkout Cart Page</label>
+                    <label>Checkout Cart Page Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>50</sort_order>
                     <show_in_default>1</show_in_default>
