@@ -79,6 +79,7 @@ class Affirm_AffirmPromo_Helper_Data extends Mage_Core_Helper_Abstract
                     </script>';
 
         if (!empty($container)) {
+            // TODO(brian): handle malformed container string
             $snippet = str_replace('{container}', $snippet, $container);
         }
         return $snippet;
