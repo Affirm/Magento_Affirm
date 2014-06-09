@@ -49,6 +49,8 @@
                 <visible_on_cart>1</visible_on_cart>
                 <visible_on_product>1</visible_on_product>
                 <currency>USD</currency>
+                <min_order_total>0.01</min_order_total>
+                <max_order_total>100000</max_order_total>
             </affirm>
         </payment>
     </default>
