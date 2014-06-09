@@ -31,7 +31,7 @@
                             <show_in_store>0</show_in_store>
                         </active>
                         <api_url translate="label">
-                            <label>API Url</label>
+                            <label>API URL</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>15</sort_order>
                             <show_in_default>1</show_in_default>
@@ -39,7 +39,7 @@
                             <show_in_store>0</show_in_store>
                         </api_url>
                         <api_key translate="label">
-                            <label>API Key</label>
+                            <label>Public API Key</label>
                             <frontend_type>text</frontend_type>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
