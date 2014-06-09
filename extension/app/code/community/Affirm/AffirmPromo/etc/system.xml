@@ -17,6 +17,8 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>0</show_in_website>
                     <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
+
                     <fields>
                         <promo_key translate="label">
                             <label>Affirm Promo Key</label>
@@ -53,6 +55,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>0</show_in_website>
                     <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
                     <fields>
                         <display translate="label">
                             <label>Display</label>
@@ -90,6 +93,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>0</show_in_website>
                     <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
                     <fields>
                         <display translate="label">
                             <label>Display</label>
@@ -127,6 +131,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>0</show_in_website>
                     <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
                     <fields>
                         <display translate="label">
                             <label>Display</label>
@@ -164,6 +169,7 @@
                     <show_in_default>1</show_in_default>
                     <show_in_website>0</show_in_website>
                     <show_in_store>0</show_in_store>
+                    <expanded>1</expanded>
                     <fields>
                         <display translate="label">
                             <label>Display</label>
