@@ -42,7 +42,7 @@
                 <!-- TODO(brian): fix rendering of payment method block so that adding a title here doesn't break presentation there -->
                 <title></title>
                 <payment_action>authorize</payment_action>
-                <api_url>https://www.affirm.com/</api_url>
+                <api_url>https://sandbox.affirm.com</api_url>
                 <api_key />
                 <secret_key backend_model="adminhtml/system_config_backend_encrypted"/>
                 <line_items_enabled>1</line_items_enabled>
