@@ -34,11 +34,11 @@
     </global>
     <default>
         <affirmpromo>
-            <settings>
+            <developer_settings>
                 <active>1</active>
                 <promo_key>XC91I7QC3C6U7Q72</promo_key>
                 <container><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container>
-            </settings>
+            </developer_settings>
 
             <homepage>
                 <display>1</display>

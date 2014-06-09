@@ -37,15 +37,6 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </active>
-                        <container translate="label,comment">
-                            <label>Code Wrapper</label>
-                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
-                            <frontend_type>textarea</frontend_type>
-                            <sort_order>6</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </container>
                     </fields>
                 </settings>
                 <homepage>
@@ -200,6 +191,26 @@
                         </position>
                     </fields>
                 </checkout_cart>
+                <developer_settings translate="label">
+                    <label>Developer Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1000</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>0</show_in_website>
+                    <show_in_store>0</show_in_store>
+                    <expanded>0</expanded>
+                    <fields>
+                        <container translate="label,comment">
+                            <label>Code Wrapper</label>
+                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </container>
+                    </fields>
+                </developer_settings>
             </groups>
         </affirmpromo>
     </sections>

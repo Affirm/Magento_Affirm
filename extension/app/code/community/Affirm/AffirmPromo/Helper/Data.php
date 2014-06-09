@@ -51,7 +51,7 @@ class Affirm_AffirmPromo_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         $id = Mage::getStoreConfig('affirmpromo/settings/id');
-        $container = Mage::getStoreConfig('affirmpromo/settings/container');
+        $container = Mage::getStoreConfig('affirmpromo/developer_settings/container');
         $size = $this->getSectionConfig()->getSize();
         $apiKey = Mage::getStoreConfig('payment/affirm/api_key');
         $promoKey = Mage::getStoreConfig('affirmpromo/settings/promo_key');
