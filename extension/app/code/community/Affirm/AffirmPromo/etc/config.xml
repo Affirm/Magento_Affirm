@@ -35,8 +35,35 @@
     <default>
         <affirmpromo>
             <settings>
+                <active>1</active>
+                <promo_key>XC91I7QC3C6U7Q72</promo_key>
                 <container><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container>
             </settings>
+
+            <homepage>
+                <display>1</display>
+                <size>196x193</size>
+                <position>right-top</position>
+            </homepage>
+
+            <catalog_category>
+                <display>1</display>
+                <size>196x193</size>
+                <position>left-top</position>
+            </catalog_category>
+
+            <catalog_product>
+                <display>1</display>
+                <size>196x193</size>
+                <position>right-top</position>
+            </catalog_product>
+
+            <checkout_cart>
+                <display>1</display>
+                <size>560x63</size>
+                <position>center-top</position>
+            </checkout_cart>
+
         </affirmpromo>
     </default>
     <admin>
