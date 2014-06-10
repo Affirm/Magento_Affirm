@@ -209,6 +209,38 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
                         </container>
+                        <path_homepage translate="label">
+                            <label>Home Page Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </path_homepage>
+                        <path_catalog_category translate="label">
+                            <label>Catalog Category Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </path_catalog_category>
+                        <path_catalog_product translate="label">
+                            <label>Catalog Product Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </path_catalog_product>
+                        <path_checkout_cart translate="label">
+                            <label>Checkout Cart Path</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </path_checkout_cart>
                     </fields>
                 </developer_settings>
             </groups>

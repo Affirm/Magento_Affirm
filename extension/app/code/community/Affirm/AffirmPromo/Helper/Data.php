@@ -2,29 +2,24 @@
 class Affirm_AffirmPromo_Helper_Data extends Mage_Core_Helper_Abstract
 {
     /**
-     * Configuration-controller-action map
-     * @var array
-     */
-    public static $_codeMap = array(
-        'catalog.product.view'=>'catalog_product',
-        'catalog.category.view'=>'catalog_category',
-        'cms.index.index'=>'homepage',
-        'checkout.cart.index'=>'checkout_cart'
-    );
-
-    /**
      * Get configuration settings for current page
      * @return Varien_Object $config
      */
     public function getSectionConfig()
     {
+        $codeMap = array(
+            Mage::getStoreConfig('affirmpromo/developer_settings/path_catalog_product')=>'catalog_product',
+            Mage::getStoreConfig('affirmpromo/developer_settings/path_catalog_category')=>'catalog_category',
+            Mage::getStoreConfig('affirmpromo/developer_settings/path_homepage')=>'homepage',
+            Mage::getStoreConfig('affirmpromo/developer_settings/path_checkout_cart')=>'checkout_cart'
+        );
         $config = new Varien_Object();
         $module = Mage::app()->getRequest()->getModuleName();
         $controller = Mage::app()->getRequest()->getControllerName();
         $action = Mage::app()->getRequest()->getActionName();
 
-        if (isset(self::$_codeMap[$module.'.'.$controller.'.'.$action])){
-            $pageCode = self::$_codeMap[$module.'.'.$controller.'.'.$action];
+        if (isset($codeMap[$module.'.'.$controller.'.'.$action])){
+            $pageCode = $codeMap[$module.'.'.$controller.'.'.$action];
             $size = Mage::getStoreConfig('affirmpromo/'.$pageCode.'/size');
             $position = Mage::getStoreConfig('affirmpromo/'.$pageCode.'/position');
             list($positionHorizontal, $positionVertical) = explode('-',$position);
