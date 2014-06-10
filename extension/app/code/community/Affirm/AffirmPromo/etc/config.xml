@@ -34,9 +34,11 @@
     </global>
     <default>
         <affirmpromo>
-            <developer_settings>
-                <active>1</active>
+            <settings>
+                <active>0</active>
                 <promo_key>XC91I7QC3C6U7Q72</promo_key>
+            </settings>
+            <developer_settings>
                 <container><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container>
                 <path_homepage>cms.index.index</path_homepage>
                 <path_catalog_category>catalog.category.view</path_catalog_category>
