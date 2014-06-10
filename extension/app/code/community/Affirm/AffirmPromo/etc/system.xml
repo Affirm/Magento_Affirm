@@ -200,15 +200,42 @@
                     <show_in_store>0</show_in_store>
                     <expanded>0</expanded>
                     <fields>
-                        <container translate="label,comment">
-                            <label>Code Wrapper</label>
+                        <container_homepage translate="label,comment">
+                            <label>Homepage Container</label>
                             <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
                             <frontend_type>textarea</frontend_type>
-                            <sort_order>6</sort_order>
+                            <sort_order>11</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                        </container>
+                        </container_homepage>
+                        <container_catalog_category translate="label,comment">
+                            <label>Catalog Category Container</label>
+                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>21</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </container_catalog_category>
+                        <container_catalog_product translate="label,comment">
+                            <label>Catalog Product Container</label>
+                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>31</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </container_catalog_product>
+                        <container_checkout_cart translate="label,comment">
+                            <label>Checkout Cart Container</label>
+                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
+                            <frontend_type>textarea</frontend_type>
+                            <sort_order>41</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </container_checkout_cart>
                         <path_homepage translate="label">
                             <label>Home Page Path</label>
                             <frontend_type>text</frontend_type>

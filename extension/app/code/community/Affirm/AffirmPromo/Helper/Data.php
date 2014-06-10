@@ -29,6 +29,10 @@ class Affirm_AffirmPromo_Helper_Data extends Mage_Core_Helper_Abstract
                 ->setSize($size)
                 ->setPositionHorizontal($positionHorizontal)
                 ->setPositionVertical($positionVertical);
+                
+            // each fetch container for a given page
+            $config->setContainer( Mage::getStoreConfig(
+                    'affirmpromo/developer_settings/container_' . $pageCode) );
         }
         return $config;
     }
@@ -45,8 +49,11 @@ class Affirm_AffirmPromo_Helper_Data extends Mage_Core_Helper_Abstract
             return '';
         }
 
+        // TODO(brian): rm extraneous getSectionConfig calls
+        $sectionConfig = $this->getSectionConfig();
+
         $id = Mage::getStoreConfig('affirmpromo/settings/id');
-        $container = Mage::getStoreConfig('affirmpromo/developer_settings/container');
+        $container = $sectionConfig->getContainer();
         $size = $this->getSectionConfig()->getSize();
         $apiKey = Mage::getStoreConfig('payment/affirm/api_key');
         $promoKey = Mage::getStoreConfig('affirmpromo/settings/promo_key');

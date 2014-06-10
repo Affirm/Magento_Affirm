@@ -39,7 +39,10 @@
                 <promo_key>XC91I7QC3C6U7Q72</promo_key>
             </settings>
             <developer_settings>
-                <container><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container>
+                <container_homepage><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_homepage>
+                <container_catalog_category><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_catalog_category>
+                <container_catalog_product><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_catalog_product>
+                <container_checkout_cart><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_checkout_cart>
                 <path_homepage>cms.index.index</path_homepage>
                 <path_catalog_category>catalog.category.view</path_catalog_category>
                 <path_catalog_product>catalog.product.view</path_catalog_product>
