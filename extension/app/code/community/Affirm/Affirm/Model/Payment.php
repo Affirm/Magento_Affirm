@@ -379,7 +379,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     // TODO(brian): extract string name constant
     private static function _getMetadata()
     {
-        return array(
+        $meta = array(
             "source" => array(
                 "data" => array(
                     "is_logged_in" => Mage::getSingleton('customer/session')->isLoggedIn(),
@@ -389,6 +389,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 "version" => Mage::getConfig()->getModuleConfig('Affirm_Affirm')->version
             )
         );
+        return $meta;
     }
 
     /* A hacky thing used to access a private method (authorize(...)) on the
