@@ -48,7 +48,7 @@ class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
         // TODO(brian): extract html to template
         // TODO(brian): conditionally load based on env config option
         // This is a stopgap until the promo API is ready to go
-        $logoSrc = "https://cdn1.affirm.com/images/badges/affirm-card_78x54.png";
+        $logoSrc = "https://cdn1.affirm.com/images/badges/affirm-logo_78x54.png";
         $html = "<img src=\"" . $logoSrc . "\" width=\"39\" height=\"27\" class=\"v-middle\" />&nbsp;";
 
         // TODO(brian): conditionally display based on payment type
