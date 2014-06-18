@@ -390,6 +390,24 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 "version" => Mage::getConfig()->getModuleConfig('Affirm_Affirm')->version
             )
         );
+        if ($session->isLoggedIn()) {
+            $customerId = $session->getCustomerId();
+
+            $customer = Mage::getModel('customer/customer')->load($customerId);
+            $meta['source']['data']['account_created'] = Mage::getModel('core/date')->
+                date(Zend_Date::ISO_8601, $customer->getCreatedAt());
+
+            $orders = Mage::getModel('sales/order')->getCollection()->
+                addFilter('customer_id', $customerId)->
+                setOrder('created_at', Varien_Data_Collection_Db::SORT_ORDER_DESC);
+            $orderCount = $orders->count();
+            $meta['data']['order_count'] = $orderCount;
+
+            if ($orderCount > 0) {
+                $meta['data']['last_order_date'] = Mage::getModel('core/date')->
+                date(Zend_Date::ISO_8601, $orders->getFirstItem()->getCreatedAt());
+            }
+        }
         return $meta;
     }
 
