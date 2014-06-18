@@ -379,10 +379,11 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     // TODO(brian): extract string name constant
     private static function _getMetadata()
     {
+        $session = Mage::getSingleton('customer/session');
         $meta = array(
             "source" => array(
                 "data" => array(
-                    "is_logged_in" => Mage::getSingleton('customer/session')->isLoggedIn(),
+                    "is_logged_in" => $session->isLoggedIn(),
                     "magento_version" => Mage::getVersion()
                 ),
                 "client_name" => "magento_affirm",
