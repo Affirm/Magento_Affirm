@@ -20,14 +20,15 @@ class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
 
         // heading
         $html .= "<div style=\"color:#034082; font-size:16px; \">";
-        $html .= "Pay over time in 3 easy payments";
+        $html .= "How does Affirm work?";
         $html .= "</div>";
 
         // sub
         $html .= "<div style=\"color:#6f6f6f; font-size:14px; \">";
-        $html .= "just enter your basic details and get";
+
+        $html .= "Just enter your basic information and get approved instantly.";
         $html .= "<br>";
-        $html .= "approved instantly.";
+        $html .= "You will complete your payment on the Affirm website";
         $html .= "</div>";
 
         $html .= "</li>";
@@ -53,7 +54,7 @@ class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
 
         // TODO(brian): conditionally display based on payment type
         // alt message: $html.= "Buy Now and Pay Later";
-        $html.= "3 Monthly Payments with Split Pay";
+        $html.= "Split into 3 Easy Payments";
 
         $this->setMethodLabelAfterHtml($html);
     }
