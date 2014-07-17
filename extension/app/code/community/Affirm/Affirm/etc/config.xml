@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>0.4.1</version>
+            <version>0.5.0</version>
         </Affirm_Affirm>
     </modules>
     <global>
@@ -11,6 +11,17 @@
                 <class>Affirm_Affirm_Model</class>
             </affirm>
         </models>
+        <events>
+            <checkout_type_onepage_save_order_after>
+                <observers>
+                    <affirm_affirm_model_order_observer>
+                        <type>singleton</type>
+                        <class>Affirm_Affirm_Model_Order_Observer</class>
+                        <method>reactivate_quote</method>
+                    </affirm_affirm_model_order_observer>
+                </observers>
+            </checkout_type_onepage_save_order_after>
+        </events>
         <blocks>
             <affirm>
                 <class>Affirm_Affirm_Block</class>

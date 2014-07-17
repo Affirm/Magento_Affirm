@@ -35,6 +35,8 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
 
     public function confirmAction()
     {
+        Mage::getSingleton('checkout/session')->getQuote()->setIsActive(false);
+        Mage::getSingleton('checkout/session')->getQuote()->save();
         $session = $this->_getCheckoutSession();
         $checkout_token = $this->getRequest()->getParam("checkout_token");
         if (!$checkout_token)
