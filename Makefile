@@ -2,7 +2,7 @@
 COMPOSER = ./build/composer.phar
 
 .PHONY : test
-test:
+test: dependencies
 	php ./test/Affirm.php
 
 .PHONY : dependencies
