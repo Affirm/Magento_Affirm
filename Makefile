@@ -11,5 +11,5 @@ dependencies:
 
 package:
 	mkdir -p ./var/
-	tar -cvf ./var/Affirm_Magento.tar ./extension/*
+	cd ./extension && tar -cvf ../var/Affirm_Magento.tar *
 	cd ./build && ./magento-tar-to-connect.phar affirm_tar_to_connect_config.php
