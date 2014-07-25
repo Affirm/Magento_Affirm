@@ -112,7 +112,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         //validate to make sure there are no errors here
         if (isset($ret_json["status_code"]))
         {
-            Mage::throwException(Mage::helper('affirm')->__('Affirm error code:'. $ret_json["status_code"] . ' error: '. @$ret_json["message"]));
+            Mage::throwException(Mage::helper('affirm')->__('Affirm error code:'. $ret_json["status_code"] . ' error: '. $ret_json["message"]));
         }
         return $ret_json;
     }
