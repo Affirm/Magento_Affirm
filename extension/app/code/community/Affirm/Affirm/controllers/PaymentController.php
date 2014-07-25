@@ -50,7 +50,6 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
     {
         $serialized_request = Mage::getSingleton('checkout/session')->getAffirmOrderRequest();
         $checkout_token = $this->getRequest()->getParam("checkout_token");
-        Mage::log("Checkout token is: $checkout_token");
 
         if ($serialized_request && $checkout_token)
         {
