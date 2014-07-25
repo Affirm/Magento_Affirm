@@ -233,6 +233,34 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $stateObject->setState($state);
         $stateObject->setStatus('pending_payment');
         $stateObject->setIsNotified(false);
+
+        if ($this->redirectPreOrder())
+        {
+            $payment = $this->getInfoInstance();
+            $order = $payment->getOrder();
+            $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
+
+            switch ($paymentAction) {
+                case self::ACTION_AUTHORIZE:
+                    Affirm_Affirm_Model_Payment::authorizePaymentForOrder($payment, $order);
+                    $payment->setAmountAuthorized($order->getTotalDue());
+                    break;
+                case self::ACTION_AUTHORIZE_CAPTURE:
+                    //authorize the total amount.
+                    Affirm_Affirm_Model_Payment::authorizePaymentForOrder($payment, $order);
+                    $payment->setAmountAuthorized(static::_affirmTotal($order));
+                    $payment->capture(null);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public function setAffirmCheckoutToken($checkout_token)
+    {
+        $payment = $this->getInfoInstance();
+        $payment->setAdditionalInformation(self::CHECKOUT_TOKEN, $checkout_token);
     }
 
 
@@ -269,7 +297,10 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
      */
     public function getOrderPlaceRedirectUrl()
     {
-          return Mage::getUrl('affirm/payment/redirect', array('_secure' => true));
+        if(!$this->redirectPreOrder())
+        {
+            return Mage::getUrl('affirm/payment/redirect', array('_secure' => true));
+        }
     }
 
     public function formatCents($currency, $amount)
@@ -449,5 +480,10 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     private static function _affirmTotal($order)
     {
         return $order->getTotalDue();
+    }
+
+    public function redirectPreOrder()
+    {
+        return $this->getConfigData('pre_order');
     }
 }
