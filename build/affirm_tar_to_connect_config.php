@@ -4,7 +4,7 @@ return array(
 'archive_files'        => 'Affirm_Magento.tar',
 'extension_name'       => 'Affirm_Magento',
 'skip_version_compare' => true,
-'extension_version'    => '0.5.0',
+'extension_version'    => '1.1.1',
 'archive_connect'      => 'Affirm_Magento-0.5.0.tgz',
 'path_output'          => realpath('../var/'),
 
