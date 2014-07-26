@@ -1,6 +1,9 @@
 # override like so: make dependencies COMPOSER=$(which composer.phar)
 COMPOSER = ./build/composer.phar
 
+.PHONY : all
+all: test
+
 .PHONY : validate_version
 validate_version:
 	python util/validate-version.py
