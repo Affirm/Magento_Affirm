@@ -6,7 +6,7 @@ validate_version:
 	python util/validate-version.py
 
 .PHONY : test
-test: dependencies
+test: dependencies validate_version
 	php ./test/Affirm.php
 
 .PHONY : dependencies
