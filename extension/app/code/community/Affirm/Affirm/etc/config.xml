@@ -12,6 +12,15 @@
             </affirm>
         </models>
         <events>
+            <checkout_type_onepage_save_order>
+                <observers>
+                    <affirm_affirm_model_pre_order_observer>
+                        <type>singleton</type>
+                        <class>Affirm_Affirm_Model_Order_Observer</class>
+                        <method>pre_order</method>
+                    </affirm_affirm_model_pre_order_observer>
+                </observers>
+            </checkout_type_onepage_save_order>
             <checkout_type_onepage_save_order_after>
                 <observers>
                     <affirm_affirm_model_order_observer>
@@ -48,6 +57,7 @@
         <payment>
             <affirm>
                 <active>0</active>
+                <pre_order>1</pre_order>
                 <model>affirm/payment</model>
                 <!-- WARNING: default value for title removed to prevent it from appearing on checkout page on MCE 1.4.0.1 -->
                 <!-- TODO(brian): fix rendering of payment method block so that adding a title here doesn't break presentation there -->
