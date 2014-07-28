@@ -60,7 +60,7 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
                 $this->_redirect('checkout/onepage/success');
                 return;
             }
-            
+
             $proxy_request = unserialize($serialized_request);
             if ($proxy_request != $_SERVER['REQUEST_METHOD'])
             {
@@ -99,8 +99,19 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
             }
             elseif(isset($orderResult["error_messages"]) && $orderResult["error"] && $orderResult["error_messages"])
             {
+                // Very rarely, a merchant's extensively customized Checkout
+                // extension may be incompatible with the Affirm extension. To
+                // help discover this issue during testing, provide a useful
+                // message.
+                Mage::log("
+                    Customer tried to checkout using Affirm.
+                    The order could not be saved.
+                    Your Checkout extension may not be compatible
+                    with this version of the Affirm Extension.
+                    Please contact Affirm Developer Support for more info");
+
                 Mage::getSingleton('checkout/session')->addError($orderResult["error_messages"]);
-                $this->_redirect('checkout/onepage/index');
+                $this->_redirect('checkout/onepage');
             }
             else
             {
