@@ -7,6 +7,31 @@ Magento CE 1.4.0.1+
 Install
 -------
 
+**To install using [magento-composer-installer](https://github.com/magento-hackathon/magento-composer-installer):**
+
+Add the following to your `composer.json` file:
+
+```json
+{
+    ...
+    "require": {
+    	...
+        "magento-hackathon/magento-composer-installer": "*",
+        "affirm/affirm-php": "@dev"
+    },
+    "repositories": [
+    	...
+        {
+            "type": "vcs",
+            "url": "https://github.com/Affirm/Magento_Affirm"
+        }
+    ]
+}
+```
+
+Then run `composer update`
+
+
 **To install using [modgit](https://github.com/jreinke/modgit):**
 
 ```
