@@ -7,7 +7,7 @@ Contribute
 4. Push to the branch (```git push origin my-new-feature```)
 5. Create a Pull Request
 
-**To run the tests:**
+**To run unit tests:**
 
 ```
 make dependencies
