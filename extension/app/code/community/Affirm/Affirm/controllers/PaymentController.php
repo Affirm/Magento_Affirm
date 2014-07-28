@@ -60,7 +60,7 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
                 $this->_redirect('checkout/onepage/success');
                 return;
             }
-            
+
             $proxy_request = unserialize($serialized_request);
             if ($proxy_request != $_SERVER['REQUEST_METHOD'])
             {
