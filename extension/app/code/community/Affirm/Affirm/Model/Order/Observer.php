@@ -54,8 +54,6 @@ class Affirm_Affirm_Model_Order_Observer
                                 "POST"=>$_POST, #need post for some cross site issues
                                 "quote_id"=>$quote->getId());                
                 Mage::getSingleton('checkout/session')->setAffirmOrderRequest(serialize($order_request));
-                Mage::log($order_request);
-                Mage::log(serialize($order_request));
                 throw new Affirm_Order_Save_Redirector($order, $quote);
             }
         }

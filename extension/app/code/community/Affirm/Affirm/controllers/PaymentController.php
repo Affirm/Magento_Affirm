@@ -53,6 +53,14 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
 
         if ($serialized_request && $checkout_token)
         {
+            if (Mage::getSingleton('checkout/session')->getLastAffirmSuccess() == $checkout_token)
+            {
+                Mage::getSingleton('checkout/session')->addSuccess("This order was already completed.");
+                //Go directly to success page if this is already successful
+                $this->_redirect('checkout/onepage/success');
+                return;
+            }
+            
             $proxy_request = unserialize($serialized_request);
             if ($proxy_request != $_SERVER['REQUEST_METHOD'])
             {
@@ -74,18 +82,31 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
                 }
             }
 
-            $orderResult = Mage::helper('core')->jsonDecode($this->getResponse()->getBody());
+            try {
+                $orderResult = Mage::helper('core')->jsonDecode($this->getResponse()->getBody());
+            } catch (Exception $e) {
+                Mage::logException($e);
+                Mage::getSingleton('checkout/session')->addError("Error processing affirm order");
+                $this->_redirect('checkout/cart');
+                return;
+            }
 
-            if ($orderResult["success"])
+            if (isset($orderResult["success"]) && $orderResult["success"])
             {
-                Mage::getSingleton('checkout/session')->setAffirmOrderRequest(null);
                 Mage::getSingleton('checkout/session')->setPreOrderRender(null);
+                Mage::getSingleton('checkout/session')->setLastAffirmSuccess($checkout_token);
                 $this->_redirect('checkout/onepage/success');
             }
-            elseif($orderResult["error"] && $orderResult["error_messages"])
+            elseif(isset($orderResult["error_messages"]) && $orderResult["error"] && $orderResult["error_messages"])
             {
                 Mage::getSingleton('checkout/session')->addError($orderResult["error_messages"]);
                 $this->_redirect('checkout/onepage/index');
+            }
+            else
+            {
+                Mage::getSingleton('checkout/session')->addError("Error encountered while processing affirm order");
+                $this->_redirect('checkout/cart');
+                return;
             }
 
             return;
