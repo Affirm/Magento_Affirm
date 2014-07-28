@@ -234,11 +234,12 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $stateObject->setStatus('pending_payment');
         $stateObject->setIsNotified(false);
 
-        if ($this->redirectPreOrder())
+        $payment = $this->getInfoInstance();
+        $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
+        //If there is a token passed along USE IT!
+        if ($token)
         {
-            $payment = $this->getInfoInstance();
             $order = $payment->getOrder();
-            $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
 
             switch ($paymentAction) {
                 case self::ACTION_AUTHORIZE:

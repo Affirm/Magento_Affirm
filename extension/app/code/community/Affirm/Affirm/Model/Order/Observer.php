@@ -36,13 +36,14 @@ class Affirm_Affirm_Model_Order_Observer
         $quote = $observer->getEvent()->getQuote();
         $method_inst = $order->getPayment()->getMethodInstance();
         $token_code = Mage::registry("affirm_token_code");
+        if ($token_code)
+        {
+            $method_inst->setAffirmCheckoutToken($token_code);
+        }
+
         if ($method_inst->getCode() == "affirm" && $method_inst->redirectPreOrder())
         {
-            if ($token_code)
-            {
-                $method_inst->setAffirmCheckoutToken($token_code);
-            }
-            else
+            if(!$token_code)
             {
                 #ok record the current controller that we are using...
                 $request = Mage::app()->getRequest();
@@ -56,6 +57,11 @@ class Affirm_Affirm_Model_Order_Observer
                 Mage::getSingleton('checkout/session')->setAffirmOrderRequest(serialize($order_request));
                 throw new Affirm_Order_Save_Redirector($order, $quote);
             }
+        }
+        elseif ($method_inst->getCode() == "affirm" && !$method_inst->redirectPreOrder())
+        {
+            #clear the Order request if we are not using this thing..
+            Mage::getSingleton('checkout/session')->setAffirmOrderRequest(null);
         }
     }
 
