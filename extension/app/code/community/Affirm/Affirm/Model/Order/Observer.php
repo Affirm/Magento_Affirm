@@ -52,6 +52,7 @@ class Affirm_Affirm_Model_Order_Observer
                                 "module"=>$request->getModuleName(),
                                 "params"=>$request->getParams(),
                                 "method"=>$request->getMethod(),
+                                "xhr"=>$request->isXmlHttpRequest(),
                                 "POST"=>$_POST, #need post for some cross site issues
                                 "quote_id"=>$quote->getId());                
                 Mage::getSingleton('checkout/session')->setAffirmOrderRequest(serialize($order_request));

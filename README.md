@@ -63,4 +63,4 @@ Configure
 Developers
 ----------
 
-Read the [Developer Notes](DEVELOPER-NOTES.md)
+Read the [Developer README](DEVELOPER-README.md)
