@@ -117,6 +117,16 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
                 }
                 else
                 {
+                    // Very rarely, a merchant's extensively customized Checkout
+                    // extension may be incompatible with the Affirm extension.
+                    // To help discover this issue during testing, provide a
+                    // useful message.
+                    Mage::log("Customer tried to checkout using Affirm.
+                               The order could not be saved.
+                               Your Checkout extension may not be compatible with this
+                               version of the Affirm Extension.
+                               Please contact Affirm Developer Support for more info");
+
                     Mage::getSingleton('checkout/session')->addError("Error encountered while processing affirm order");
                     $this->_redirect('checkout/cart');
                     return;
