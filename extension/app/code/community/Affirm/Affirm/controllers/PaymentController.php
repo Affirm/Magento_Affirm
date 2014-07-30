@@ -36,9 +36,19 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
     {
         $order = $this->getRequest()->getParam("order");
         $string = $this->getLayout()->createBlock('affirm/payment_redirect')->setOrder($order)->toHtml();
-        $this->_getCheckoutSession()->setPreOrderRender($string);
-        $result = array("redirect"=>Mage::getUrl('*/*/redirectPreOrder'));
-        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+        $serialized_request = Mage::getSingleton('checkout/session')->getAffirmOrderRequest();
+        $proxy_request = unserialize($serialized_request);
+
+        if (isset($proxy_request["xhr"]) && $proxy_request["xhr"])
+        {
+            $this->_getCheckoutSession()->setPreOrderRender($string);
+            $result = array("redirect"=>Mage::getUrl('*/*/redirectPreOrder'));
+            $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+        }
+        else
+        {
+            $this->getResponse()->setBody($string);
+        }
     }
 
     public function redirectPreOrderAction()
@@ -73,53 +83,45 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
             Mage::register("affirm_token_code", $checkout_token);
             $this->_forward($proxy_request["action"], $proxy_request["controller"], $proxy_request["module"], $proxy_request["params"]);
 
-            #need to actually execute the forward!
-            $front = Mage::app()->getFrontController();
-            $request = $this->getRequest();
-            foreach ($front->getRouters() as $router) {
-                if ($router->match($request)) {
-                    break;
+
+            if ((isset($proxy_request["xhr"]) && $proxy_request["xhr"]))
+            {
+                #need to actually execute the forward!
+                $front = Mage::app()->getFrontController();
+                $request = $this->getRequest();
+                foreach ($front->getRouters() as $router) {
+                    if ($router->match($request)) {
+                        break;
+                    }
+                }
+
+                try {
+                    $orderResult = Mage::helper('core')->jsonDecode($this->getResponse()->getBody());
+                } catch (Exception $e) {
+                    Mage::logException($e);
+                    Mage::getSingleton('checkout/session')->addError("Error processing affirm order");
+                    $this->_redirect('checkout/cart');
+                    return;
+                }
+
+                if (isset($orderResult["success"]) && $orderResult["success"])
+                {
+                    Mage::getSingleton('checkout/session')->setPreOrderRender(null);
+                    Mage::getSingleton('checkout/session')->setLastAffirmSuccess($checkout_token);
+                    $this->_redirect('checkout/onepage/success');
+                }
+                elseif(isset($orderResult["error_messages"]) && $orderResult["error"] && $orderResult["error_messages"])
+                {
+                    Mage::getSingleton('checkout/session')->addError($orderResult["error_messages"]);
+                    $this->_redirect('checkout/onepage/index');
+                }
+                else
+                {
+                    Mage::getSingleton('checkout/session')->addError("Error encountered while processing affirm order");
+                    $this->_redirect('checkout/cart');
+                    return;
                 }
             }
-
-            try {
-                $orderResult = Mage::helper('core')->jsonDecode($this->getResponse()->getBody());
-            } catch (Exception $e) {
-                Mage::logException($e);
-                Mage::getSingleton('checkout/session')->addError("Error processing affirm order");
-                $this->_redirect('checkout/cart');
-                return;
-            }
-
-            if (isset($orderResult["success"]) && $orderResult["success"])
-            {
-                Mage::getSingleton('checkout/session')->setPreOrderRender(null);
-                Mage::getSingleton('checkout/session')->setLastAffirmSuccess($checkout_token);
-                $this->_redirect('checkout/onepage/success');
-            }
-            elseif(isset($orderResult["error_messages"]) && $orderResult["error"] && $orderResult["error_messages"])
-            {
-                // Very rarely, a merchant's extensively customized Checkout
-                // extension may be incompatible with the Affirm extension. To
-                // help discover this issue during testing, provide a useful
-                // message.
-                Mage::log("
-                    Customer tried to checkout using Affirm.
-                    The order could not be saved.
-                    Your Checkout extension may not be compatible
-                    with this version of the Affirm Extension.
-                    Please contact Affirm Developer Support for more info");
-
-                Mage::getSingleton('checkout/session')->addError($orderResult["error_messages"]);
-                $this->_redirect('checkout/onepage');
-            }
-            else
-            {
-                Mage::getSingleton('checkout/session')->addError("Error encountered while processing affirm order");
-                $this->_redirect('checkout/cart');
-                return;
-            }
-
             return;
         }
         Mage::getSingleton('checkout/session')->getQuote()->setIsActive(false);
