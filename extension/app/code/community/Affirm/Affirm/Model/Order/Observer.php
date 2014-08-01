@@ -8,6 +8,15 @@ class Affirm_Order_Save_Redirector extends Mage_Core_Controller_Varien_Exception
     {
         $this->order = $order;
         $this->quote = $quote;
+        unset($this->message);
+    }
+
+    public function __get($property)
+    {
+        if ($property == "message")
+        {
+            throw $this;
+        }
     }
 
     public function __tostring()

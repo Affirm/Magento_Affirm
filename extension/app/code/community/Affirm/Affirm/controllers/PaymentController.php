@@ -113,7 +113,7 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
                 elseif(isset($orderResult["error_messages"]) && $orderResult["error"] && $orderResult["error_messages"])
                 {
                     Mage::getSingleton('checkout/session')->addError($orderResult["error_messages"]);
-                    $this->_redirect('checkout/onepage/index');
+                    $this->_redirect('checkout/cart');
                 }
                 else
                 {
