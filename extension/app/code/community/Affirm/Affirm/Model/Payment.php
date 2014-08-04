@@ -26,7 +26,6 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
      * Availability options
      */
     protected $_isGateway               = true;
-    protected $_isInitializeNeeded      = true;
     protected $_canAuthorize            = true;
     protected $_canCapture              = true;
     protected $_canCapturePartial       = false;
@@ -56,6 +55,19 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         return true;
     }
 
+
+    public function isInitializeNeeded()
+    {
+        if ($this->getCheckoutToken())
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     /**
      * Return array of currency codes supplied by Payment Gateway
      *
@@ -74,6 +86,11 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     public function getChargeId()
     {
         return $this->getInfoInstance()->getAdditionalInformation("charge_id");
+    }
+
+    public function getCheckoutToken()
+    {
+        return $this->getInfoInstance()->getAdditionalInformation(self::CHECKOUT_TOKEN);
     }
 
     protected function setChargeId($charge_id)
@@ -152,7 +169,15 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $charge_id = $this->getChargeId();
         $amount_cents = Affirm_Util::formatCents($amount);
         if (!$charge_id) {
-            Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
+            if ($this->getCheckoutToken())
+            {
+                $this->authorize($payment, $amount);
+                $charge_id = $this->getChargeId();
+            }
+            else
+            {
+                Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
+            }
         }
         $result = $this->_api_request(Varien_Http_Client::POST, "{$charge_id}/capture");
         $this->_validate_amount_result($amount_cents, $result);
@@ -233,29 +258,6 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $stateObject->setState($state);
         $stateObject->setStatus('pending_payment');
         $stateObject->setIsNotified(false);
-
-        $payment = $this->getInfoInstance();
-        $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
-        //If there is a token passed along USE IT!
-        if ($token)
-        {
-            $order = $payment->getOrder();
-
-            switch ($paymentAction) {
-                case self::ACTION_AUTHORIZE:
-                    Affirm_Affirm_Model_Payment::authorizePaymentForOrder($payment, $order);
-                    $payment->setAmountAuthorized($order->getTotalDue());
-                    break;
-                case self::ACTION_AUTHORIZE_CAPTURE:
-                    //authorize the total amount.
-                    Affirm_Affirm_Model_Payment::authorizePaymentForOrder($payment, $order);
-                    $payment->setAmountAuthorized(static::_affirmTotal($order));
-                    $payment->capture(null);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     public function setAffirmCheckoutToken($checkout_token)
