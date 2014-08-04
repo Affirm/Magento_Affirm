@@ -36,18 +36,25 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
     {
         $order = $this->getRequest()->getParam("order");
         $string = $this->getLayout()->createBlock('affirm/payment_redirect')->setOrder($order)->toHtml();
-        $serialized_request = Mage::getSingleton('checkout/session')->getAffirmOrderRequest();
-        $proxy_request = unserialize($serialized_request);
-
-        if (isset($proxy_request["xhr"]) && $proxy_request["xhr"])
+        $order_request = Mage::registry("affirm_order_request");
+        if ($order_request)
         {
-            $this->_getCheckoutSession()->setPreOrderRender($string);
-            $result = array("redirect"=>Mage::getUrl('*/*/redirectPreOrder'));
-            $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+            Mage::getSingleton('checkout/session')->setAffirmOrderRequest(serialize($order_request));
+
+            if (isset($order_request["xhr"]) && $order_request["xhr"])
+            {
+                $this->_getCheckoutSession()->setPreOrderRender($string);
+                $result = array("redirect"=>Mage::getUrl('*/*/redirectPreOrder'));
+                $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+            }
+            else
+            {
+                $this->getResponse()->setBody($string);
+            }
         }
         else
         {
-            $this->getResponse()->setBody($string);
+            Mage::log("The order request for the affirm order has not been recorded.");
         }
     }
 
