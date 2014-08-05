@@ -1,8 +1,32 @@
 <?php
 class Affirm_Order_Save_Redirector extends Mage_Core_Controller_Varien_Exception
 {
-    public $order;
-    public $quote;
+    private $order;
+    private $quote;
+
+    public function __construct($order, $quote)
+    {
+        $this->order = $order;
+        $this->quote = $quote;
+    }
+
+
+    public function getResultFlags()
+    {
+        return array();
+    }
+
+    public function getResultCallback()
+    {
+        return array(Mage_Core_Controller_Varien_Exception::RESULT_FORWARD, array("renderPreOrder", "payment", "affirm", array("order"=>$this->order, "quote"=>$this->quote)));
+    }
+
+}
+
+class Affirm_Order_Payment_Redirector extends Mage_Payment_Model_Info_Exception
+{
+    private $order;
+    private $quote;
 
     public function __construct($order, $quote)
     {
@@ -15,24 +39,15 @@ class Affirm_Order_Save_Redirector extends Mage_Core_Controller_Varien_Exception
     {
         if ($property == "message")
         {
-            throw $this;
+            throw new Affirm_Order_Save_Redirector($this->order, $this->quote);
         }
     }
 
     public function __tostring()
     {
-        throw $this;
+        throw new Affirm_Order_Save_Redirector($this->order, $this->quote);
     }
 
-    public function getResultFlags()
-    {
-        return array();
-    }
-
-    public function getResultCallback()
-    {
-        return array(Mage_Core_Controller_Varien_Exception::RESULT_FORWARD, array("renderPreOrder", "payment", "affirm", array("order"=>$this->order, "quote"=>$this->quote)));
-    }
 }
 
 
@@ -65,7 +80,7 @@ class Affirm_Affirm_Model_Order_Observer
                                 "POST"=>$_POST, #need post for some cross site issues
                                 "quote_id"=>$quote->getId());                
                 Mage::register("affirm_order_request", $order_request);
-                throw new Affirm_Order_Save_Redirector($order, $quote);
+                throw new Affirm_Order_Payment_Redirector($order, $quote);
             }
         }
         elseif ($method_inst->getCode() == "affirm" && !$method_inst->redirectPreOrder())
