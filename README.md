@@ -13,6 +13,10 @@ Install
 1. Visit System > Magento Conenct > Magento Connect Manager
 1. Upload the Magento_Affirm package
 
+[![](docs/package-connect-menu.png)](https://affirm.com) 
+[![](docs/upload.png)](https://affirm.com) 
+
+
 **To install using [modgit](https://github.com/jreinke/modgit):**
 
 ```
