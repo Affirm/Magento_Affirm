@@ -2,6 +2,16 @@
 
 class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
 {
+    public function preDispatch()
+    {
+        $this->setFlag('renderPreOrder', self::FLAG_NO_START_SESSION, 1);
+        $this->setFlag('renderPreOrder', self::FLAG_NO_CHECK_INSTALLATION, 1);
+        $this->setFlag('renderPreOrder', self::FLAG_NO_COOKIES_REDIRECT, 0);
+        $this->setFlag('renderPreOrder', self::FLAG_NO_PRE_DISPATCH, 1);
+
+        parent::preDispatch();
+    }
+    
 
     private function _getCheckoutSession()
     {
