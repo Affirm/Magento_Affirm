@@ -7,7 +7,7 @@ Magento CE 1.4.0.1+
 Install
 -------
 
-**To install using [modgit](https://github.com/jreinke/modgit):**
+####To install using [modgit](https://github.com/jreinke/modgit)
 
 ```
 cd MAGENTO_ROOT
@@ -19,7 +19,7 @@ to update:
 modgit update Magento_Affirm
 ```
 
-**To install using [modman](https://github.com/colinmollenhour/modman):**
+####To install using [modman](https://github.com/colinmollenhour/modman)
 
 ```
 cd MAGENTO_ROOT
@@ -30,7 +30,7 @@ to update:
 modman update Magento_Affirm
 ```
 
-**To install using from a package (Magento Connect Manager):**
+####To install using from a package (Magento Connect Manager):
 
 1. Click here to download the latest package release (.tgz): https://github.com/Affirm/Magento_Affirm/releases/latest
 1. Visit System > Magento Conenct > Magento Connect Manager
@@ -39,7 +39,7 @@ modman update Magento_Affirm
 [![](docs/package-connect-menu.png)](https://affirm.com) 
 [![](docs/upload.png)](https://affirm.com) 
 
-**To install using Affirm's deploy script:**
+####To install using Affirm's deploy script
 
 1. Download the [Makefile](https://raw.githubusercontent.com/Affirm/Magento_Affirm/master/util/Makefile) (requires git, wget)
 2. Copy to MAGENTO_ROOT
