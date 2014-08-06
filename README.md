@@ -7,6 +7,12 @@ Magento CE 1.4.0.1+
 Install
 -------
 
+**To install using from a package (Magento Connect Manager):**
+
+1. Click here to download the latest package release (.tgz): https://github.com/Affirm/Magento_Affirm/releases/latest
+1. Visit System > Magento Conenct > Magento Connect Manager
+1. Upload the Magento_Affirm package
+
 **To install using [modgit](https://github.com/jreinke/modgit):**
 
 ```
