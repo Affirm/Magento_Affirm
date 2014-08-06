@@ -33,6 +33,9 @@ class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
 
         $html .= "</li>";
         $html .= "</ul>";
+        $html .= '<span style="display:none">';
+        $html .= Mage::getConfig()->getModuleConfig('Affirm_Affirm')->version;
+        $html .= "</span>";
 
         return $html;
     }
