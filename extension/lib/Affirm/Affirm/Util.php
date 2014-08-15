@@ -7,13 +7,13 @@ class Affirm_Util {
     const MONEY_FORMAT = "%.2f";
 
     public static function formatMoney($amount) {
-        return sprintf(static::MONEY_FORMAT, $amount);
+        return sprintf(Affirm_Util::MONEY_FORMAT, $amount);
     }
 
     public static function formatCents($amount = 0) {
         $negative = false;
 
-        $str = static::formatMoney($amount);
+        $str = Affirm_Util::formatMoney($amount);
 
         if (strcmp($str[0], "-") === 0) {
             // treat it like a positive. then prepend a '-' to the return value.
