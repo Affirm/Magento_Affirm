@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>2.0.4</version>
+            <version>2.0.5</version>
         </Affirm_Affirm>
     </modules>
     <global>
@@ -61,7 +61,7 @@
                 <model>affirm/payment</model>
                 <!-- WARNING: default value for title removed to prevent it from appearing on checkout page on MCE 1.4.0.1 -->
                 <!-- TODO(brian): fix rendering of payment method block so that adding a title here doesn't break presentation there -->
-                <title>Affirm: Split into 3 Easy Payments</title>
+                <title>Affirm: Buy Now with 3 Easy Payments</title>
                 <payment_action>authorize</payment_action>
                 <api_url>https://sandbox.affirm.com</api_url>
                 <api_key />
