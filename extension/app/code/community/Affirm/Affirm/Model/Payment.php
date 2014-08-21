@@ -378,7 +378,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             'tax_amount'=>$this->formatCents($currency, $order->getTaxAmount()),
             "merchant" => array(
                     "public_api_key"=>$this->getConfigData('api_key'), 
-                    "user_confirmation_url"=>Mage::getUrl("affirm/payment/confirm"),
+                    "user_confirmation_url"=>Mage::getUrl('affirm/payment/confirm', array('_secure' => true)),
                     "user_cancel_url"=>Mage::helper('checkout/url')->getCheckoutUrl(),
                     "charge_declined_url"=>Mage::helper('checkout/url')->getCheckoutUrl()
                   ),
