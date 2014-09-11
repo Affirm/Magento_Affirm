@@ -30,7 +30,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected $_canCapture              = true;
     protected $_canCapturePartial       = false;
     protected $_canRefund               = true;
-    protected $_canRefundInvoicePartial = false;
+    protected $_canRefundInvoicePartial = true;
     protected $_canVoid                 = true;
     protected $_canUseInternal          = true;
     protected $_canUseCheckout          = true;
