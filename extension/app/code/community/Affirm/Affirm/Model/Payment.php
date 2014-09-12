@@ -470,7 +470,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     // TODO(brian): move this function to a helper library
     private static function callPrivateMethod($object, $methodName)
     {
-      $reflectionClass = new \ReflectionClass($object);
+      $reflectionClass = new ReflectionClass($object);
       $reflectionMethod = $reflectionClass->getMethod($methodName);
       $reflectionMethod->setAccessible(true);
 
