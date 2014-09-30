@@ -35,3 +35,4 @@ class Affirm_AffirmPromo_Model_Observer
         return $this;
     }
 }
+

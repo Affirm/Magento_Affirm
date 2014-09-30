@@ -57,12 +57,13 @@ class Affirm_AffirmPromo_Helper_Data extends Mage_Core_Helper_Abstract
         $size = $this->getSectionConfig()->getSize();
         $apiKey = Mage::getStoreConfig('payment/affirm/api_key');
         $promoKey = Mage::getStoreConfig('affirmpromo/settings/promo_key');
+        $affirmJsUrl = Mage::helper('affirm')->getAffirmJsUrl();
 
         $snippet = '<div class="affirm-promo" data-promo-size="'.$size.'" data-promo-key="'.$promoKey.'"></div>
                     <script>
                     var _affirm_config = {
                         public_api_key:         "'.$apiKey.'",
-                        script:                 "https://dux8ocbmxvxce.cloudfront.net/js/v2/affirm.js"
+                        script:                 "'.$affirmJsUrl.'"
                     };
                     (function(l,g,m,e,a,f,b){var d,c=l[m]||{},
                         h=document.createElement(f),
@@ -71,7 +72,7 @@ class Affirm_AffirmPromo_Helper_Data extends Mage_Core_Helper_Abstract
                             return function(){a[b]._.push([c,arguments])}
                         };
                         c[e]=k(c,e,"set");
-                        d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;
+                        d=c[e];c[a]={};c[a]._=[];d.u=[];c[a][b]=k(c,a,b);a=0;
                         for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");
                             a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];
                             a<b.length;a++)d[b[a]]=function(){};h.async=!0;
