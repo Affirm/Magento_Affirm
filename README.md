@@ -54,7 +54,7 @@ Configure
 1. Log in to your Magento Admin portal.
 2. Visit System > Cache Management. Then, click _Flush Magento Cache_
 2. Visit System > Configuration > Payment Methods (under Sales) > Affirm
-3. Set the API URL. In a test environment, use ```https://sandbox.affirm.com```. On your live site, use ```https://www.affirm.com```.
+3. Set the API URL. In a test environment, use ```https://sandbox.affirm.com```. On your live site, use ```https://api.affirm.com```.
 4. Provide your 3 keys (merchant API key, secret key, financial product key)
 5. Adjust the order total minimum and maximum options to control when Affirm is
    shown to your customers.
