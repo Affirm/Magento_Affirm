@@ -321,7 +321,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $shipping = array(
                 "name"=> array("full"=>$shipping_address->getName()),
                 "phone_number"=> $shipping_address->getTelephone(),
-                "phone_number_alternate"=> $shipping_address->getAltTelephone(),
+                "phone_number_alternative"=> $shipping_address->getAltTelephone(),
                 "address"=> array(
                         "line1" => $shipping_address->getStreet(1),
                         "line2" => $shipping_address->getStreet(2),
@@ -337,7 +337,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 "email"=>$order->getCustomerEmail(),
                 "name"=> array("full"=>$billing_address->getName()),
                 "phone_number"=> $billing_address->getTelephone(),
-                "phone_number_alternate"=> $billing_address->getAltTelephone(),
+                "phone_number_alternative"=> $billing_address->getAltTelephone(),
                 "address"=> array(
                         "line1" => $billing_address->getStreet(1),
                         "line2" => $billing_address->getStreet(2),
