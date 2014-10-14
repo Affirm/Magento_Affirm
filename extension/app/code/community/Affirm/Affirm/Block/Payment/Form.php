@@ -54,10 +54,7 @@ class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
             // This is a stopgap until the promo API is ready to go
             $logoSrc = "https://cdn1.affirm.com/images/badges/affirm-logo_78x54.png";
             $html = "<img src=\"" . $logoSrc . "\" width=\"39\" height=\"27\" class=\"v-middle\" />&nbsp;";
-
-            // TODO(brian): conditionally display based on payment type
-            // alt message: $html.= "Buy Now and Pay Later";
-            $html.= "Buy Now with 3 Easy Payments";
+            $html.= "Buy Now with Monthly Payments";
 
             $this->setMethodLabelAfterHtml($html);
         }
