@@ -7,6 +7,10 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     // TODO(brian): extract this along with API client 
     const API_CHARGES_PATH = '/api/v2/charges/';
 
+    const CHECKOUT_XHR_AUTO = 'auto';
+    const CHECKOUT_XHR = 'xhr';
+    const CHECKOUT_REDIRECT = 'redirect';
+
     /**
      * Form block type
      */
@@ -424,6 +428,17 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 "version" => Mage::getConfig()->getModuleConfig('Affirm_Affirm')->version
             )
         );
+
+        if (Mage::app()->getStore()->isAdmin()) {
+            //this is in the admin area..
+            $meta["source"]["merchant_user_initiated"] = 1;
+            $user = Mage::getSingleton('admin/session')->getUser();
+            if ($user) {
+                $meta["source"]["data"]["merchant_logged_in"] = 1;
+                $meta["source"]["data"]["merchant_username"] = $user->getUsername();
+            }
+        }
+
         if ($session->isLoggedIn()) {
             $customerId = $session->getCustomerId();
 

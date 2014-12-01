@@ -100,6 +100,15 @@
                             <show_in_website>1</show_in_website>
                             <sort_order>210</sort_order>
                         </plain_text_title_enabled>
+                        <detect_xhr_checkout translate="label">
+                            <label>Checkout uses xhr</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>affirm/source_paymentCheckoutXhr</source_model>
+                            <sort_order>220</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </detect_xhr_checkout>
                     </fields>
                 </affirm>
             </groups>
