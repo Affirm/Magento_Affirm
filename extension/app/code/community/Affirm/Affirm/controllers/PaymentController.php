@@ -1,6 +1,8 @@
 <?php
 
-class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
+require_once 'Mage/Checkout/controllers/OnepageController.php';
+
+class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
 {
 
     private function _getCheckoutSession()
@@ -32,6 +34,25 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
         $session->unsRedirectUrl();
     }
 
+    private function isXhrRequest($proxy_request)
+    {
+        $detected_xhr = isset($proxy_request["xhr"]) && $proxy_request["xhr"];
+        $config_xhr = Mage::getStoreConfig("payment/affirm/detect_xhr_checkout");
+
+        if ($config_xhr == Affirm_Affirm_Model_Payment::CHECKOUT_REDIRECT)
+        {
+            return false;
+        }
+        elseif ($config_xhr == Affirm_Affirm_Model_Payment::CHECKOUT_XHR)
+        {
+            return true;
+        }
+        else
+        {
+            return $detected_xhr;
+        }
+    }
+
     public function renderPreOrderAction()
     {
         $order = $this->getRequest()->getParam("order");
@@ -39,10 +60,10 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
         $serialized_request = Mage::getSingleton('checkout/session')->getAffirmOrderRequest();
         $proxy_request = unserialize($serialized_request);
 
-        if (isset($proxy_request["xhr"]) && $proxy_request["xhr"])
+        if ($this->isXhrRequest($proxy_request))
         {
             $this->_getCheckoutSession()->setPreOrderRender($string);
-            $result = array("redirect"=>Mage::getUrl('*/*/redirectPreOrder'));
+            $result = array("redirect"=>Mage::getUrl('affirm/payment/redirectPreOrder'));
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
         }
         else
@@ -83,8 +104,7 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
             Mage::register("affirm_token_code", $checkout_token);
             $this->_forward($proxy_request["action"], $proxy_request["controller"], $proxy_request["module"], $proxy_request["params"]);
 
-
-            if ((isset($proxy_request["xhr"]) && $proxy_request["xhr"]))
+            if ($this->isXhrRequest($proxy_request))
             {
                 #need to actually execute the forward!
                 $front = Mage::app()->getFrontController();
@@ -93,6 +113,15 @@ class Affirm_Affirm_PaymentController extends Mage_Core_Controller_Front_Action
                     if ($router->match($request)) {
                         break;
                     }
+                }
+
+                //
+                //It's already redirecting... so let it do so
+                //This should never happen, but if it does we should probably let it go through
+                //
+                if ($this->getResponse()->getHttpResponseCode() == 302)
+                {
+                    return;
                 }
 
                 try {

@@ -54,7 +54,7 @@ class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
             // This is a stopgap until the promo API is ready to go
             $logoSrc = "https://cdn1.affirm.com/images/badges/affirm-logo_78x54.png";
             $html = "<img src=\"" . $logoSrc . "\" width=\"39\" height=\"27\" class=\"v-middle\" />&nbsp;";
-            $html.= "Buy Now with Monthly Payments";
+            $html.= "Buy with Monthly Payments";
 
             $this->setMethodLabelAfterHtml($html);
         }
