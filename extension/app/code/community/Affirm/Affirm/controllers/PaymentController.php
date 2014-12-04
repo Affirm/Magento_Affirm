@@ -56,9 +56,15 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
     public function renderPreOrderAction()
     {
         $order = $this->getRequest()->getParam("order");
+        $quote = $this->getRequest()->getParam("quote");
         $string = $this->getLayout()->createBlock('affirm/payment_redirect')->setOrder($order)->toHtml();
         $serialized_request = Mage::getSingleton('checkout/session')->getAffirmOrderRequest();
         $proxy_request = unserialize($serialized_request);
+
+        //only resetve this order id
+        $mod_quote = Mage::getModel('sales/quote')->load($quote->getId());
+        $mod_quote->setReservedOrderId($order->getIncrementId());
+        $mod_quote->save();
 
         if ($this->isXhrRequest($proxy_request))
         {
