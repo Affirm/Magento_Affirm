@@ -72,7 +72,7 @@ class Affirm_AffirmPromo_Helper_Data extends Mage_Core_Helper_Abstract
                             return function(){a[b]._.push([c,arguments])}
                         };
                         c[e]=k(c,e,"set");
-                        d=c[e];c[a]={};c[a]._=[];d.u=[];c[a][b]=k(c,a,b);a=0;
+                        d=c[e];c[a]={};c[a]._=[];d._=[];c[a][b]=k(c,a,b);a=0;
                         for(b="set add save post open empty reset on off trigger ready setProduct".split(" ");
                             a<b.length;a++)d[b[a]]=k(c,e,b[a]);a=0;for(b=["get","token","url","items"];
                             a<b.length;a++)d[b[a]]=function(){};h.async=!0;
