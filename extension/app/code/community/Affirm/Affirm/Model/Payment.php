@@ -6,6 +6,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 {
     // TODO(brian): extract this along with API client 
     const API_CHARGES_PATH = '/api/v2/charges/';
+    const API_CHECKOUT_PATH = '/api/v2/checkout/';
 
     const CHECKOUT_XHR_AUTO = 'auto';
     const CHECKOUT_XHR = 'xhr';
@@ -108,9 +109,10 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     }
 
     // TODO(brian): extract to a separate class and use DI to make it testable/mockable
-    public function _api_request($method, $path, $data=null)
+    public function _api_request($method, $path, $data=null, $resource_path=self::API_CHARGES_PATH)
     {
-        $url = trim($this->getBaseApiUrl(), "/") . self::API_CHARGES_PATH . $path;
+        $url = trim($this->getBaseApiUrl(), "/") . $resource_path . $path;
+        Mage::log($url);
 
         $client = new Zend_Http_Client($url);
 
@@ -138,6 +140,17 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         return $ret_json;
     }
 
+    private function _get_checkout_from_token($token)
+    {
+        return $this->_api_request('GET', $token, null, self::API_CHECKOUT_PATH);
+    }
+
+    private function _get_checkout_total_from_token($token)
+    {
+        $res = $this->_get_checkout_from_token($token);
+        return $res['total'];
+    }
+
     protected function _set_charge_result($result)
     {
         if (isset($result["id"]))
@@ -150,9 +163,9 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         }
     }
 
-    protected function _validate_amount_result($amount, $result)
+    protected function _validate_amount_result($amount, $affirm_amount)
     {
-        if ($result["amount"] != $amount)
+        if ($affirm_amount != $amount)
         {
             Mage::throwException(Mage::helper('affirm')->__('Your cart amount has changed since starting your Affirm application. Please try again.'));
         }
@@ -184,7 +197,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             }
         }
         $result = $this->_api_request(Varien_Http_Client::POST, "{$charge_id}/capture");
-        $this->_validate_amount_result($amount_cents, $result);
+        $this->_validate_amount_result($amount_cents, $result["amount"]);
         return $this;
     }
 
@@ -207,7 +220,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $result = $this->_api_request(Varien_Http_Client::POST, "{$charge_id}/refund", array(
 									"amount"=>$amount_cents)
         );
-        $this->_validate_amount_result($amount_cents, $result);
+        $this->_validate_amount_result($amount_cents, $result["amount"]);
 
         return $this;
     }
@@ -240,13 +253,14 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 
         $amount_cents = Affirm_Util::formatCents($amount);
         $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
+        $amount_to_authorize = $this->_get_checkout_total_from_token($token); 
+        $this->_validate_amount_result($amount_cents, $amount_to_authorize);
 
         $result = $this->_api_request(Varien_Http_Client::POST, "", array(
 									self::CHECKOUT_TOKEN=>$token)
 					);
 
         $this->_set_charge_result($result);
-        $this->_validate_amount_result($amount_cents, $result);
         $payment->setTransactionId($this->getChargeId())->setIsTransactionClosed(0);
         return $this;
     }
