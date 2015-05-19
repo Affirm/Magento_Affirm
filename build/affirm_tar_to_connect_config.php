@@ -4,8 +4,8 @@ return array(
 'archive_files'        => 'Affirm_Magento.tar',
 'extension_name'       => 'Affirm_Magento',
 'skip_version_compare' => true,
-'extension_version'    => '2.0.15',
-'archive_connect'      => 'Affirm_Magento-2.0.15.tgz',
+'extension_version'    => '2.1.0',
+'archive_connect'      => 'Affirm_Magento-2.1.0.tgz',
 'path_output'          => realpath('../var/'),
 
 'stability'            => 'stable',
