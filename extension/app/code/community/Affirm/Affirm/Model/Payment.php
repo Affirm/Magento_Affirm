@@ -154,7 +154,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     {
         if ($result["amount"] != $amount)
         {
-            Mage::throwException(Mage::helper('affirm')->__('Affirm authorized amount of ' . $result["amount"].' does not match requested amount of: ' . $amount));
+            Mage::throwException(Mage::helper('affirm')->__('Your cart amount has changed since starting your Affirm application. Please try again.'));
         }
     }
 
