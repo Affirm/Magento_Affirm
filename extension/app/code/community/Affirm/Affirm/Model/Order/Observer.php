@@ -80,7 +80,7 @@ class Affirm_Affirm_Model_Order_Observer
         // TODO(brian): get object once
         // TODO(brian): don't hardcode the payment method code. get it from an 
         // instance of the model object
-        $method_inst = Mage::getSingleton('checkout/session')->getQuote()->getPayment()->getMethodInstance();
+        $method_inst = $observer->getQuote()->getPayment()->getMethodInstance();
         if ($method_inst->getCode() == 'affirm' && !$method_inst->redirectPreOrder()) {
             Mage::getSingleton('checkout/session')->getQuote()->setIsActive(true);
             Mage::getSingleton('checkout/session')->getQuote()->save();
