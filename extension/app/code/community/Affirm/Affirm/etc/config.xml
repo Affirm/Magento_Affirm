@@ -73,6 +73,7 @@
                 <min_order_total>0.01</min_order_total>
                 <max_order_total>100000</max_order_total>
                 <plain_text_title_enabled>0</plain_text_title_enabled>
+                <sort_order>10000</sort_order>
             </affirm>
         </payment>
     </default>
