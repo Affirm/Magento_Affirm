@@ -30,6 +30,12 @@ to update:
 modman update Magento_Affirm
 ```
 
+####To install user [magento-composer-installer](https://github.com/Cotya/magento-composer-installer)
+
+```
+composer require affirm/affirm-php
+```
+
 ####To install using from a package (Magento Connect Manager):
 
 1. Click here to download the latest package release (.tgz): https://github.com/Affirm/Magento_Affirm/releases/latest
