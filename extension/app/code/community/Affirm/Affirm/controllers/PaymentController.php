@@ -1,197 +1,172 @@
 <?php
-
-require_once 'Mage/Checkout/controllers/OnepageController.php';
-
+/**
+ * OnePica
+ * NOTICE OF LICENSE
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to codemaster@onepica.com so we can send you a copy immediately.
+ *
+ * @category    Affirm
+ * @package     Affirm_Affirm
+ * @copyright   Copyright (c) 2014 One Pica, Inc. (http://www.onepica.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+require_once Mage::getModuleDir('controllers', 'Mage_Checkout') . DS . 'OnepageController.php';
+/**
+ * Class Affirm_Affirm_PaymentController
+ */
 class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
 {
-
-    private function _getCheckoutSession()
-    {
-        return Mage::getSingleton('checkout/session');
-    }
-
-    // TODO why is this still here?
-    private function _getQuote()
-    {
-        if (!$this->_quote) {
-            $this->_quote = $this->_getCheckoutSession()->getQuote();
-        }
-        return $this->_quote;
-    }
-
+    /**
+     * Redirect
+     */
     public function redirectAction()
     {
-        $session = $this->_getCheckoutSession();
-        if (!$session->getLastRealOrderId())
-        {
+        $session = Mage::helper('affirm')->getCheckoutSession();
+        if (!$session->getLastRealOrderId()) {
             $session->addError($this->__('Your order has expired.'));
             $this->_redirect('checkout/cart');
             return;
         }
         $order = Mage::getModel('sales/order')->loadByIncrementId($session->getLastRealOrderId());
-        $this->getResponse()->setBody($this->getLayout()->createBlock('affirm/payment_redirect')->setOrder($order)->toHtml());
+        $this->getResponse()
+            ->setBody($this->getLayout()->createBlock('affirm/payment_redirect')->setOrder($order)->toHtml());
         $session->unsQuoteId();
         $session->unsRedirectUrl();
     }
 
-    private function isXhrRequest($proxy_request)
-    {
-        $detected_xhr = isset($proxy_request["xhr"]) && $proxy_request["xhr"];
-        $config_xhr = Mage::getStoreConfig("payment/affirm/detect_xhr_checkout");
-
-        if ($config_xhr == Affirm_Affirm_Model_Payment::CHECKOUT_REDIRECT)
-        {
-            return false;
-        }
-        elseif ($config_xhr == Affirm_Affirm_Model_Payment::CHECKOUT_XHR)
-        {
-            return true;
-        }
-        else
-        {
-            return $detected_xhr;
-        }
-    }
-
+    /**
+     * Render pre order
+     */
     public function renderPreOrderAction()
     {
-        $order = $this->getRequest()->getParam("order");
-        $quote = $this->getRequest()->getParam("quote");
+        //after place order
+        $order = $this->getRequest()->getParam('order');
+        $quote = $this->getRequest()->getParam('quote');
+        $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
         $string = $this->getLayout()->createBlock('affirm/payment_redirect')->setOrder($order)->toHtml();
-        $serialized_request = Mage::getSingleton('checkout/session')->getAffirmOrderRequest();
-        $proxy_request = unserialize($serialized_request);
+        $serializedRequest = $checkoutSession->getAffirmOrderRequest();
+        $proxyRequest = unserialize($serializedRequest);
 
-        //only resetve this order id
-        $mod_quote = Mage::getModel('sales/quote')->load($quote->getId());
-        $mod_quote->setReservedOrderId($order->getIncrementId());
-        $mod_quote->save();
+        //only reserve this order id
+        $modQuote = Mage::getModel('sales/quote')->load($quote->getId());
+        $modQuote->setReservedOrderId($order->getIncrementId());
+        $modQuote->save();
 
-        if ($this->isXhrRequest($proxy_request))
-        {
-            $this->_getCheckoutSession()->setPreOrderRender($string);
-            $result = array("redirect"=>Mage::getUrl('affirm/payment/redirectPreOrder'));
+        if (Mage::helper('affirm')->isXhrRequest($proxyRequest)) {
+            $checkoutSession->setPreOrderRender($string);
+            $result = array('redirect' => Mage::getUrl('affirm/payment/redirectPreOrder'));
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
-        }
-        else
-        {
+        } else {
             $this->getResponse()->setBody($string);
         }
     }
 
+    /**
+     * Redirect pre order
+     */
     public function redirectPreOrderAction()
     {
-        $this->getResponse()->setBody($this->_getCheckoutSession()->getPreOrderRender());
+        $this->getResponse()->setBody(Mage::helper('affirm')->getCheckoutSession()->getPreOrderRender());
     }
 
+    /**
+     * Is place order after confirm
+     *
+     * @param string $serializedRequest
+     * @param string $checkoutToken
+     * @return bool
+     */
+    protected function _isPlaceOrderAfterConf($serializedRequest, $checkoutToken)
+    {
+        return $serializedRequest && $checkoutToken;
+    }
+
+    /**
+     * Confirm checkout
+     */
     public function confirmAction()
     {
-        $serialized_request = Mage::getSingleton('checkout/session')->getAffirmOrderRequest();
-        $checkout_token = $this->getRequest()->getParam("checkout_token");
+        $serializedRequest = Mage::helper('affirm')->getCheckoutSession()->getAffirmOrderRequest();
+        $checkoutToken = $this->getRequest()->getParam('checkout_token');
 
-        if ($serialized_request && $checkout_token)
-        {
-            if (Mage::getSingleton('checkout/session')->getLastAffirmSuccess() == $checkout_token)
-            {
-                Mage::getSingleton('checkout/session')->addSuccess("This order was already completed.");
-                //Go directly to success page if this is already successful
-                $this->_redirect('checkout/onepage/success');
-                return;
-            }
-
-            $proxy_request = unserialize($serialized_request);
-            if ($proxy_request != $_SERVER['REQUEST_METHOD'])
-            {
-                $_SERVER['REQUEST_METHOD'] = $proxy_request["method"];
-            }
-            if ($proxy_request["method"] == "POST")
-            {
-                $_POST = $proxy_request["POST"];
-            }
-            Mage::register("affirm_token_code", $checkout_token);
-            $this->_forward($proxy_request["action"], $proxy_request["controller"], $proxy_request["module"], $proxy_request["params"]);
-
-            if ($this->isXhrRequest($proxy_request))
-            {
-                #need to actually execute the forward!
-                $front = Mage::app()->getFrontController();
-                $request = $this->getRequest();
-                foreach ($front->getRouters() as $router) {
-                    if ($router->match($request)) {
-                        break;
-                    }
-                }
-
-                //
-                //It's already redirecting... so let it do so
-                //This should never happen, but if it does we should probably let it go through
-                //
-                if ($this->getResponse()->getHttpResponseCode() == 302)
-                {
-                    return;
-                }
-
-                try {
-                    $orderResult = Mage::helper('core')->jsonDecode($this->getResponse()->getBody());
-                } catch (Exception $e) {
-                    Mage::logException($e);
-                    Mage::getSingleton('checkout/session')->addError("Error processing affirm order");
-                    $this->_redirect('checkout/cart');
-                    return;
-                }
-
-                if (isset($orderResult["success"]) && $orderResult["success"])
-                {
-                    Mage::getSingleton('checkout/session')->setPreOrderRender(null);
-                    Mage::getSingleton('checkout/session')->setLastAffirmSuccess($checkout_token);
-                    $this->_redirect('checkout/onepage/success');
-                }
-                elseif(isset($orderResult["error_messages"]) && $orderResult["error"] && $orderResult["error_messages"])
-                {
-                    Mage::getSingleton('checkout/session')->addError($orderResult["error_messages"]);
-                    $this->_redirect('checkout/cart');
-                }
-                else
-                {
-                    // Very rarely, a merchant's extensively customized Checkout
-                    // extension may be incompatible with the Affirm extension.
-                    // To help discover this issue during testing, provide a
-                    // useful message.
-                    Mage::log("Customer tried to checkout using Affirm.
-                               The order could not be saved.
-                               Your Checkout extension may not be compatible with this
-                               version of the Affirm Extension.
-                               Please contact Affirm Developer Support for more info");
-
-                    Mage::getSingleton('checkout/session')->addError("Error encountered while processing affirm order");
-                    $this->_redirect('checkout/cart');
-                    return;
-                }
-            }
-            return;
+        if ($this->_isPlaceOrderAfterConf($serializedRequest, $checkoutToken)) {
+            $this->_processConfWithSaveOrder($checkoutToken, $serializedRequest);
+        } else {
+            $this->_processConfWithoutSaveOrder($checkoutToken);
         }
-        Mage::getSingleton('checkout/session')->getQuote()->setIsActive(false);
-        Mage::getSingleton('checkout/session')->getQuote()->save();
-        $session = $this->_getCheckoutSession();
-        if (!$checkout_token)
-        {
-            Mage::throwException($this->__('Confirm has no checkout token.'));
-        }
+    }
 
-        if ($session->getLastRealOrderId()) {
-            $data = $this->getRequest()->getPost(); // TODO(brian): remove dead code
-            $order = Mage::getModel('sales/order')->loadByIncrementId($session->getLastRealOrderId());
-            $order->getPayment()->getMethodInstance()->processConfirmOrder($order, $checkout_token);
-
-            // TODO(brian): add a boolean configuration option to allow
-            // merchants to decide whether affirm should send emails upon email
-            // confirmation.
-            $order->sendNewOrderEmail();
-
+    /**
+     * Process conf with save order
+     *
+     * @param string $checkoutToken
+     * @param string $serializedRequest
+     */
+    protected function _processConfWithSaveOrder($checkoutToken, $serializedRequest)
+    {
+        $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
+        if ($checkoutSession->getLastAffirmSuccess() == $checkoutToken) {
+            $checkoutSession->addSuccess($this->__('This order was already completed.'));
+            //Go directly to success page if this is already successful
             $this->_redirect('checkout/onepage/success');
             return;
         }
+
+        $proxyRequest = unserialize($serializedRequest);
+        $this->getRequest()->setPost($proxyRequest['POST']);
+        Mage::register('affirm_token_code', $checkoutToken);
+        $this->_forward($proxyRequest['action'], $proxyRequest['controller'], $proxyRequest['module'], $proxyRequest['params']);
+    }
+
+    /**
+     * Process conf without save order
+     *
+     * @param string $checkoutToken
+     * @throws Affirm_Affirm_Exception
+     */
+    protected function _processConfWithoutSaveOrder($checkoutToken)
+    {
+        $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
+        if (!$checkoutToken) {
+            $checkoutSession->addError($this->__('Confirm has no checkout token.'));
+            $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart'))->sendResponse();
+            return;
+        }
+        try {
+            if ($checkoutSession->getLastRealOrderId()) {
+                $order = Mage::getModel('sales/order')
+                    ->loadByIncrementId($checkoutSession->getLastRealOrderId());
+                $order->getPayment()->getMethodInstance()->processConfirmOrder($order, $checkoutToken);
+                $order->sendNewOrderEmail();
+                $this->_redirect('checkout/onepage/success');
+                return;
+            }
+        } catch (Affirm_Affirm_Exception $e) {
+            Mage::logException($e);
+            $checkoutSession->addError($e->getMessage());
+            $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart'))->sendResponse();
+            return;
+        } catch (Mage_Core_Exception $e) {
+            Mage::logException($e);
+            $checkoutSession->addError($this->__('Error encountered while processing affirm order.'));
+            $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart'))->sendResponse();
+            return;
+        }
+
         $this->_redirect('checkout/onepage');
     }
 
-    // TODO(brian): implement cancel action
+    /**
+     * Set Affirm Payment Flag And Checkout
+     */
+    public function setPaymentFlagAndCheckoutAction()
+    {
+        Mage::helper('affirm')->getCheckoutSession()->setAffirmPaymentFlag(true);
+        $this->_redirect('checkout/onepage');
+    }
 }

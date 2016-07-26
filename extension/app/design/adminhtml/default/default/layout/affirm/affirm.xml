@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_affirm_errorordercreatepageonaffirmpayment>
+        <reference name="content">
+            <block type="core/template" name="affirm-error-block"
+                   template="affirm/affirm/errorOrderCreatePageOnAffirmPayment.phtml"/>
+        </reference>
+    </adminhtml_affirm_errorordercreatepageonaffirmpayment>
+
+    <adminhtml_compatibility_tool_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/affirm/affirm.js</name>
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="affirm/adminhtml_compatibility_tool" name="affirm_compatibility_tool"
+                   template="affirm/compatibility/tool.phtml"></block>
+        </reference>
+    </adminhtml_compatibility_tool_index>
+
+    <adminhtml_compatibility_tool_validate>
+        <reference name="content">
+            <block type="affirm/adminhtml_compatibility_tool" name="affirm_compatibility_tool"
+                   template="affirm/compatibility/tool.phtml"></block>
+        </reference>
+    </adminhtml_compatibility_tool_validate>
+</layout>

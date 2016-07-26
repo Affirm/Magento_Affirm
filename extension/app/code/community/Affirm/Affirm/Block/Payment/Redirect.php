@@ -1,19 +1,28 @@
 <?php
-class Affirm_Affirm_Block_Payment_Redirect extends Mage_Core_Block_Abstract
+/**
+ * OnePica
+ * NOTICE OF LICENSE
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to codemaster@onepica.com so we can send you a copy immediately.
+ *
+ * @category    Affirm
+ * @package     Affirm_Affirm
+ * @copyright   Copyright (c) 2014 One Pica, Inc. (http://www.onepica.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
+class Affirm_Affirm_Block_Payment_Redirect extends Mage_Core_Block_Template
 {
-    protected function _toHtml()
+    /**
+     * Set custom template
+     */
+    protected function _construct()
     {
-        $order = $this->getOrder();
-        $payment_method = $order->getPayment()->getMethodInstance();
-
-        $html = '<html><body>';
-        $html.= '<script type="text/javascript" src="'. trim($payment_method->getBaseApiUrl(), "/") . '/js/v2/affirm.js"></script>';
-        $html.= '<script type="text/javascript">';
-        $html.= 'affirm.checkout(' . json_encode($payment_method->getCheckoutObject($order)) . ');';
-        $html.= 'affirm.ui.error.on("close", function(){ window.location= "' . Mage::helper('checkout/url')->getCheckoutUrl() . '";});';
-        $html.= 'affirm.checkout.post();';
-        $html.= '</script>';
-        $html.= '</body></html>';
-        return $html;
+        parent::_construct();
+        $this->setTemplate('affirm/affirm/payment/redirect.phtml');
     }
 }

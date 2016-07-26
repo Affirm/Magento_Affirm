@@ -7,6 +7,27 @@ Magento CE 1.4.0.1+
 Install
 -------
 
+####Install via FTP
+
+1. Click here to download the latest package release (.tgz): https://github.com/Affirm/Magento_Affirm/releases/latest
+2. Extract the contents of the package to your computer
+3. Upload the package contents to your Magento root directory
+
+
+####To install using from a package (Magento Connect Manager):
+
+1. Click here to download the latest package release (.tgz): https://github.com/Affirm/Magento_Affirm/releases/latest
+2. Visit System > Magento Conenct > Magento Connect Manager
+3. Upload the Magento_Affirm package
+
+[![](docs/package-connect-menu.png)](https://affirm.com) 
+[![](docs/upload.png)](https://affirm.com) 
+
+####Install via SSH
+
+
+
+
 ####To install using [modgit](https://github.com/jreinke/modgit)
 
 ```
@@ -30,15 +51,6 @@ to update:
 modman update Magento_Affirm
 ```
 
-####To install using from a package (Magento Connect Manager):
-
-1. Click here to download the latest package release (.tgz): https://github.com/Affirm/Magento_Affirm/releases/latest
-1. Visit System > Magento Conenct > Magento Connect Manager
-1. Upload the Magento_Affirm package
-
-[![](docs/package-connect-menu.png)](https://affirm.com) 
-[![](docs/upload.png)](https://affirm.com) 
-
 ####To install using Affirm's deploy script
 
 1. Download the [Makefile](https://raw.githubusercontent.com/Affirm/Magento_Affirm/master/util/Makefile) (requires git, wget)
@@ -53,7 +65,7 @@ Configure
 
 1. Log in to your Magento Admin portal.
 2. Visit System > Cache Management. Then, click _Flush Magento Cache_
-2. Visit System > Configuration > Payment Methods (under Sales) > Affirm
+2. Visit System > Configuration > Sales > Payment Methods > Affirm
 3. Set the API URL. In a test environment, use ```https://sandbox.affirm.com```. On your live site, use ```https://api.affirm.com```.
 4. Provide your 3 keys (merchant API key, secret key, financial product key)
 5. Adjust the order total minimum and maximum options to control when Affirm is
