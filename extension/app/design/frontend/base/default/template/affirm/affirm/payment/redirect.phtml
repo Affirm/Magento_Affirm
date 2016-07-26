@@ -1,0 +1,15 @@
+<?php
+    /** @var Affirm_Affirm_Block_Payment_Redirect $this **/
+    $order = $this->getOrder();
+    $paymentMethod = $order->getPayment()->getMethodInstance();
+?>
+<html>
+    <body>
+        <script type="text/javascript" src="<?php echo trim($paymentMethod->getBaseApiUrl(), "/") ?>/js/v2/affirm.js"></script>
+        <script type="text/javascript">
+            affirm.checkout(<?php echo json_encode($paymentMethod->getCheckoutObject($order)); ?>);
+            affirm.ui.error.on("close", function(){ window.location= "<?php echo $this->helper('checkout/url')->getCheckoutUrl(); ?> ";});
+            affirm.checkout.post();
+        </script>
+    </body>
+</html>

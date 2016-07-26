@@ -1,61 +1,41 @@
 <?php
+/**
+ * OnePica
+ * NOTICE OF LICENSE
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to codemaster@onepica.com so we can send you a copy immediately.
+ *
+ * @category    Affirm
+ * @package     Affirm_Affirm
+ * @copyright   Copyright (c) 2014 One Pica, Inc. (http://www.onepica.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
 {
+    /**
+     * Set custom template, customize label
+     */
     protected function _construct()
     {
         parent::_construct();
-        // TODO(brian): refactor this into a 3 step process to make the state
-        // change more explicit
-        $this->replaceLabel();
+        $this->setTemplate('affirm/affirm/payment/form/affirm.phtml');
+        $this->_replaceLabel();
     }
 
-    protected function _toHtml()
-    {
-        // TODO(brian): extract this html block to a template
-        // TODO(brian): extract css
-        $msg = "You'll complete your payment after you place your order.";
-
-        $html = "<ul class=\"form-list\" id=\"payment_form_affirm\" style=\"display:none;\">";
-        $html .= "<li class=\"form-alt\">";
-
-        // heading
-        $html .= "<div style=\"color:#034082; font-size:16px; \">";
-        $html .= "How does Affirm work?";
-        $html .= "</div>";
-
-        // sub
-        $html .= "<div style=\"color:#6f6f6f; font-size:14px; \">";
-
-        $html .= "Just enter your basic information and get approved instantly.";
-        $html .= "<br>";
-        $html .= "You will complete your payment on the Affirm website";
-        $html .= "</div>";
-
-        $html .= "</li>";
-        $html .= "</ul>";
-        $html .= '<span style="display:none">';
-        $html .= Mage::getConfig()->getModuleConfig('Affirm_Affirm')->version;
-        $html .= "</span>";
-
-        return $html;
-    }
-
-    /* Replaces default label with custom image, conditionally displaying text
+    /**
+     * Replaces default label with custom image, conditionally displaying text
      * based on the Affirm product.
-     *
-     * Context: Payment Information step of Checkout flow
      */
-    private function replaceLabel()
+    protected function _replaceLabel()
     {
-        if (Mage::getStoreConfig('payment/affirm/plain_text_title_enabled') == false) {
+        if (!$this->helper('affirm')->isPlainTextEnabled()) {
             $this->setMethodTitle('');
-            // TODO(brian): extract html to template
-            // TODO(brian): conditionally load based on env config option
-            // This is a stopgap until the promo API is ready to go
-            $logoSrc = "https://cdn1.affirm.com/images/badges/affirm-logo_78x54.png";
-            $html = "<img src=\"" . $logoSrc . "\" width=\"39\" height=\"27\" class=\"v-middle\" />&nbsp;";
-            $html.= "Buy with Monthly Payments";
-
+            $html = $this->helper('affirm')->getLabelHtmlAfter();
             $this->setMethodLabelAfterHtml($html);
         }
     }

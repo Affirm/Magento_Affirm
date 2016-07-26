@@ -1,0 +1,13 @@
+<?php
+    /** @var Affirm_Affirm_Block_Adminhtml_Compatibility_Tool_Compiler $this **/
+    $controllerList = $this->getCompilerControllerList();
+    if (count($controllerList) > 0) {
+        foreach ($controllerList as $controller) {
+            echo sprintf("[WARNING]: Controller %s use wrong including statement for class OnepageController.php in the file
+            %s \n",
+                basename($controller), $controller);
+        }
+    } else {
+        echo sprintf('No wrong including of OnepageController controller.');
+    }
+

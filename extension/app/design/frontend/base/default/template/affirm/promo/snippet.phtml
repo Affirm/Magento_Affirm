@@ -1,0 +1,18 @@
+<?php
+    /** @var Affirm_Affirm_Block_Promo_Promo $this **/
+    $size = $this->helper('affirm/promo_data')->getSectionConfig()->getSize();
+    $promoKey = $this->helper('affirm/promo_data')->getPromoKey();
+    $apiKey = $this->helper('affirm')->getApiKey();
+    $affirmJsUrl = $this->helper('affirm')->getAffirmJsUrl();
+?>
+<div class="affirm-promo" data-promo-size="<?php echo $size; ?>" data-promo-key="<?php echo $promoKey; ?>"></div>
+<script type="text/javascript">
+    if (!AFFIRM_AFFIRM.promos.getIsInitialized()) {
+        AFFIRM_AFFIRM.promos.initialize("<?php echo $this->helper('affirm')->getApiKey(); ?>",
+            "<?php echo $this->helper('affirm')->getAffirmJsUrl(); ?>");
+    }
+
+    if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {
+        AFFIRM_AFFIRM.promos.loadScript();
+    }
+</script>
