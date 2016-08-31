@@ -532,9 +532,8 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         }
         $metadata = array(
             'platform_type' => 'Magento',
-            'platform_version' => $mageVersion,
-            'platform_affirm' => '3.1.0',
-            'shipping_type' => $shipping_type
+            'platform_version' => Mage::getVersion(),
+            'platform_affirm' => '3.2.0',
         );
         $checkout = array(
             'checkout_id' => $order->getIncrementId(),

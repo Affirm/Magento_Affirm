@@ -18,13 +18,13 @@
         </reference>
         <reference name="checkout.cart.top_methods">
             <block type="affirm/promo_checkoutButton"
-                   name="checkout.cart.methods.affrim.top"
+                   name="checkout.cart.methods.affirm.top"
                    template="affirm/promo/checkout_button.phtml"
                    after="-" />
         </reference>
         <reference name="checkout.cart.methods">
             <block type="affirm/promo_checkoutButton"
-                   name="checkout.cart.methods.affrim.top"
+                   name="checkout.cart.methods.affirm.top"
                    template="affirm/promo/checkout_button.phtml"
                    after="checkout.cart.methods.onepage.bottom" />
         </reference>

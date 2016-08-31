@@ -34,7 +34,9 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
         }
         $order = Mage::getModel('sales/order')->loadByIncrementId($session->getLastRealOrderId());
         $this->getResponse()
-            ->setBody($this->getLayout()->createBlock('affirm/payment_redirect')->setOrder($order)->toHtml());
+            ->setBody($this->getLayout()->createBlock('affirm/payment_redirect', 'affirm_redirect')
+                ->setOrder($order)->toHtml()
+            );
         $session->unsQuoteId();
         $session->unsRedirectUrl();
     }
@@ -48,7 +50,8 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
         $order = $this->getRequest()->getParam('order');
         $quote = $this->getRequest()->getParam('quote');
         $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
-        $string = $this->getLayout()->createBlock('affirm/payment_redirect')->setOrder($order)->toHtml();
+        $string = $this->getLayout()->createBlock('affirm/payment_redirect', 'affirm_redirect')
+            ->setOrder($order)->toHtml();
         $serializedRequest = $checkoutSession->getAffirmOrderRequest();
         $proxyRequest = unserialize($serializedRequest);
 
