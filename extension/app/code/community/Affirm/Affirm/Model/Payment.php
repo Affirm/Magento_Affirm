@@ -530,12 +530,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 $categoryItemsIds = array_merge($categoryItemsIds, $categoryIds);
             }
         }
-        $metadata = array(
-            'platform_type' => 'Magento',
-            'platform_version' => $mageVersion,
-            'platform_affirm' => '3.1.0',
-            'shipping_type' => $shipping_type
-        );
+
         $checkout = array(
             'checkout_id' => $order->getIncrementId(),
             'currency' => $order->getOrderCurrencyCode(),
@@ -550,8 +545,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             ),
             'config' => array('required_billing_fields' => 'name,address,email'),
             'items' => $items,
-            'billing' => $billing,
-            'metadata' => $metadata
+            'billing' => $billing
         );
 
         // By convention, Affirm expects positive value for discount amount. Magento provides negative.
