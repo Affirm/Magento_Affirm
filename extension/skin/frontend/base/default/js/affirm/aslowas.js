@@ -122,9 +122,10 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
             // the payment comes back in USD cents
             var dollars = ((payment_estimate.payment + 99) / 100) | 0; // get dollars, round up, and convert to int
             // Set affirm payment text
+            var logo = '<img src="https://cdn-assets.affirm.com/images/blue_logo-transparent_bg.png" style="height:1em; margin:0 .3em .15em;vertical-align:bottom;">';
             var a = document.getElementById('learn-more');
-            var iText = ('innerText' in a)? 'innerText' : 'textContent';
-            a[iText] = "Starting at $" + dollars + " a month. Learn More";
+            var iText = ('innerHTML' in a)? 'innerHTML' : 'textContent';
+            a[iText] = "Starting at $" + dollars + " a month with" + logo + "Learn More";
             // open the customized Affirm learn more modal
             a.onclick = payment_estimate.open_modal;
             a.style.visibility = "visible";
@@ -139,7 +140,7 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
          processPriceThresholdRange: function(amount) {
              if ((this.minTotal && amount < this.minTotal) || (this.maxTotal && amount > this.maxTotal)) {
                  var a = document.getElementById('learn-more');
-                 var iText = ('innerText' in a)? 'innerText' : 'textContent';
+                 var iText = ('innerHTML' in a)? 'innerHTML' : 'textContent';
                  a[iText] = "";
                  a.style.visibility = "hidden";
                  return true;

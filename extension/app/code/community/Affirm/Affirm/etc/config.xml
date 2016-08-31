@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>3.1.2.0</version>
+            <version>3.2.0</version>
         </Affirm_Affirm>
     </modules>
     <global>
@@ -161,9 +161,9 @@
                 <model>affirm/payment</model>
                 <!-- WARNING: default value for title removed to prevent it from appearing on checkout page on MCE 1.4.0.1 -->
                 <title>Affirm: Buy with Monthly Payments</title>
-                <label_html_custom><![CDATA[<img src="https://cdn1.affirm.com/images/badges/affirm-logo_78x54.png" width="39" height="27" class="v-middle">&nbsp;Buy with Monthly Payments]]></label_html_custom>
+                <label_html_custom><![CDATA[<img src="https://cdn-assets.affirm.com/images/blue_logo-transparent_bg.png" width="57" height="17" class="v-middle" style="margin-right:3px;">&nbsp;Buy with Monthly Payments]]></label_html_custom>
                 <checkout_button_active>0</checkout_button_active>
-                <checkout_button_code>http://d33v4339jhl8k0.cloudfront.net/docs/assets/54ab19f8e4b08393789ca141/images/54ebbdc6e4b086c0c0968fa2/file-cmGEKUeWtK.png</checkout_button_code>
+                <checkout_button_code>https://cdn-assets.affirm.com/images/buttons/30_148-white.png</checkout_button_code>
                 <payment_action>authorize</payment_action>
                 <api_url_sandbox>https://sandbox.affirm.com</api_url_sandbox>
                 <api_key_sandbox />
