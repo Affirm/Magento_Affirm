@@ -42,47 +42,25 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
     const PAYMENT_AFFIRM_END_DATE_MFP = 'payment/affirm/end_date_mfp';
 
     /**
-     * Cart size
-     */
-    const PAYMENT_AFFIRM_CART_SIZE_MFP_VALUE = 'payment/affirm/cart_size_mfp_value';
-
-    /**
-     * Min order total MFP
-     */
-    const PAYMENT_AFFIRM_MIN_ORDER_TOTAL_MFP = 'payment/affirm/min_order_total_mfp';
-
-    /**
-     * Max order total MFP
-     */
-    const PAYMENT_AFFIRM_MAX_ORDER_TOTAL_MFP = 'payment/affirm/max_order_total_mfp';
-
-    /**
      * Customer MFP
      *
      * @var string
      */
-    protected $_customerMfp;
-
-    /**
-     * Entity MFP
-     *
-     * @var string
-     */
-    protected $_entityMfp;
+    protected $customerMfp;
 
     /**
      * Product MFP
      *
      * @var string
      */
-    protected $_productMfp;
+    protected $productMfp;
 
     /**
      * Category MFP
      *
      * @var string
      */
-    protected $_categoryMfp;
+    protected $categoryMfp;
 
     /**
      * Get MFP default
@@ -129,39 +107,6 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Get mfp cart size
-     *
-     * @param Mage_Core_Model_Store $store
-     * @return string
-     */
-    public function getMFPCartSizeValue($store = null)
-    {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_CART_SIZE_MFP_VALUE, $store);
-    }
-
-    /**
-     * Get min order total MFP
-     *
-     * @param Mage_Core_Model_Store $store
-     * @return string
-     */
-    public function getMinOrderTotalMFP($store = null)
-    {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_MIN_ORDER_TOTAL_MFP, $store);
-    }
-
-    /**
-     * Get max order total MFP
-     *
-     * @param Mage_Core_Model_Store $store
-     * @return string
-     */
-    public function getMaxOrderTotalMFP($store = null)
-    {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_MAX_ORDER_TOTAL_MFP, $store);
-    }
-
-    /**
      * Is MFP valid for current date
      *
      * @return bool
@@ -173,69 +118,21 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Get dynamically set MFP
+     * Is dynamically set MFP
      *
      * @return string
      */
     public function getDynamicallySetMFP()
     {
-        if (null === $this->_customerMfp) {
+        if (null === $this->customerMfp) {
             $customerSession = Mage::getSingleton('customer/session');
             if ($customerSession->isLoggedIn()) {
-                $this->_customerMfp = $customerSession->getCustomer()->getAffirmCustomerMfp();
+                $this->customerMfp = $customerSession->getCustomer()->getAffirmCustomerMfp();
             } else {
-                $this->_customerMfp =  $customerSession->getAffirmCustomerMfp();
+                $this->customerMfp =  $customerSession->getAffirmCustomerMfp();
             }
         }
-        return $this->_customerMfp;
-    }
-
-    /**
-     * Get MFP from entities
-     *
-     * @param array $entityItemsMFP
-     * @return string
-     */
-    protected function _getMfpFromEntityItems(array $entityItemsMFP)
-    {
-        $exclusiveMFP = array(); $inclusiveMFP = array(); $existItemWithoutMFP = false;
-        $inclusiveMFPTemp = array(); $this->_entityMfp = '';
-        foreach ($entityItemsMFP as $entityItemMFP) {
-            if (!$entityItemMFP['value']) {
-                $existItemWithoutMFP = true;
-            } else {
-                if (!$entityItemMFP['type']) {
-                    if (!in_array($entityItemMFP['value'], $exclusiveMFP)) {
-                        $exclusiveMFP[] = $entityItemMFP['value'];
-                    }
-                } else {
-                    if (!in_array($entityItemMFP['value'], $inclusiveMFPTemp)) {
-                        $inclusiveMFPTemp[] = $entityItemMFP['value'];
-                        $inclusiveMFP[] = array(
-                            'value' => $entityItemMFP['value'],
-                            'priority' => $entityItemMFP['priority']
-                        );
-                    }
-                }
-            }
-        }
-
-        if (count($inclusiveMFP) == 1) {
-            $this->_entityMfp = $inclusiveMFP[0]['value'];
-        } elseif ((count($exclusiveMFP) == 1) && (count($inclusiveMFP) == 0) && !$existItemWithoutMFP) {
-            $this->_entityMfp = $exclusiveMFP[0];
-        } elseif (count($inclusiveMFP) > 1) {
-            $higherPriority = -1;
-            foreach ($inclusiveMFP as $inclusiveMFPValue) {
-                if ($inclusiveMFPValue['priority'] > $higherPriority) {
-                    $higherPriority = $inclusiveMFPValue['priority'];
-                    $this->_entityMfp = $inclusiveMFPValue['value'];
-                }
-            }
-        } else {
-            $this->_entityMfp = '';
-        }
-        return $this->_entityMfp;
+        return $this->customerMfp;
     }
 
     /**
@@ -246,10 +143,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      */
     protected function _getMFPFromProducts(array $productItemsMFP)
     {
-        if (null === $this->_productMfp) {
-            $this->_productMfp = $this->_getMfpFromEntityItems($productItemsMFP);
+        if (null === $this->productMfp) {
+            if (!empty($productItemsMFP) && (count(array_unique($productItemsMFP)) == 1)) {
+                $this->productMfp = reset($productItemsMFP);
+            } else{
+                $this->productMfp = '';
+            }
         }
-        return $this->_productMfp;
+        return $this->productMfp;
     }
 
     /**
@@ -260,41 +161,23 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      */
     protected function _getMFPFromCategories(array $categoryItemsIds)
     {
-        if (null === $this->_categoryMfp) {
+        if (null === $this->categoryMfp) {
             $categories = Mage::getModel('catalog/category')->getCollection()
-                ->addAttributeToSelect(
-                    array('affirm_category_mfp', '', 'affirm_category_mfp_type', 'affirm_category_mfp_priority')
-                )
+                ->addAttributeToSelect(array('affirm_category_mfp'))
                 ->addAttributeToFilter('entity_id', array('in' => $categoryItemsIds));
             $categoryItemsMFP = array();
             foreach ($categories as $category) {
-                $categoryItemsMFP[] = array(
-                    'value' => $category->getAffirmCategoryMfp(),
-                    'type' => $category->getAffirmCategoryMfpType(),
-                    'priority' => $category->getAffirmCategoryMfpPriority() ?
-                        $category->getAffirmCategoryMfpPriority() : 0
-                );
+                if ($category->getAffirmCategoryMfp()) {
+                    $categoryItemsMFP[] = $category->getAffirmCategoryMfp();
+                }
             }
-
-            $this->_categoryMfp = $this->_getMfpFromEntityItems($categoryItemsMFP);
+            if (!empty($categoryItemsMFP) && (count(array_unique($categoryItemsMFP)) == 1)) {
+                $this->categoryMfp = reset($categoryItemsMFP);
+            } else {
+                $this->categoryMfp = '';
+            }
         }
-        return $this->_categoryMfp;
-    }
-
-    /**
-     * Is MFP based on the cart size
-     *
-     * @param int $cartTotal
-     * @return bool
-     */
-    protected function _isMFPBasedOnCartSize($cartTotal)
-    {
-        $minTotal = $this->getMinOrderTotalMFP();
-        $maxTotal = $this->getMaxOrderTotalMFP();
-        if (!$this->getMFPCartSizeValue() || (!empty($minTotal) && $cartTotal < $minTotal || !empty($maxTotal) && $cartTotal > $maxTotal)) {
-            return false;
-        }
-        return true;
+        return $this->categoryMfp;
     }
 
     /**
@@ -302,10 +185,9 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param array $productItemsMFP
      * @param array $categoryItemsIds
-     * @param string $cartTotal
      * @return string
      */
-    public function getAffirmMFPValue(array $productItemsMFP, array $categoryItemsIds, $cartTotal)
+    public function getAffirmMFPValue(array $productItemsMFP, array $categoryItemsIds)
     {
         $dynamicallyMFPValue = $this->getDynamicallySetMFP();
         if (!empty($dynamicallyMFPValue)) {
@@ -314,8 +196,6 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
             return $this->_getMFPFromProducts($productItemsMFP);
         } elseif ($this->_getMFPFromCategories($categoryItemsIds)) {
             return $this->_getMFPFromCategories($categoryItemsIds);
-        } elseif ($this->_isMFPBasedOnCartSize($cartTotal)) {
-            return $this->getMFPCartSizeValue();
         } elseif ($this->_isMFPValidCurrentDate()) {
             return $this->getMFPDateRange();
         } else {

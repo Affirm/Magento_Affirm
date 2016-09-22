@@ -40,8 +40,7 @@ class Affirm_Affirm_Block_Promo_CheckoutButton extends Mage_Core_Block_Template
             $isEnabled = !$this->helper('affirm')->isDisableModuleFunctionality() &&
                 $this->helper('affirm/promo_data')->isCheckoutButtonActive() &&
                 $this->helper('affirm')->isAffirmPaymentMethodEnabled() &&
-                $method->canUseForQuoteThreshold($this->helper('checkout/cart')->getQuote()) &&
-                !Mage::registry('affirm_disabled_backordered');
+                $method->canUseForQuoteThreshold($this->helper('checkout/cart')->getQuote());
             $this->_isEnabled = $isEnabled;
         }
         return $this->_isEnabled;

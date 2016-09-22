@@ -19,11 +19,6 @@
             "<?php echo $affirmHelper->getAffirmJsUrl(); ?>");
     }
     AFFIRM_AFFIRM.promos.initOptions("<?php echo $apr; ?>", <?php echo $months; ?>, <?php echo $amount; ?>);
-    <?php if ($this->helper('affirm')->isProductConfigurable()): ?>
-        if (!AFFIRM_AFFIRM.promos.getIsConfigurableOptionsInitialized()) {
-            AFFIRM_AFFIRM.promos.initConfigurableOptions(<?php echo $this->helper('affirm')->getConfigurableBackOrderedInfo(); ?>);
-        }
-    <?php endif; ?>
     AFFIRM_AFFIRM.promos.initLimitation("<?php echo $minPrice; ?>", "<?php echo $maxPrice; ?>");
 
     if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {

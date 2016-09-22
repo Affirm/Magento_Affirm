@@ -164,15 +164,6 @@
                             <show_in_store>0</show_in_store>
                             <frontend_class>validate-number</frontend_class>
                         </sort_order>
-                        <disable_for_backordered_items translate="label">
-                            <label>Disable for backordered items</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>201</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </disable_for_backordered_items>
                         <financing_program_value_default translate="label">
                             <label>Default Financing Program value</label>
                             <frontend_type>text</frontend_type>
@@ -207,37 +198,13 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </end_date_mfp>
-                        <cart_size_mfp_value translate="label">
-                            <label>Cart-size Financing Program value</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>209</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </cart_size_mfp_value>
-                        <min_order_total_mfp translate="label">
-                            <label>Financing Program Minimum Order Total</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>210</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </min_order_total_mfp>
-                        <max_order_total_mfp translate="label">
-                            <label>Financing Program Maximum Order Total</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>211</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </max_order_total_mfp>
                         <plain_text_title_enabled translate="label">
                             <label>Plain Text Appearance</label>
                             <comment>controls the appearance of the payment
                                 option at checkout</comment>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <frontend_type>select</frontend_type>
-                            <sort_order>214</sort_order>
+                            <sort_order>210</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_store>0</show_in_store>
                             <show_in_website>1</show_in_website>

@@ -57,17 +57,6 @@ modman update Magento_Affirm
 2. Copy to MAGENTO_ROOT
 3. To install, run `make install`
 4. To update, run `make update`
- 
-####Known Issue with SSH installation
-If you are upgrading from 2.x to 3.x version of the extension via SSH, double promo banners may be displayed. 
-To fix the issue, remove the following to from the Magento directory:
- MAGENTO_ROOT/app/code/community/Affirm/Affirm/Model: Pricer.php
- MAGENTO_ROOT/app/code/community/Affirm: AffirmPromo
- MAGENTO_ROOT/app/design/frontend/base/default/template: affirmpromo
- MAGENTO_ROOT/app/etc/modules: Affirm_AffirmPromo.xml
- MAGENTO_ROOT/lib: Affirm
- 
- 
 
 Configure
 ---------
@@ -87,8 +76,8 @@ Configure
 **Promos**
 
 1. Visit System > Configuration > Affirm Promos (under General)
-2. Set the Promo Key and enable the extension.
-3. (optional) Customize the size and position of your promos.
+1. Set the Promo Key and enable the extension.
+1. (optional) Customize the size and position of your promos.
 	
 	![](docs/promo-config.png)
 

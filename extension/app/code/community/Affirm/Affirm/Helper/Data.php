@@ -52,41 +52,11 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     const PAYMENT_AFFIRM_PRE_ORDER = 'payment/affirm/pre_order';
 
     /**
-     * Disable for back ordered items
-     */
-    const PAYMENT_AFFIRM_DISABLE_BACK_ORDERED_ITEMS = 'payment/affirm/disable_for_backordered_items';
-
-    /**
      * Disabled module
      *
      * @var bool
      */
     protected $_disabledModule;
-
-    /**
-     * Disabled back ordered on cart
-     *
-     * @var bool
-     */
-    protected $_disabledBackOrderedCart;
-
-    /**
-     * Disabled back ordered on PDP
-     *
-     * @var bool
-     */
-    protected $_disabledBackOrderedPdp;
-
-    /**
-     * Returns is disable for back ordered items
-     *
-     * @param Mage_Core_Model_Store $store
-     * @return bool
-     */
-    public function isDisableForBackOrderedItems($store = null)
-    {
-        return Mage::getStoreConfigFlag(self::PAYMENT_AFFIRM_DISABLE_BACK_ORDERED_ITEMS, $store);
-    }
 
     /**
      * Returns is enabled plain text
@@ -331,116 +301,5 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     public function getCheckoutSession()
     {
         return Mage::getSingleton('checkout/session');
-    }
-
-    /**
-     * Skip promo messages for back ordered products PDP
-     *
-     * @return bool
-     */
-    public function isDisableProductBackOrdered()
-    {
-        if (null === $this->_disabledBackOrderedPdp) {
-            $this->_disabledBackOrderedPdp = false;
-            if (!Mage::helper('affirm')->isDisableForBackOrderedItems()) {
-                $this->_disabledBackOrderedPdp = false;
-                return $this->_disabledBackOrderedPdp;
-            }
-            $product = Mage::helper('catalog')->getProduct();
-            if ($product && $product->getId()) {
-                if ($product->isGrouped()) {
-                    $associatedProducts = $product->getTypeInstance(true)->getAssociatedProducts($product);
-                    foreach ($associatedProducts as $associatedProduct) {
-                        $inventory = Mage::getModel('cataloginventory/stock_item')->loadByProduct($associatedProduct);
-                        if ($inventory->getBackorders() && ($inventory->getQty() < 1)) {
-                            $this->_disabledBackOrderedPdp = true;
-                            break;
-                        }
-                    }
-                } else {
-                    $inventory = Mage::getModel('cataloginventory/stock_item')->loadByProduct($product);
-                    $this->_disabledBackOrderedPdp = $inventory->getBackorders() && ($inventory->getQty() < 1);
-                }
-                Mage::register('affirm_disabled_backordered', $this->_disabledBackOrderedPdp);
-                return $this->_disabledBackOrderedPdp;
-            }
-        }
-        return $this->_disabledBackOrderedPdp;
-    }
-
-
-    /**
-     * Skip promo message for back ordered products cart
-     *
-     * @param null $quote
-     * @return bool
-     */
-    public function isDisableQuoteBackOrdered($quote = null)
-    {
-        if (null === $this->_disabledBackOrderedCart) {
-            if (!Mage::helper('affirm')->isDisableForBackOrderedItems()) {
-                $this->_disabledBackOrderedCart = false;
-                return $this->_disabledBackOrderedCart;
-            }
-            if (null === $quote) {
-                $quote = Mage::helper('checkout/cart')->getQuote();
-            }
-            foreach ($quote->getAllItems() as $quoteItem) {
-                $inventory = Mage::getModel('cataloginventory/stock_item')->loadByProduct($quoteItem->getProduct());
-                if ($inventory->getBackorders() && (($inventory->getQty() - $quoteItem->getQty()) < 0)) {
-                    $this->_disabledBackOrderedCart = true;
-                    break;
-                }
-            }
-            Mage::register('affirm_disabled_backordered', $this->_disabledBackOrderedCart);
-        }
-        return $this->_disabledBackOrderedCart;
-    }
-
-    /**
-     * Get product on PDP
-     *
-     * @return Mage_Catalog_Model_Product|null
-     */
-    public function getProduct()
-    {
-        return Mage::helper('catalog')->getProduct();
-    }
-
-    /**
-     * Is product configurable
-     *
-     * @return bool
-     */
-    public function isProductConfigurable()
-    {
-        if ($this->getProduct() && $this->getProduct()->getId()) {
-            return $this->getProduct()->isConfigurable() && $this->isDisableForBackOrderedItems();
-        }
-        return false;
-    }
-
-    /**
-     * Get configurable back ordered info
-     *
-     * @return string
-     */
-    public function getConfigurableBackOrderedInfo()
-    {
-        $childProducts = Mage::getModel('catalog/product_type_configurable')
-            ->getUsedProducts(null, $this->getProduct());
-        $configurableAttributes = $this->getProduct()->getTypeInstance(true)
-            ->getConfigurableAttributesAsArray($this->getProduct());
-        $result = array();
-        foreach ($childProducts as $childProduct) {
-            foreach ($configurableAttributes as $configurableAttribute) {
-                $result[$childProduct->getEntityId()][$configurableAttribute['attribute_id']] =
-                    $childProduct[$configurableAttribute['attribute_code']];
-            }
-            $inventory = Mage::getModel('cataloginventory/stock_item')->loadByProduct($childProduct);
-            $result[$childProduct->getEntityId()]['backorders'] = $inventory->getBackorders() &&
-                ($inventory->getQty() < 1);
-        }
-        return Mage::helper('core')->jsonEncode($result);
     }
 }
