@@ -11,7 +11,11 @@
         AFFIRM_AFFIRM.promos.initialize("<?php echo $this->helper('affirm')->getApiKey(); ?>",
             "<?php echo $this->helper('affirm')->getAffirmJsUrl(); ?>");
     }
-
+    <?php if ($this->helper('affirm')->isProductConfigurable()): ?>
+        if (!AFFIRM_AFFIRM.promos.getIsConfigurableOptionsInitialized()) {
+            AFFIRM_AFFIRM.promos.initConfigurableOptions(<?php echo $this->helper('affirm')->getConfigurableBackOrderedInfo(); ?>);
+        }
+    <?php endif; ?>
     if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {
         AFFIRM_AFFIRM.promos.loadScript();
     }

@@ -503,7 +503,9 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $productIds[] = $orderItem->getProductId();
         }
         $products = Mage::getModel('catalog/product')->getCollection()
-            ->addAttributeToSelect(array('affirm_product_mfp'))
+            ->addAttributeToSelect(
+                array('affirm_product_mfp', 'affirm_product_mfp_type', 'affirm_product_mfp_priority')
+            )
             ->addAttributeToFilter('entity_id', array('in' => $productIds));
         $productItems = $products->getItems();
         foreach ($order->getAllVisibleItems() as $orderItem) {
@@ -522,9 +524,13 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 'unit_price' => Mage::helper('affirm/util')->formatCents($orderItem->getPrice())
             );
 
-            if ($product->getAffirmProductMfp()) {
-                $productItemsMFP[] = $product->getAffirmProductMfp();
-            }
+            $productItemsMFP[] = array(
+                'value' => $product->getAffirmProductMfp(),
+                'type' => $product->getAffirmProductMfpType(),
+                'priority' => $product->getAffirmProductMfpPriority() ?
+                    $product->getAffirmProductMfpPriority() : 0
+            );
+
             $categoryIds = $product->getCategoryIds();
             if (!empty($categoryIds)) {
                 $categoryItemsIds = array_merge($categoryItemsIds, $categoryIds);
@@ -533,7 +539,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $metadata = array(
             'platform_type' => 'Magento',
             'platform_version' => Mage::getVersion(),
-            'platform_affirm' => '3.2.0',
+            'platform_affirm' => '3.3.0',
         );
         $checkout = array(
             'checkout_id' => $order->getIncrementId(),
@@ -572,7 +578,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $checkout['metadata'] = array(
             'shipping_type' => $order->getShippingDescription()
         );
-        $affirmMFPValue = Mage::helper('affirm/mfp')->getAffirmMFPValue($productItemsMFP, $categoryItemsIds);
+        $affirmMFPValue = Mage::helper('affirm/mfp')->getAffirmMFPValue($productItemsMFP, $categoryItemsIds, $order->getBaseGrandTotal());
         if ($affirmMFPValue) {
             $checkout['financing_program'] = $affirmMFPValue;
         }
@@ -646,6 +652,17 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     }
 
     /**
+     * Can use for back ordered
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @return bool
+     */
+    public function canUseForBackOrdered($quote)
+    {
+        return !Mage::helper('affirm')->isDisableQuoteBackOrdered($quote);
+    }
+
+    /**
      * Is available method
      *
      * @param Mage_Sales_Model_Quote $quote
@@ -687,6 +704,10 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             }
 
             if (!$this->canUseForZeroTotal($quote)) {
+                return false;
+            }
+
+            if (!$this->canUseForBackOrdered($quote)) {
                 return false;
             }
         }

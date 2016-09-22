@@ -27,19 +27,12 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
          */
         isDBInitialized: false,
 
-         /**
-          * Is As Low As initialized
-          *
-          * {bool}
-          */
-         isALAInitialized: false,
-
         /**
          * Delay before request to affirm
          *
          * @type {Number}
          */
-        REQUEST_DELAY: 1500,
+        REQUEST_DELAY: 1000,
 
          /**
           * Min total
@@ -91,15 +84,6 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
                  this.maxTotal = this.formatPriceToCents(maxTotal);
              }
              return this;
-         },
-
-         /**
-          * Set ALA initialized flag
-          *
-          * @returns {Boolean}
-          */
-         getIsAsLowAsInitialized: function() {
-             return this.isALAInitialized;
          },
 
         /**
@@ -162,7 +146,7 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
                 return this;
             }
             var recalculate = typeof recalculate !== 'undefined' ? recalculate : false;
-            if (recalculate) {
+            if (recalculate && (container !== null)) {
                 amount = this.parsePrice(container, priceFormat)
             }
 
@@ -187,37 +171,6 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
             // request a payment estimate
             affirm.ui.payments.get_estimate(this.options, this.handleEstimateResponse);
             return this;
-        },
-
-        /** Returns a function, that, as long as it continues to be invoked, will not
-         * be triggered. The function will be called after it stops being called for
-         * N milliseconds. If `immediate` is passed, trigger the function on the
-         * leading edge, instead of the trailing.
-         *
-         * @param {Function} func
-         * @param {Number} wait
-         * @param {Boolean} immediate
-         */
-        deBounce: function (func, wait, immediate) {
-            var timeout;
-            return function () {
-                var context = this,
-                    args = arguments,
-                    callNow,
-                    later;
-                later = function () {
-                    timeout = null;
-                    if (!immediate) {
-                        func.apply(context, args);
-                    }
-                };
-                callNow = immediate && !timeout;
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-                if (callNow) {
-                    func.apply(context, args);
-                }
-            };
         },
 
         /**
@@ -267,25 +220,3 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
     };
     Object.extend(AFFIRM_AFFIRM.promos, asLowAs);
 })(AFFIRM_AFFIRM);
-
-/**
- * Product options wrapper
- *
- * Override to update as low as on PDP.
- *
- * @returns {string}
- */
-if ((typeof Product != 'undefined') && (typeof Product.OptionsPrice != 'undefined') &&
-        (typeof Product.OptionsPrice.prototype.reload != 'undefined')
-    ) {
-    Product.OptionsPrice.prototype.reload  = Product.OptionsPrice.prototype.reload.wrap(
-        function(reload) {
-            reload();
-            // Affirm changes region start
-            var deBounceUpdateAsLowAs, container = $(this.containers[0]);
-            deBounceUpdateAsLowAs = AFFIRM_AFFIRM.promos.getDeBouncedAsLowAs();
-            deBounceUpdateAsLowAs(0, true, container, this.priceFormat);
-            //endregion
-        }
-    );
-}
