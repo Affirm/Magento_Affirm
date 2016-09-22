@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
         </Affirm_Affirm>
     </modules>
     <global>
@@ -177,6 +177,7 @@
                 <currency>USD</currency>
                 <min_order_total>0.01</min_order_total>
                 <max_order_total>100000</max_order_total>
+                <disable_for_backordered_items>0</disable_for_backordered_items>
                 <plain_text_title_enabled>0</plain_text_title_enabled>
                 <allowspecific>1</allowspecific>
                 <specificcountry>US</specificcountry>

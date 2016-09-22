@@ -87,7 +87,8 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
     public function isPromoActive($store = null)
     {
         return !Mage::helper('affirm')->isDisableModuleFunctionality() &&
-            Mage::getStoreConfigFlag(self::AFFIRM_PROMO_ACTIVE, $store);
+            Mage::getStoreConfigFlag(self::AFFIRM_PROMO_ACTIVE, $store) &&
+            !Mage::registry('affirm_disabled_backordered');
     }
 
     /**
