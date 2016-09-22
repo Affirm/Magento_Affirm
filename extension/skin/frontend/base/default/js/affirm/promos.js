@@ -21,11 +21,53 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
         isLoaded: false,
 
         /**
+         * Is As Low As initialized
+         *
+         * {bool}
+         */
+        isALAInitialized: false,
+
+        /**
+         * Options for configurable product
+         *
+         * {Object}
+         */
+        configurableOptions: {},
+
+        /**
+         * Is conf options initialized
+         *
+         * {bool}
+         */
+        isConfigurableOptionsInitialized: false,
+
+        /**
+         * isDBPromoConfigurableInitialized
+         *
+         * {bool}
+         */
+        isDBPromoConfigurableInitialized: false,
+
+        /**
+         * deBounceUpdatePromoConfigurable
+         *
+         * {Object}
+         */
+        deBounceUpdatePromoConfigurable: {},
+
+        /**
          * Config
          *
          * {Object}
          */
         config: {},
+
+        /**
+         * Delay
+         *
+         * @type {Number}
+         */
+        REQUEST_CONFIGURABLE_DELAY: 1200,
 
         /**
          * Initialize
@@ -106,6 +148,153 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
          */
         getIsInitialized: function() {
             return this.isInitialized;
+        },
+
+        /**
+         * Set ALA initialized flag
+         *
+         * @returns {Boolean}
+         */
+        getIsAsLowAsInitialized: function() {
+            return this.isALAInitialized;
+        },
+
+        /**
+         * Update promo blocks visibility
+         */
+        updatePromoBlocksVisibility: function(visibility) {
+            var asLowAs = document.getElementById('learn-more');
+            if (asLowAs) {
+                asLowAs.style.visibility = visibility;
+            }
+            var promoBanners = document.getElementsByClassName('affirm-promo');
+            if (promoBanners[0]){
+                promoBanners[0].style.visibility = visibility;
+            }
+            return true;
+        },
+
+        /**
+         * Init configurable options
+         *
+         * @returns {AFFIRM_AFFIRM.promos}
+         */
+        initConfigurableOptions: function(configurableInfo) {
+            this.configurableOptions = configurableInfo;
+            this.isConfigurableOptionsInitialized = true;
+            return this;
+        },
+
+        /**
+         * Get isConfigurableOptionsInitialized flag
+         *
+         * @returns {Boolean}
+         */
+        getIsConfigurableOptionsInitialized: function() {
+            return this.isConfigurableOptionsInitialized;
+        },
+
+        /**
+         * Update for configurable
+         *
+         * @returns {boolean}
+         */
+        hidePromoForConfigurableBackOrdered: function() {
+            var selectedSimpleOptions = {}, productId, key, productProperties, productSelected;
+            $$('select.super-attribute-select').each(function(item, index){
+                selectedSimpleOptions[item.attributeId] = item.value;
+            });
+            for (productId in this.configurableOptions) {
+                productSelected = true;
+                productProperties = this.configurableOptions[productId];
+                for (key in selectedSimpleOptions) {
+                    if (productProperties[key] != selectedSimpleOptions[key]) {
+                        productSelected = false;
+                    }
+                }
+                if (productSelected && productProperties.backorders) {
+                    this.updatePromoBlocksVisibility('hidden');
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        /** Returns a function, that, as long as it continues to be invoked, will not
+         * be triggered. The function will be called after it stops being called for
+         * N milliseconds. If `immediate` is passed, trigger the function on the
+         * leading edge, instead of the trailing.
+         *
+         * @param {Function} func
+         * @param {Number} wait
+         * @param {Boolean} immediate
+         */
+        deBounce: function (func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this,
+                    args = arguments,
+                    callNow,
+                    later;
+                later = function () {
+                    timeout = null;
+                    if (!immediate) {
+                        func.apply(context, args);
+                    }
+                };
+                callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) {
+                    func.apply(context, args);
+                }
+            };
+        },
+
+        /**
+         * Get de bounce singleton object
+         *
+         * @returns {Object}
+         */
+        getDeBouncedPromoUpdateConfigurable: function () {
+            if (!this.isDBPromoConfigurableInitialized) {
+                this.deBounceUpdatePromoConfigurable = this.deBounce(
+                    this.hidePromoForConfigurableBackOrdered, this.REQUEST_CONFIGURABLE_DELAY, false
+                ).bind(this);
+                this.isDBPromoConfigurableInitialized = true;
+            }
+            return this.deBounceUpdatePromoConfigurable;
         }
     };
 })(AFFIRM_AFFIRM);
+
+/**
+ * Product options wrapper
+ *
+ * Override to update as low as on PDP.
+ *
+ * @returns {string}
+ */
+if ((typeof Product != 'undefined') && (typeof Product.OptionsPrice != 'undefined') &&
+    (typeof Product.OptionsPrice.prototype.reload != 'undefined')
+) {
+    Product.OptionsPrice.prototype.reload  = Product.OptionsPrice.prototype.reload.wrap(
+        function(reload) {
+            reload();
+            // Affirm changes region start
+            if (AFFIRM_AFFIRM.promos.getIsAsLowAsInitialized()) {
+                var deBounceUpdateAsLowAs, container = $(this.containers[0]);
+                deBounceUpdateAsLowAs = AFFIRM_AFFIRM.promos.getDeBouncedAsLowAs();
+                deBounceUpdateAsLowAs(0, true, container, this.priceFormat);
+            }
+            if (AFFIRM_AFFIRM.promos.getIsConfigurableOptionsInitialized()) {
+                var deBounceUpdatePromoConfigurable;
+                deBounceUpdatePromoConfigurable = AFFIRM_AFFIRM.promos.getDeBouncedPromoUpdateConfigurable();
+                if (!deBounceUpdatePromoConfigurable()) {
+                    AFFIRM_AFFIRM.promos.updatePromoBlocksVisibility('visible');
+                }
+            }
+            //endregion
+        }
+    );
+}

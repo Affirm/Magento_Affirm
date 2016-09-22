@@ -29,6 +29,20 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     protected $_skippedTypes = array(Mage_Catalog_Model_Product_Type::TYPE_GROUPED);
 
     /**
+     * Disabled back ordered on cart
+     *
+     * @var bool
+     */
+    protected $_affirmDisabledBackOrderedCart;
+
+    /**
+     * Disabled back ordered on PDP
+     *
+     * @var bool
+     */
+    protected $_affirmDisabledBackOrderedPdp;
+
+    /**
      * Visibility as low as on PDP
      */
     const AFFIRM_PROMO_AS_LOW_AS_PDP = 'affirmpromo/as_low_as/as_low_as_pdp';
@@ -93,17 +107,6 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Is As Low As disabled on checkout
-     *
-     * @return bool
-     */
-    public function isAsLowAsDisabledOnCheckout()
-    {
-        return Mage::helper('affirm')->isDisableModuleFunctionality() ||
-            !$this->isVisibleOnCart() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled();
-    }
-
-    /**
      * Skip As Low As message for specific product types
      *
      * @return bool
@@ -118,14 +121,33 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Is As Low As disabled on checkout
+     *
+     * @return bool
+     */
+    public function isAsLowAsDisabledOnCheckout()
+    {
+        if (null === $this->_affirmDisabledBackOrderedCart) {
+            $this->_affirmDisabledBackOrderedCart = Mage::helper('affirm')->isDisableQuoteBackOrdered() ||
+                Mage::helper('affirm')->isDisableModuleFunctionality() ||
+                !$this->isVisibleOnCart() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled();
+        }
+        return $this->_affirmDisabledBackOrderedCart;
+    }
+
+    /**
      * Is As Low As disabled on PDP
      *
      * @return bool
      */
     public function isAsLowAsDisabledOnPDP()
     {
-        return Mage::helper('affirm')->isDisableModuleFunctionality() ||
-            !$this->isVisibleOnPDP() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled() ||
-            $this->_isSkipProductByType();
+        if (null === $this->_affirmDisabledBackOrderedPdp) {
+            $this->_affirmDisabledBackOrderedPdp = Mage::helper('affirm')->isDisableProductBackOrdered() ||
+                Mage::helper('affirm')->isDisableModuleFunctionality() ||
+                !$this->isVisibleOnPDP() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled() ||
+                $this->_isSkipProductByType();
+        }
+        return $this->_affirmDisabledBackOrderedPdp;
     }
 }
