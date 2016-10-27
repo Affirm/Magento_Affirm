@@ -536,11 +536,6 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 $categoryItemsIds = array_merge($categoryItemsIds, $categoryIds);
             }
         }
-        $metadata = array(
-            'platform_type' => 'Magento',
-            'platform_version' => Mage::getVersion(),
-            'platform_affirm' => '3.3.0',
-        );
         $checkout = array(
             'checkout_id' => $order->getIncrementId(),
             'currency' => $order->getOrderCurrencyCode(),
@@ -555,8 +550,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             ),
             'config' => array('required_billing_fields' => 'name,address,email'),
             'items' => $items,
-            'billing' => $billing,
-            'metadata' => $metadata
+            'billing' => $billing
         );
 
         // By convention, Affirm expects positive value for discount amount. Magento provides negative.
@@ -576,7 +570,10 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $checkout['financial_product_key'] = Mage::helper('affirm')->getFinancialProductKey();
         $checkout['total'] = Mage::helper('affirm/util')->formatCents(self::_affirmTotal($order));
         $checkout['metadata'] = array(
-            'shipping_type' => $order->getShippingDescription()
+            'shipping_type' => $order->getShippingDescription(),
+            'platform_type' => 'Magento',
+            'platform_version' => Mage::getVersion(),
+            'platform_affirm' => '3.3.1'
         );
         $affirmMFPValue = Mage::helper('affirm/mfp')->getAffirmMFPValue($productItemsMFP, $categoryItemsIds, $order->getBaseGrandTotal());
         if ($affirmMFPValue) {

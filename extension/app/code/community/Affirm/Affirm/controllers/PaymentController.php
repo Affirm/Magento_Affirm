@@ -62,7 +62,9 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
 
         if (Mage::helper('affirm')->isXhrRequest($proxyRequest)) {
             $checkoutSession->setPreOrderRender($string);
-            $result = array('redirect' => Mage::getUrl('affirm/payment/redirectPreOrder'));
+            $result = array('redirect' => Mage::getUrl('affirm/payment/redirectPreOrder',
+                array('_secure' => $this->getRequest()->isSecure())
+            ));
             $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
         } else {
             $this->getResponse()->setBody($string);

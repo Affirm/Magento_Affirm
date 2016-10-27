@@ -23,6 +23,8 @@ class Affirm_Affirm_Block_Payment_Redirect extends Mage_Core_Block_Template
     protected function _construct()
     {
         parent::_construct();
+        $this->unsetData('cache_lifetime');
+        $this->unsetData('cache_tags');
         $this->setTemplate('affirm/affirm/payment/redirect.phtml');
     }
 }
