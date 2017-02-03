@@ -2,35 +2,10 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>2.2.0</version>
+            <version>3.3.1</version>
         </Affirm_Affirm>
     </modules>
     <global>
-        <models>
-            <affirm>
-                <class>Affirm_Affirm_Model</class>
-            </affirm>
-        </models>
-        <events>
-            <checkout_type_onepage_save_order>
-                <observers>
-                    <affirm_affirm_model_pre_order_observer>
-                        <type>singleton</type>
-                        <class>Affirm_Affirm_Model_Order_Observer</class>
-                        <method>pre_order</method>
-                    </affirm_affirm_model_pre_order_observer>
-                </observers>
-            </checkout_type_onepage_save_order>
-            <checkout_type_onepage_save_order_after>
-                <observers>
-                    <affirm_affirm_model_order_observer>
-                        <type>singleton</type>
-                        <class>Affirm_Affirm_Model_Order_Observer</class>
-                        <method>reactivate_quote</method>
-                    </affirm_affirm_model_order_observer>
-                </observers>
-            </checkout_type_onepage_save_order_after>
-        </events>
         <blocks>
             <affirm>
                 <class>Affirm_Affirm_Block</class>
@@ -41,8 +16,92 @@
                 <class>Affirm_Affirm_Helper</class>
             </affirm>
         </helpers>
+        <models>
+            <affirm>
+                <class>Affirm_Affirm_Model</class>
+            </affirm>
+        </models>
+        <resources>
+            <affirm_setup>
+                <setup>
+                    <module>Affirm_Affirm</module>
+                </setup>
+            </affirm_setup>
+        </resources>
     </global>
     <frontend>
+        <events>
+            <checkout_type_onepage_save_order>
+                <observers>
+                    <affirm_affirm_model_pre_order_observer>
+                        <type>singleton</type>
+                        <class>affirm/order_observer</class>
+                        <method>preOrder</method>
+                    </affirm_affirm_model_pre_order_observer>
+                </observers>
+            </checkout_type_onepage_save_order>
+            <controller_action_layout_generate_xml_before>
+                <observers>
+                    <affirm_affirmpromo>
+                        <type>singleton</type>
+                        <class>affirm/promo_observer</class>
+                        <method>layoutGenerateBlocksBefore</method>
+                    </affirm_affirmpromo>
+                </observers>
+            </controller_action_layout_generate_xml_before>
+            <controller_action_postdispatch_checkout_onepage_saveBilling>
+                <observers>
+                    <affirm_checkoutbutton_proceed>
+                        <type>singleton</type>
+                        <class>affirm/order_observer_applyAffirmPaymentMethod</class>
+                        <method>execute</method>
+                    </affirm_checkoutbutton_proceed>
+                </observers>
+            </controller_action_postdispatch_checkout_onepage_saveBilling>
+            <checkout_type_onepage_save_order_after>
+                <observers>
+                    <affirm_affirm_model_order_observer>
+                        <type>singleton</type>
+                        <class>affirm/order_observer</class>
+                        <method>reactivateQuote</method>
+                    </affirm_affirm_model_order_observer>
+                </observers>
+            </checkout_type_onepage_save_order_after>
+            <controller_action_postdispatch_checkout_onepage_saveOrder>
+                <observers>
+                    <controller_action_postdispatch_affirm_payment_confirm>
+                        <type>singleton</type>
+                        <class>affirm/order_observer_afterSaveOrder</class>
+                        <method>postDispatchSaveOrder</method>
+                    </controller_action_postdispatch_affirm_payment_confirm>
+                </observers>
+            </controller_action_postdispatch_checkout_onepage_saveOrder>
+            <controller_action_predispatch>
+                <observers>
+                    <controller_action_predispatch_affirm_mfp_identify>
+                        <type>singleton</type>
+                        <class>affirm/order_observer_mfp_identify</class>
+                        <method>execute</method>
+                    </controller_action_predispatch_affirm_mfp_identify>
+                </observers>
+            </controller_action_predispatch>
+            <customer_login>
+                <observers>
+                    <affirm_affirm_mfp_detection_customer_login>
+                        <type>singleton</type>
+                        <class>affirm/order_observer_mfp_updateOnCustomerLogin</class>
+                        <method>execute</method>
+                    </affirm_affirm_mfp_detection_customer_login>
+                </observers>
+            </customer_login>
+        </events>
+        <layout>
+            <updates>
+                <affirm>
+                    <file>affirm/affirm.xml</file>
+                </affirm>
+            </updates>
+        </layout>
         <routers>
             <affirm>
                 <use>standard</use>
@@ -53,27 +112,116 @@
             </affirm>
         </routers>
     </frontend>
+    <adminhtml>
+        <events>
+            <controller_action_predispatch_adminhtml_sales_order_create_save>
+                <observers>
+                    <affirm_affirm_model_before_order_save_admin>
+                        <type>singleton</type>
+                        <class>affirm/order_observer_beforeOrderSaveAdmin</class>
+                        <method>execute</method>
+                    </affirm_affirm_model_before_order_save_admin>
+                </observers>
+            </controller_action_predispatch_adminhtml_sales_order_create_save>
+            <controller_action_predispatch_adminhtml_sales_order_edit_save>
+                <observers>
+                    <affirm_affirm_model_before_order_edit_save_admin>
+                        <type>singleton</type>
+                        <class>affirm/order_observer_beforeOrderEditSaveAdmin</class>
+                        <method>execute</method>
+                    </affirm_affirm_model_before_order_edit_save_admin>
+                </observers>
+            </controller_action_predispatch_adminhtml_sales_order_edit_save>
+        </events>
+        <layout>
+            <updates>
+                <affirm>
+                    <file>affirm/affirm.xml</file>
+                </affirm>
+            </updates>
+        </layout>
+    </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Affirm_Affirm before="Mage_Adminhtml">Affirm_Affirm_Adminhtml</Affirm_Affirm>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
     <default>
         <payment>
             <affirm>
                 <active>0</active>
+                <account_mode>sandbox</account_mode>
                 <pre_order>1</pre_order>
                 <model>affirm/payment</model>
                 <!-- WARNING: default value for title removed to prevent it from appearing on checkout page on MCE 1.4.0.1 -->
-                <!-- TODO(brian): fix rendering of payment method block so that adding a title here doesn't break presentation there -->
                 <title>Affirm: Buy with Monthly Payments</title>
+                <label_html_custom><![CDATA[<img src="https://cdn-assets.affirm.com/images/blue_logo-transparent_bg.png" width="57" height="17" class="v-middle" style="margin-right:3px;">&nbsp;Buy with Monthly Payments]]></label_html_custom>
+                <checkout_button_active>0</checkout_button_active>
+                <checkout_button_code>https://cdn-assets.affirm.com/images/buttons/30_148-white.png</checkout_button_code>
                 <payment_action>authorize</payment_action>
-                <api_url>https://sandbox.affirm.com</api_url>
-                <api_key />
-                <secret_key backend_model="adminhtml/system_config_backend_encrypted"/>
+                <api_url_sandbox>https://sandbox.affirm.com</api_url_sandbox>
+                <api_key_sandbox />
+                <secret_key_sandbox backend_model="adminhtml/system_config_backend_encrypted"/>
+                <api_url_production>https://api.affirm.com</api_url_production>
+                <api_key_production />
+                <secret_key_production backend_model="adminhtml/system_config_backend_encrypted"/>
                 <line_items_enabled>1</line_items_enabled>
                 <visible_on_cart>1</visible_on_cart>
                 <visible_on_product>1</visible_on_product>
                 <currency>USD</currency>
                 <min_order_total>0.01</min_order_total>
                 <max_order_total>100000</max_order_total>
+                <disable_for_backordered_items>0</disable_for_backordered_items>
                 <plain_text_title_enabled>0</plain_text_title_enabled>
+                <allowspecific>1</allowspecific>
+                <specificcountry>US</specificcountry>
             </affirm>
         </payment>
+        <affirmpromo>
+            <settings>
+                <active>0</active>
+                <promo_key>W6WU7UK82RS34HDH</promo_key>
+            </settings>
+            <developer_settings>
+                <container_homepage><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_homepage>
+                <container_catalog_category><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_catalog_category>
+                <container_catalog_product><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_catalog_product>
+                <container_checkout_cart><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_checkout_cart>
+                <path_homepage>cms.index.index</path_homepage>
+                <path_catalog_category>catalog.category.view</path_catalog_category>
+                <path_catalog_product>catalog.product.view</path_catalog_product>
+                <path_checkout_cart>checkout.cart.index</path_checkout_cart>
+            </developer_settings>
+            <homepage>
+                <display>1</display>
+                <size>170x100</size>
+                <position>right-top</position>
+            </homepage>
+            <catalog_category>
+                <display>1</display>
+                <size>170x100</size>
+                <position>left-top</position>
+            </catalog_category>
+            <catalog_product>
+                <display>1</display>
+                <size>468x60</size>
+                <position>right-top</position>
+            </catalog_product>
+            <checkout_cart>
+                <display>1</display>
+                <size>468x60</size>
+                <position>center-top</position>
+            </checkout_cart>
+            <as_low_as>
+                <apr_value>0.10</apr_value>
+                <promo_months>12</promo_months>
+            </as_low_as>
+        </affirmpromo>
     </default>
 </config>

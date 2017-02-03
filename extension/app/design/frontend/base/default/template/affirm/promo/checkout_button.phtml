@@ -1,0 +1,6 @@
+<?php
+    /** @var Affirm_Affirm_Block_Promo_CheckoutButton $this **/
+?>
+<a href="<?php echo $this->getCheckoutUrl(); ?>" class="btn btn-default">
+    <img src="<?php echo $this->helper('affirm/promo_data')->getCheckoutButtonCode(); ?>" />
+</a>

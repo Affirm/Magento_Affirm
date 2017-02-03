@@ -1,5 +1,4 @@
 extension/app/code/community/Affirm/Affirm                     	app/code/community/Affirm/Affirm
-extension/lib/Affirm                                    		lib/Affirm
 extension/app/etc/modules/Affirm_Affirm.xml             		app/etc/modules/Affirm_Affirm.xml
 
 extension/app/code/community/Affirm/AffirmPromo 				        app/code/community/Affirm/AffirmPromo

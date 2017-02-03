@@ -1,16 +1,35 @@
 <?php
+/**
+ * OnePica
+ * NOTICE OF LICENSE
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to codemaster@onepica.com so we can send you a copy immediately.
+ *
+ * @category    Affirm
+ * @package     Affirm_Affirm
+ * @copyright   Copyright (c) 2014 One Pica, Inc. (http://www.onepica.com)
+ * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ */
 
-require_once Mage::getBaseDir('lib').DS.'Affirm'.DS.'Affirm.php';
-
+/**
+ * Class Affirm_Affirm_Model_Payment
+ */
 class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
 {
-    // TODO(brian): extract this along with API client 
+    /**#@+
+     * Define constants
+     */
     const API_CHARGES_PATH = '/api/v2/charges/';
     const API_CHECKOUT_PATH = '/api/v2/checkout/';
-
     const CHECKOUT_XHR_AUTO = 'auto';
     const CHECKOUT_XHR = 'xhr';
     const CHECKOUT_REDIRECT = 'redirect';
+    /**#@-*/
 
     /**
      * Form block type
@@ -22,12 +41,21 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
      */
     protected $_infoBlockType = 'affirm/payment_info';
 
-
+    /**#@+
+     * Define constants
+     */
     const CHECKOUT_TOKEN = 'checkout_token';
     const METHOD_CODE = 'affirm';
-    protected $_code  = self::METHOD_CODE;
+    /**#@-*/
 
     /**
+     * Code
+     *
+     * @var string
+     */
+    protected $_code = self::METHOD_CODE;
+
+    /**#@+
      * Availability options
      */
     protected $_isGateway               = true;
@@ -42,33 +70,33 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected $_canUseForMultishipping  = false;
     protected $_canSaveCc               = false;
     protected $_canFetchTransactionInfo = true;
-
-    protected $_allowCurrencyCode = array('USD');
+    protected $_allowCurrencyCode       = array('USD');
+    /**#@-*/
 
     /**
      * Check method for processing with base currency
      *
      * @param string $currencyCode
-     * @return boolean
+     * @return bool
      */
     public function canUseForCurrency($currencyCode)
     {
-    	// TODO(brian): extract implementation to separate class
         if (!in_array($currencyCode, $this->getAcceptedCurrencyCodes())) {
             return false;
         }
         return true;
     }
 
-
+    /**
+     * Is needed initialize
+     *
+     * @return bool
+     */
     public function isInitializeNeeded()
     {
-        if ($this->getCheckoutToken())
-        {
+        if ($this->getCheckoutToken()) {
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
     }
@@ -88,187 +116,287 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         return $this->_getData('_accepted_currency');
     }
 
+    /**
+     * Get charge ID
+     *
+     * @return string
+     */
     public function getChargeId()
     {
-        return $this->getInfoInstance()->getAdditionalInformation("charge_id");
+        return $this->getInfoInstance()->getAdditionalInformation('charge_id');
     }
 
+    /**
+     * Get checkout token
+     *
+     * @return string
+     */
     public function getCheckoutToken()
     {
         return $this->getInfoInstance()->getAdditionalInformation(self::CHECKOUT_TOKEN);
     }
 
-    protected function setChargeId($charge_id)
+    /**
+     * Set charge Id
+     *
+     * @param string $chargeId
+     * @return Mage_Payment_Model_Info
+     */
+    public function setChargeId($chargeId)
     {
-        return $this->getInfoInstance()->setAdditionalInformation("charge_id", $charge_id);
+        return $this->getInfoInstance()->setAdditionalInformation('charge_id', $chargeId);
     }
 
+    /**
+     * Get base api url
+     *
+     * @return string
+     */
     public function getBaseApiUrl()
     {
-        return $this->getConfigData('api_url');
+        return Mage::helper('affirm')->getApiUrl();
     }
 
-    // TODO(brian): extract to a separate class and use DI to make it testable/mockable
-    public function _api_request($method, $path, $data=null, $resource_path=self::API_CHARGES_PATH)
+    /**
+     * Api request
+     *
+     * @param  mixed  $method
+     * @param  string $path
+     * @param  null|array $data
+     * @param  string $resourcePath
+     * @return string
+     * @throws Affirm_Affirm_Exception
+     */
+    protected function _apiRequest($method, $path, $data = null, $resourcePath = self::API_CHARGES_PATH)
     {
-        $url = trim($this->getBaseApiUrl(), "/") . $resource_path . $path;
+        $url = trim($this->getBaseApiUrl(), '/') . $resourcePath . $path;
         Mage::log($url);
 
         $client = new Zend_Http_Client($url);
 
-        if ($method == Zend_Http_Client::POST && $data)
-        {
+        if ($method == Zend_Http_Client::POST && $data) {
             $json = json_encode($data);
             $client->setRawData($json, 'application/json');
         }
-        
-        $client->setAuth($this->getConfigData('api_key'), $this->getConfigData('secret_key'), Zend_Http_Client::AUTH_BASIC);
 
-        $raw_result = $client->request($method)->getRawBody();
-        try{
-            $ret_json = Zend_Json::decode($raw_result, Zend_Json::TYPE_ARRAY);
-        } catch(Zend_Json_Exception $e)
-        {
-            Mage::throwException(Mage::helper('affirm')->__('Invalid affirm response: '. $raw_result));
+        $client->setAuth(Mage::helper('affirm')->getApiKey(),
+            Mage::helper('affirm')->getSecretKey(), Zend_Http_Client::AUTH_BASIC
+        );
+
+        $rawResult = $client->request($method)->getRawBody();
+        try {
+            $retJson = Zend_Json::decode($rawResult, Zend_Json::TYPE_ARRAY);
+        } catch (Zend_Json_Exception $e) {
+            throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Invalid affirm response: '. $rawResult));
         }
 
         //validate to make sure there are no errors here
-        if (isset($ret_json["status_code"]))
-        {
-            Mage::throwException(Mage::helper('affirm')->__('Affirm error code:'. $ret_json["status_code"] . ' error: '. $ret_json["message"]));
+        if (isset($retJson['status_code'])) {
+            throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Affirm error code:'.
+                    $retJson['status_code'] . ' error: '. $retJson['message']));
         }
-        return $ret_json;
+        return $retJson;
     }
 
-    private function _get_checkout_from_token($token)
+    /**
+     * Get checkout from tocken
+     *
+     * @param string $token
+     * @return string
+     */
+    protected function _getCheckoutFromToken($token)
     {
-        return $this->_api_request('GET', $token, null, self::API_CHECKOUT_PATH);
+        return $this->_apiRequest(Zend_Http_Client::GET, $token, null, self::API_CHECKOUT_PATH);
     }
 
-    private function _get_checkout_total_from_token($token)
+    /**
+     * Get checkout total
+     *
+     * @param string $token
+     * @return string
+     */
+    protected function _getCheckoutTotalFromToken($token)
     {
-        $res = $this->_get_checkout_from_token($token);
+        $res = $this->_getCheckoutFromToken($token);
         return $res['total'];
     }
 
-    protected function _set_charge_result($result)
+    /**
+     * Set charge result
+     *
+     * @param array $result
+     * @throws Affirm_Affirm_Exception
+     */
+    protected function _setChargeResult($result)
     {
-        if (isset($result["id"]))
-        {
-            $this->setChargeId($result["id"]);
-        }
-        else
-        {
-            Mage::throwException(Mage::helper('affirm')->__('Affirm charge id not returned from call.'));
+        if (isset($result['id'])) {
+            $this->setChargeId($result['id']);
+        } else {
+            throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Affirm charge id not returned from call.'));
         }
     }
 
-    protected function _validate_amount_result($amount, $affirm_amount)
+    /**
+     * Validate
+     *
+     * @param string $amount
+     * @param string $affirmAmount
+     * @throws Affirm_Affirm_Exception
+     */
+    protected function _validateAmountResult($amount, $affirmAmount)
     {
-        if ($affirm_amount != $amount)
-        {
-            Mage::throwException(Mage::helper('affirm')->__('Your cart amount has changed since starting your Affirm application. Please try again.'));
+        if ($affirmAmount != $amount) {
+            throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__(
+                'Your cart amount has changed since starting your Affirm application. Please try again.'
+                )
+            );
         }
     }
 
     /**
      * Send capture request to gateway
      *
-     * @param Mage_Payment_Model_Info $payment
-     * @param decimal $amount
-     * @return Mage_Paygate_Model_Authorizenet
+     * @param Varien_Object $payment
+     * @param float $amount
+     * @return $this|Mage_Payment_Model_Abstract
+     * @throws Affirm_Affirm_Exception
      */
     public function capture(Varien_Object $payment, $amount)
     {
         if ($amount <= 0) {
-            Mage::throwException(Mage::helper('affirm')->__('Invalid amount for capture.'));
+            throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Invalid amount for capture.'));
         }
-        $charge_id = $this->getChargeId();
-        $amount_cents = Affirm_Util::formatCents($amount);
-        if (!$charge_id) {
-            if ($this->getCheckoutToken())
-            {
+        $chargeId = $this->getChargeId();
+        $amountCents = Mage::helper('affirm/util')->formatCents($amount);
+        if (!$chargeId) {
+            if ($this->getCheckoutToken()) {
                 $this->authorize($payment, $amount);
-                $charge_id = $this->getChargeId();
-            }
-            else
-            {
-                Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
+                $chargeId = $this->getChargeId();
+            } else {
+                throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Charge id have not been set.'));
             }
         }
-        $result = $this->_api_request(Varien_Http_Client::POST, "{$charge_id}/capture");
-        $this->_validate_amount_result($amount_cents, $result["amount"]);
+        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/capture");
+        $this->_validateAmountResult($amountCents, $result['amount']);
+        $payment->setIsTransactionClosed(0);
+        return $this;
+    }
+
+    /**
+     * Identify is refund partial (compatibility issue for earlier CE version)
+     *
+     * @param Varien_Object $payment
+     * @return $this
+     */
+    protected function _identifyPartialRefund(Varien_Object $payment)
+    {
+        $canRefundMore = $payment->getOrder()->canCreditmemo();
+        $payment->setShouldCloseParentTransaction(!$canRefundMore);
         return $this;
     }
 
     /**
      * Refund capture
      *
-     * @param Mage_Sales_Model_Order_Payment $payment
-     * @return Mage_Paypal_Model_Direct
+     * @param Varien_Object $payment
+     * @param float         $amount
+     * @return $this|Mage_Payment_Model_Abstract
+     * @throws Affirm_Affirm_Exception
      */
     public function refund(Varien_Object $payment, $amount)
     {
         if ($amount <= 0) {
-            Mage::throwException(Mage::helper('affirm')->__('Invalid amount for refund.'));
+            throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Invalid amount for refund.'));
         }
-        $charge_id = $this->getChargeId();
-        $amount_cents = Affirm_Util::formatCents($amount);
-        if (!$charge_id) {
-            Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
+        $chargeId = $this->getChargeId();
+        $amountCents = Mage::helper('affirm/util')->formatCents($amount);
+        if (!$chargeId) {
+            throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Charge id have not been set.'));
         }
-        $result = $this->_api_request(Varien_Http_Client::POST, "{$charge_id}/refund", array(
-									"amount"=>$amount_cents)
+        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/refund", array(
+                'amount' => $amountCents)
         );
-        $this->_validate_amount_result($amount_cents, $result["amount"]);
 
+        $this->_validateAmountResult($amountCents, $result['amount']);
+        $type = Mage_Sales_Model_Order_Payment_Transaction::TYPE_REFUND;
+        $id = Mage::getModel('core/date')->date('His');
+        if (!$id) {
+            $id = 1;
+        }
+        $payment->setTransactionId("{$this->getChargeId()}-{$id}-{$type}")->setIsTransactionClosed(1);
+        $this->_identifyPartialRefund($payment);
         return $this;
     }
 
+    /**
+     * Void
+     *
+     * @param Varien_Object $payment
+     * @return $this|Mage_Payment_Model_Abstract
+     * @throws Affirm_Affirm_Exception
+     */
     public function void(Varien_Object $payment)
     {
         if (!$this->canVoid($payment)) {
-            Mage::throwException(Mage::helper('payment')->__('Void action is not available.'));
+            throw new Affirm_Affirm_Exception(Mage::helper('payment')->__('Void action is not available.'));
         }
-        $charge_id = $this->getChargeId();
-        if (!$charge_id) {
-            Mage::throwException(Mage::helper('affirm')->__('Charge id have not been set.'));
+        $chargeId = $this->getChargeId();
+        if (!$chargeId) {
+            throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Charge id have not been set.'));
         }
-        $result = $this->_api_request(Varien_Http_Client::POST, "{$charge_id}/void");
+        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/void");
         return $this;
+    }
+
+    /**
+     * Cancel (apply void if applicable)
+     *
+     * @param Varien_Object $payment
+     * @return $this|Mage_Payment_Model_Abstract
+     * @throws Affirm_Affirm_Exception
+     */
+    public function cancel(Varien_Object $payment)
+    {
+        if ($payment->canVoid($payment)) {
+            $this->void($payment);
+        };
+        return parent::cancel($payment);
     }
 
     /**
      * Send authorize request to gateway
      *
-     * @param  Mage_Payment_Model_Info $payment
-     * @param  decimal $amount
-     * @return Mage_Paygate_Model_Authorizenet
+     * @param  Varien_Object $payment
+     * @param  float $amount
+     * @return $this|Mage_Payment_Model_Abstract
+     * @throws Affirm_Affirm_Exception
      */
     public function authorize(Varien_Object $payment, $amount)
     {
         if ($amount <= 0) {
-            Mage::throwException(Mage::helper('affirm')->__('Invalid amount for authorization.'));
+            throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Invalid amount for authorization.'));
         }
 
-        $amount_cents = Affirm_Util::formatCents($amount);
+        $amountCents = Mage::helper('affirm/util')->formatCents($amount);
         $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
-        $amount_to_authorize = $this->_get_checkout_total_from_token($token); 
-        $this->_validate_amount_result($amount_cents, $amount_to_authorize);
+        $amountToAuthorize = $this->_getCheckoutTotalFromToken($token);
+        $this->_validateAmountResult($amountCents, $amountToAuthorize);
 
-        $result = $this->_api_request(Varien_Http_Client::POST, "", array(
-									self::CHECKOUT_TOKEN=>$token)
-					);
+        $result = $this->_apiRequest(Varien_Http_Client::POST, '', array(
+                self::CHECKOUT_TOKEN => $token)
+        );
 
-        $this->_set_charge_result($result);
+        $this->_setChargeResult($result);
         $payment->setTransactionId($this->getChargeId())->setIsTransactionClosed(0);
         return $this;
     }
 
     /**
      * Instantiate state and set it to state object
+     *
      * @param string $paymentAction
-     * @param Varien_Object
+     * @param Varien_Object $stateObject
+     * @return Mage_Payment_Model_Abstract|void
      */
     public function initialize($paymentAction, $stateObject)
     {
@@ -278,34 +406,38 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $stateObject->setIsNotified(false);
     }
 
-    public function setAffirmCheckoutToken($checkout_token)
+    /**
+     * Set affirm checkout token
+     *
+     *@param string $checkoutToken
+     */
+    public function setAffirmCheckoutToken($checkoutToken)
     {
         $payment = $this->getInfoInstance();
-        $payment->setAdditionalInformation(self::CHECKOUT_TOKEN, $checkout_token);
+        $payment->setAdditionalInformation(self::CHECKOUT_TOKEN, $checkoutToken);
     }
 
-
-    public function processConfirmOrder($order, $checkout_token)
+    /**
+     * Process confirmation order (after return from affirm, pre_order=0)
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @param string $checkoutToken
+     */
+    public function processConfirmOrder($order, $checkoutToken)
     {
         $payment = $order->getPayment();
 
-        $payment->setAdditionalInformation(self::CHECKOUT_TOKEN, $checkout_token);
+        $payment->setAdditionalInformation(self::CHECKOUT_TOKEN, $checkoutToken);
         $action = $this->getConfigData('payment_action');
 
         //authorize the total amount.
-        Affirm_Affirm_Model_Payment::authorizePaymentForOrder($payment, $order);
-        $payment->setAmountAuthorized(Affirm_Affirm_Model_Payment::_affirmTotal($order));
+        $payment->authorize(true, self::_affirmTotal($order));
+        $payment->setAmountAuthorized(self::_affirmTotal($order));
         $order->save();
         //can capture as well..
-        if ($action == self::ACTION_AUTHORIZE_CAPTURE)
-        {
-            $payment->setAmountAuthorized(Affirm_Affirm_Model_Payment::_affirmTotal($order));
-
-            // TODO(brian): It is unclear why this statement is here. If you
-            // know why, please replace this message with documentation to
-            // justify its existence.
+        if ($action == self::ACTION_AUTHORIZE_CAPTURE) {
+            $payment->setAmountAuthorized(self::_affirmTotal($order));
             $payment->setBaseAmountAuthorized($order->getBaseTotalDue());
-
             $payment->capture(null);
             $order->save();
         }
@@ -318,204 +450,265 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
      */
     public function getOrderPlaceRedirectUrl()
     {
-        if(!$this->redirectPreOrder())
-        {
+        if (!$this->redirectPreOrder()) {
             return Mage::getUrl('affirm/payment/redirect', array('_secure' => true));
         }
     }
 
-    public function formatCents($currency, $amount)
-    {
-        return Affirm_Util::formatCents($amount);
-    }
-
+    /**
+     * Get checkout object
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @return array
+     */
     public function getCheckoutObject($order)
     {
-        $info = $this->getInfoInstance(); // TODO(brian): remove unused variable
-        $shipping_address = $order->getShippingAddress();
+        $shippingAddress = $order->getShippingAddress();
         $shipping = null;
-        if ($shipping_address)
-        {
+        if ($shippingAddress) {
             $shipping = array(
-                "name"=> array("full"=>$shipping_address->getName()),
-                "phone_number"=> $shipping_address->getTelephone(),
-                "phone_number_alternative"=> $shipping_address->getAltTelephone(),
-                "address"=> array(
-                        "line1" => $shipping_address->getStreet(1),
-                        "line2" => $shipping_address->getStreet(2),
-                        "city" => $shipping_address->getCity(),
-                        "state" => $shipping_address->getRegion(),
-                        "country" => $shipping_address->getCountryModel()->getIso2Code(),
-                        "zipcode" => $shipping_address->getPostcode(),
-                      ));
+                'name' => array('full' => $shippingAddress->getName()),
+                'phone_number' => $shippingAddress->getTelephone(),
+                'phone_number_alternative' => $shippingAddress->getAltTelephone(),
+                'address' => array(
+                    'line1'   => $shippingAddress->getStreet(1),
+                    'line2'   => $shippingAddress->getStreet(2),
+                    'city'    => $shippingAddress->getCity(),
+                    'state'   => $shippingAddress->getRegion(),
+                    'country' => $shippingAddress->getCountryModel()->getIso2Code(),
+                    'zipcode' => $shippingAddress->getPostcode(),
+                ));
         }
 
-        $billing_address = $order->getBillingAddress();
+        $billingAddress = $order->getBillingAddress();
         $billing = array(
-                "email"=>$order->getCustomerEmail(),
-                "name"=> array("full"=>$billing_address->getName()),
-                "phone_number"=> $billing_address->getTelephone(),
-                "phone_number_alternative"=> $billing_address->getAltTelephone(),
-                "address"=> array(
-                        "line1" => $billing_address->getStreet(1),
-                        "line2" => $billing_address->getStreet(2),
-                        "city" => $billing_address->getCity(),
-                        "state" => $billing_address->getRegion(),
-                        "country" => $billing_address->getCountryModel()->getIso2Code(),
-                        "zipcode" => $billing_address->getPostcode(),
-                      ));
+            'name' => array('full' => $billingAddress->getName()),
+            'email' => $order->getCustomerEmail(),
+            'phone_number' => $billingAddress->getTelephone(),
+            'phone_number_alternative' => $billingAddress->getAltTelephone(),
+            'address' => array(
+                'line1'   => $billingAddress->getStreet(1),
+                'line2'   => $billingAddress->getStreet(2),
+                'city'    => $billingAddress->getCity(),
+                'state'   => $billingAddress->getRegion(),
+                'country' => $billingAddress->getCountryModel()->getIso2Code(),
+                'zipcode' => $billingAddress->getPostcode(),
+            ));
 
         $items = array();
-        $currency = $order->getOrderCurrency();
-        $products = Mage::getModel('catalog/product');
-        // TODO(brian): instantiate |pricer| upon construction
-        $pricer = Mage::getModel('affirm/pricer');
-        foreach($order->getAllVisibleItems() as $order_item)
-        {
-            $productId = $order_item->getProductId();
-            $product = $products->load($productId);
-
+        $productIds = array();
+        $productItemsMFP = array();
+        $categoryItemsIds = array();
+        foreach ($order->getAllVisibleItems() as $orderItem) {
+            $productIds[] = $orderItem->getProductId();
+        }
+        $products = Mage::getModel('catalog/product')->getCollection()
+            ->addAttributeToSelect(
+                array('affirm_product_mfp', 'affirm_product_mfp_type', 'affirm_product_mfp_priority')
+            )
+            ->addAttributeToFilter('entity_id', array('in' => $productIds));
+        $productItems = $products->getItems();
+        foreach ($order->getAllVisibleItems() as $orderItem) {
+            $product = $productItems[$orderItem->getProductId()];
+            if (Mage::helper('affirm')->isPreOrder() && $orderItem->getParentItem() &&
+                ($orderItem->getParentItem()->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE)
+            ) {
+                continue;
+            }
             $items[] = array(
-                "sku" => $order_item->getSku(),
-                "display_name" => $order_item->getName(),
-                "item_url" => $product->getProductUrl(),
-                "item_image_url" => $product->getImageUrl(),
-                "qty" => intval($order_item->getQtyOrdered()),
-                "unit_price" => $pricer->getPriceInCents($order_item)
+                'sku' => $orderItem->getSku(),
+                'display_name' => $orderItem->getName(),
+                'item_url' => $product->getProductUrl(),
+                'item_image_url' => $product->getImageUrl(),
+                'qty' => intval($orderItem->getQtyOrdered()),
+                'unit_price' => Mage::helper('affirm/util')->formatCents($orderItem->getPrice())
+            );
+
+            $productItemsMFP[] = array(
+                'value' => $product->getAffirmProductMfp(),
+                'type' => $product->getAffirmProductMfpType(),
+                'priority' => $product->getAffirmProductMfpPriority() ?
+                    $product->getAffirmProductMfpPriority() : 0
+            );
+
+            $categoryIds = $product->getCategoryIds();
+            if (!empty($categoryIds)) {
+                $categoryItemsIds = array_merge($categoryItemsIds, $categoryIds);
+            }
+        }
+        $checkout = array(
+            'checkout_id' => $order->getIncrementId(),
+            'currency' => $order->getOrderCurrencyCode(),
+            'shipping_amount' => Mage::helper('affirm/util')->formatCents($order->getShippingAmount()),
+            'shipping_type' => $order->getShippingMethod(),
+            'tax_amount' => Mage::helper('affirm/util')->formatCents($order->getTaxAmount()),
+            'merchant' => array(
+                'public_api_key' => Mage::helper('affirm')->getApiKey(),
+                'user_confirmation_url' => Mage::getUrl('affirm/payment/confirm', array('_secure' => true)),
+                'user_cancel_url' => Mage::helper('checkout/url')->getCheckoutUrl(),
+                'charge_declined_url' => Mage::helper('checkout/url')->getCheckoutUrl()
+            ),
+            'config' => array('required_billing_fields' => 'name,address,email'),
+            'items' => $items,
+            'billing' => $billing
+        );
+
+        // By convention, Affirm expects positive value for discount amount. Magento provides negative.
+        $discountAmtAffirm = (-1) * $order->getDiscountAmount();
+        if ($discountAmtAffirm > 0.001) {
+            $discountCode = $this->_getDiscountCode($order);
+            $checkout['discounts'] = array(
+                $discountCode => array(
+                    'discount_amount' => Mage::helper('affirm/util')->formatCents($discountAmtAffirm)
+                )
             );
         }
 
-        // TODO(brian): test checkout/onepage urls. it's unclear whether this
-        // is enabled for all merchants or whether merchant customization could
-        // cause this to be an invalid destination
-        $checkout = array(
-            'checkout_id'=>$order->getIncrementId(),
-            'currency'=>$order->getOrderCurrencyCode(),
-            'shipping_amount'=>$this->formatCents($currency, $order->getShippingAmount()),
-            'shipping_type'=>$order->getShippingMethod(),
-            'tax_amount'=>$this->formatCents($currency, $order->getTaxAmount()),
-            "merchant" => array(
-                    "public_api_key"=>$this->getConfigData('api_key'), 
-                    "user_confirmation_url"=>Mage::getUrl('affirm/payment/confirm', array('_secure' => true)),
-                    "user_cancel_url"=>Mage::helper('checkout/url')->getCheckoutUrl(),
-                    "charge_declined_url"=>Mage::helper('checkout/url')->getCheckoutUrl()
-                  ),
-            "config" => array("required_billing_fields"=> "name,address,email"),
-            "items" => $items,
-            "billing" => $billing);
-
-        // By convention, Affirm expects positive value for discount amount.
-        // Magento provides negative.
-        $discountAmtAffirm = -1 * $order->getDiscountAmount();
-        if ($discountAmtAffirm > 0.001)
-        {
-          $checkout["discounts"] = array(
-            $order->getCouponCode()=>array(
-              "discount_amount"=>$this->formatCents($currency, $discountAmtAffirm)
-            )
-          );
+        if ($shipping) {
+            $checkout['shipping'] = $shipping;
         }
-
-        if ($shipping)
-        {
-            $checkout["shipping"] = $shipping;
+        $checkout['financial_product_key'] = Mage::helper('affirm')->getFinancialProductKey();
+        $checkout['total'] = Mage::helper('affirm/util')->formatCents(self::_affirmTotal($order));
+        $checkout['metadata'] = array(
+            'shipping_type' => $order->getShippingDescription(),
+            'platform_type' => 'Magento',
+            'platform_version' => Mage::getVersion(),
+            'platform_affirm' => '3.3.1'
+        );
+        $affirmMFPValue = Mage::helper('affirm/mfp')->getAffirmMFPValue($productItemsMFP, $categoryItemsIds, $order->getBaseGrandTotal());
+        if ($affirmMFPValue) {
+            $checkout['financing_program'] = $affirmMFPValue;
         }
-        $checkout['financial_product_key'] = $this->getConfigData('financial_product_key');
-
-        // TODO(brian): make this safer and less error-prone.
-        $checkout['total'] = Affirm_Util::formatCents(Affirm_Affirm_Model_Payment::_affirmTotal($order));
-        $checkout['meta'] = Affirm_Affirm_Model_Payment::_getMetadata();
         return $checkout;
     }
 
-    // TODO(brian): extract string name constant
-    private static function _getMetadata()
-    {
-        $session = Mage::getSingleton('customer/session');
-        $meta = array(
-            "source" => array(
-                "data" => array(
-                    "is_logged_in" => $session->isLoggedIn(),
-                    "magento_version" => Mage::getVersion()
-                ),
-                "client_name" => "magento_affirm",
-                "version" => Mage::getConfig()->getModuleConfig('Affirm_Affirm')->version
-            )
-        );
-
-        if (Mage::app()->getStore()->isAdmin()) {
-            //this is in the admin area..
-            $meta["source"]["merchant_user_initiated"] = 1;
-            $user = Mage::getSingleton('admin/session')->getUser();
-            if ($user) {
-                $meta["source"]["data"]["merchant_logged_in"] = 1;
-                $meta["source"]["data"]["merchant_username"] = $user->getUsername();
-            }
-        }
-
-        if ($session->isLoggedIn()) {
-            $customerId = $session->getCustomerId();
-
-            $customer = Mage::getModel('customer/customer')->load($customerId);
-            $meta['source']['data']['account_created'] = Mage::getModel('core/date')->
-                date(Zend_Date::ISO_8601, $customer->getCreatedAt());
-
-            $orders = Mage::getModel('sales/order')->getCollection()->
-                addFilter('customer_id', $customerId)->
-                setOrder('created_at', Varien_Data_Collection_Db::SORT_ORDER_DESC);
-            $orderCount = $orders->count();
-            $meta['data']['order_count'] = $orderCount;
-
-            if ($orderCount > 0) {
-                $meta['data']['last_order_date'] = Mage::getModel('core/date')->
-                date(Zend_Date::ISO_8601, $orders->getFirstItem()->getCreatedAt());
-            }
-        }
-        return $meta;
-    }
-
-    /* A hacky thing used to access a private method (authorize(...)) on the
-     * payment object in order to provide compatibility with version 1.4.0.1 CE.
+    /**
+     * Get discount code
      *
-     * FIXME(brian): take a closer look at the payment class at version 1.4.
-     * Surely, there _must_ be a way to accomplish this without reflection.
-     *
-     * TODO(brian): Write a regression test to catch incompatibilities with
-     * other Magento versions.
+     * @param Mage_Sales_Model_Order $order
+     * @return string
      */
-    private static function authorizePaymentForOrder($payment, $order)
+    protected function _getDiscountCode($order)
     {
-      $moduleVersion = Mage::getConfig()->getModuleConfig("Mage_Sales")->version;
-      $incompatibleVersions = array(
-        "0.9.56"
-      );
-      if (in_array($moduleVersion, $incompatibleVersions)) {
-        Affirm_Affirm_Model_Payment::callPrivateMethod($payment, "_authorize", true, Affirm_Affirm_Model_Payment::_affirmTotal($order));
-      } else {
-        $payment->authorize(true, Affirm_Affirm_Model_Payment::_affirmTotal($order));
-      }
+        return $order->getDiscountDescription();
     }
 
-    // TODO(brian): move this function to a helper library
-    private static function callPrivateMethod($object, $methodName)
-    {
-      $reflectionClass = new ReflectionClass($object);
-      $reflectionMethod = $reflectionClass->getMethod($methodName);
-      $reflectionMethod->setAccessible(true);
-
-      $params = array_slice(func_get_args(), 2); //get all the parameters after $methodName
-      return $reflectionMethod->invokeArgs($object, $params);
-    }
-
-    // TODO(brian): move this to an external pricer so merchants can override
-    // the functionality.
-    private static function _affirmTotal($order)
+    /**
+     * Affirm total
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @return string
+     */
+    protected static function _affirmTotal($order)
     {
         return $order->getTotalDue();
     }
 
+    /**
+     * Redirect pre-order
+     *
+     * @return bool
+     */
     public function redirectPreOrder()
     {
         return $this->getConfigData('pre_order');
+    }
+
+    /**
+     * Can use for order threshold
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @return bool
+     */
+    public function canUseForQuoteThreshold($quote)
+    {
+        $total = $quote->getBaseGrandTotal();
+        $minTotal = $this->getConfigData('min_order_total');
+        $maxTotal = $this->getConfigData('max_order_total');
+        if (!empty($minTotal) && $total < $minTotal || !empty($maxTotal) && $total > $maxTotal) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Check zero total
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @return bool
+     */
+    public function canUseForZeroTotal($quote)
+    {
+        $total = $quote->getBaseSubtotal() + $quote->getShippingAddress()->getBaseShippingAmount();
+        if ($total < 0.0001 && $this->getCode() != 'free'
+            && !($this->canManageRecurringProfiles() && $quote->hasRecurringItems())
+        ) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Can use for back ordered
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @return bool
+     */
+    public function canUseForBackOrdered($quote)
+    {
+        return !Mage::helper('affirm')->isDisableQuoteBackOrdered($quote);
+    }
+
+    /**
+     * Is available method
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @return bool
+     */
+    public function isAvailable($quote = null)
+    {
+        return $this->isAvailableForQuote($quote) && parent::isAvailable($quote);
+    }
+
+    /**
+     * Added verification for quote (compatibility reason)
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @return bool
+     */
+    public function isAvailableForQuote($quote = null)
+    {
+        if ($quote) {
+            $shipCountry = $quote->getShippingAddress()->getCountry();
+            if (!empty($shipCountry) && !$this->canUseForCountry($shipCountry)) {
+                return false;
+            }
+
+            if (!$this->canUseForCountry($quote->getBillingAddress()->getCountry())) {
+                return false;
+            }
+
+            if (!$this->canUseForCurrency($quote->getStore()->getBaseCurrencyCode())) {
+                return false;
+            }
+
+            if (!$this->canUseCheckout()) {
+                return false;
+            }
+
+            if (!$this->canUseForQuoteThreshold($quote)) {
+                return false;
+            }
+
+            if (!$this->canUseForZeroTotal($quote)) {
+                return false;
+            }
+
+            if (!$this->canUseForBackOrdered($quote)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
