@@ -126,6 +126,12 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
         $this->getRequest()->setPost($proxyRequest['POST']);
         Mage::register('affirm_token_code', $checkoutToken);
         $this->_forward($proxyRequest['action'], $proxyRequest['controller'], $proxyRequest['module'], $proxyRequest['params']);
+
+        // Fix for rewrite modules paths
+        // Change the routing info → No Events (It will now trigger then checkout post dispatch event)
+        $this->getRequest()->setRoutingInfo($proxyRequest['routing_info']);
+        $this->setFlag('', self::FLAG_NO_POST_DISPATCH, true);
+        // End change
     }
 
     /**

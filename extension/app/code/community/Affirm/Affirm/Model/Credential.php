@@ -90,7 +90,7 @@ class Affirm_Affirm_Model_Credential
      */
     public function getApiUrl($store = null)
     {
-        return $this->_getCredentialModel($store)->getApiUrl($store);
+        return $this->_getCredentialModel($store)->getApiUrl();
     }
 
     /**

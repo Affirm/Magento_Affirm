@@ -31,6 +31,14 @@ class Affirm_Affirm_Block_Promo_AsLowAs_Checkout extends Mage_Core_Block_Templat
         if ($this->helper('affirm/promo_asLowAs')->isAsLowAsDisabledOnCheckout()) {
             return "";
         }
+
+        $mpp = $this->helper('affirm/promo_asLowAs')->getMinMPP();
+        if (!empty($mpp)) {
+            if ($this->helper('checkout/cart')->getQuote()->getGrandTotal() < $mpp) {
+                return "";
+            }
+        }
+
         return parent::_toHtml();
     }
 
@@ -43,5 +51,65 @@ class Affirm_Affirm_Block_Promo_AsLowAs_Checkout extends Mage_Core_Block_Templat
     {
         $total = $this->helper('checkout/cart')->getQuote()->getGrandTotal();
         return $this->helper('affirm/util')->formatCents($total);
+    }
+
+    /**
+     * Get MFP value
+     *
+     * @return string
+     */
+    public function getMFPValue()
+    {
+        $cart = Mage::getModel('checkout/cart')->getQuote();
+        $productIds = array();
+        $productItemMFP = array();
+        $categoryItemsIds = array();
+        foreach ($cart->getAllVisibleItems() as $item) {
+            $productIds[] = $item->getProduct()->getId();
+        }
+
+        $products = Mage::getModel('catalog/product')->getCollection()
+            ->addAttributeToSelect(
+                array('affirm_product_promo_id', 'affirm_product_mfp_type', 'affirm_product_mfp_priority')
+            )
+            ->addAttributeToFilter('entity_id', array('in' => $productIds));
+        $productItems = $products->getItems();
+
+        foreach ($cart->getAllVisibleItems() as $item) {
+            $product = $productItems[$item->getProduct()->getId()];
+            if (Mage::helper('affirm')->isPreOrder() && $item->getProduct()->getParentItem() &&
+                ($item->getProduct()->getParentItem()->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE)
+            ) {
+                continue;
+            }
+
+            $start_date = $product->getAffirmProductMfpStartDate();
+            $end_date = $product->getAffirmProductMfpEndDate();
+            if(empty($start_date) || empty($end_date)) {
+                $mfpValue = $product->getAffirmProductPromoId();
+            } else {
+                if(Mage::app()->getLocale()->isStoreDateInInterval(null, $start_date, $end_date)) {
+                    $mfpValue = $product->getAffirmProductPromoId();
+                } else {
+                    $mfpValue = "";
+                }
+            }
+
+            $productItemMFP[] = array(
+                'value' => $mfpValue,
+                'type' => $product->getAffirmProductMfpType(),
+                'priority' => $product->getAffirmProductMfpPriority() ?
+                    $product->getAffirmProductMfpPriority() : 0
+            );
+
+            $categoryIds = $product->getCategoryIds();
+            if (!empty($categoryIds)) {
+                $categoryItemsIds = array_merge($categoryItemsIds, $categoryIds);
+            }
+        }
+
+        $categoryIds = $product->getCategoryIds();
+
+        return Mage::helper('affirm/promo_asLowAs')->getAffirmMFPValue($productItemMFP, $categoryIds, $this->helper('checkout/cart')->getQuote()->getGrandTotal());
     }
 }

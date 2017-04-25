@@ -8,7 +8,7 @@
             </action>
         </reference>
     </default>
-
+    
     <checkout_cart_index>
         <reference name="head">
             <action method="addItem">
@@ -18,22 +18,22 @@
         </reference>
         <reference name="checkout.cart.top_methods">
             <block type="affirm/promo_checkoutButton"
-                   name="checkout.cart.methods.affirm.top"
-                   template="affirm/promo/checkout_button.phtml"
-                   after="-" />
+            name="checkout.cart.methods.affirm.top"
+            template="affirm/promo/checkout_button.phtml"
+            after="-" />
         </reference>
         <reference name="checkout.cart.methods">
             <block type="affirm/promo_checkoutButton"
-                   name="checkout.cart.methods.affirm.top"
-                   template="affirm/promo/checkout_button.phtml"
-                   after="checkout.cart.methods.onepage.bottom" />
+            name="checkout.cart.methods.affirm.top"
+            template="affirm/promo/checkout_button.phtml"
+            after="checkout.cart.methods.onepage.bottom" />
         </reference>
         <reference name="checkout.cart.methods">
             <block type="affirm/promo_asLowAs_checkout" name="as.low.as.pdp"
-                   template="affirm/promo/aslowas/checkout.phtml" before="-" />
+            template="affirm/promo/aslowas/checkout.phtml" before="-" />
         </reference>
     </checkout_cart_index>
-
+    
     <catalog_product_view>
         <reference name="head">
             <action method="addItem">
@@ -43,7 +43,29 @@
         </reference>
         <reference name="product.info.extrahint">
             <block type="affirm/promo_asLowAs_product" name="as.low.as.pdp"
-                   template="affirm/promo/aslowas/product.phtml" after="-" />
+            template="affirm/promo/aslowas/product.phtml" after="-" />
         </reference>
     </catalog_product_view>
+    <catalog_category_layered>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="affirm/promo_data/getPLPAffirmJsScript" />
+            </action>
+        </reference>
+        <reference name="before_body_end">
+            <block type="core/template" name="affirm_plp_javascript" template="affirm/promo/aslowas/list.phtml"/>
+        </reference>
+    </catalog_category_layered>
+    <catalogsearch_result_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="affirm/promo_data/getPLPAffirmJsScript" />
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="affirm_plp_javascript" after="-" template="affirm/promo/aslowas/list.phtml"/>
+        </reference>
+    </catalogsearch_result_index>
 </layout>

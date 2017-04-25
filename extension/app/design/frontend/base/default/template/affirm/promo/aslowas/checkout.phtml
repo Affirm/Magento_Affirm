@@ -1,30 +1,23 @@
 <?php
-    /** @var Affirm_Affirm_Block_Promo_AsLowAs_Checkout $this **/
-    $affirmHelper = $this->helper('affirm');
-    $affirmPromoALAHelper = $this->helper('affirm/promo_asLowAs');
-    $apr = $affirmPromoALAHelper->getAPRValue();
-    $months = $affirmPromoALAHelper->getPromoMonths();
-    $amount = $this->getCheckoutGrandTotal();
-    $minPrice = $affirmHelper->getMinOrderThreshold();
-    $maxPrice = $affirmHelper->getMaxOrderThreshold();
+    $mfpValue = $this->getMFPValue();
 ?>
 <div>
-    <a id="learn-more" style="visibility: none" href="#"></a>
+    <?php echo '<div class="affirm-as-low-as" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->getCheckoutGrandTotal() .'"></div>'; ?>
 </div>
+
 <script type="text/javascript">
     if (!AFFIRM_AFFIRM.promos.getIsInitialized()) {
-        AFFIRM_AFFIRM.promos.initialize("<?php echo $affirmHelper->getApiKey(); ?>",
-            "<?php echo $affirmHelper->getAffirmJsUrl(); ?>");
+        AFFIRM_AFFIRM.promos.initialize("<?php echo $this->helper('affirm')->getApiKey(); ?>",
+            "<?php echo $this->helper('affirm')->getAffirmJsUrl(); ?>");
     }
-    AFFIRM_AFFIRM.promos.initOptions("<?php echo $apr; ?>", <?php echo $months; ?>, <?php echo $amount; ?>);
-    AFFIRM_AFFIRM.promos.initLimitation("<?php echo $minPrice; ?>", "<?php echo $maxPrice; ?>");
+    <?php if ($this->helper('affirm')->isProductConfigurable()): ?>
+    if (!AFFIRM_AFFIRM.promos.getIsConfigurableOptionsInitialized()) {
+        AFFIRM_AFFIRM.promos.initConfigurableOptions(<?php echo $this->helper('affirm')->getConfigurableBackOrderedInfo(); ?>);
+    }
+    <?php endif; ?>
+    AFFIRM_AFFIRM.promos.initLimitation("<?php echo $this->helper('affirm')->getMinOrderThreshold(); ?>", "<?php echo $this->helper('affirm')->getMaxOrderThreshold(); ?>");
 
     if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {
         AFFIRM_AFFIRM.promos.loadScript();
     }
-
-    // change to your template value for product or cart price
-    affirm.ui.ready(function() {
-        AFFIRM_AFFIRM.promos.updateAffirmAsLowAs(<?php echo $amount; ?>)
-    });
 </script>

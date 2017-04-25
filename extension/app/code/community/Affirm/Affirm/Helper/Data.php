@@ -78,6 +78,16 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     protected $_disabledBackOrderedPdp;
 
     /**
+     * Returns extension version
+     *
+     * @return string
+     */
+    public function getExtensionVersion()
+    {
+        return (string)Mage::getConfig()->getNode()->modules->Affirm_Affirm->version;
+    }
+
+    /**
      * Returns is disable for back ordered items
      *
      * @param Mage_Core_Model_Store $store
@@ -152,9 +162,9 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
      * @param Mage_Core_Model_Store $store
      * @return string
      */
-    public function getApiUrl($store = null)
+    public function getApiUrl()
     {
-        return Mage::getSingleton('affirm/credential')->getApiUrl($store);
+        return Mage::getSingleton('affirm/credential')->getApiUrl();
     }
 
     /**

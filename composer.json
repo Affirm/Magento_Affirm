@@ -1,6 +1,7 @@
 {
   "name": "affirm/affirm-php",
   "description": "Affirm PHP bindings",
+  "type": "magento-module",
   "keywords": [
     "affirm",
     "api",

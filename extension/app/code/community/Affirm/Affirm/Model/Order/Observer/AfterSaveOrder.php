@@ -52,22 +52,10 @@ class Affirm_Affirm_Model_Order_Observer_AfterSaveOrder
             return;
         }
 
-        $orderResult = Mage::helper('core')->jsonDecode(Mage::app()->getResponse()->getBody());
-
-        if (isset($orderResult['success']) && $orderResult['success']) {
-            $session->setPreOrderRender(null);
-            $session->setLastAffirmSuccess($checkoutToken);
-            $session->setAffirmOrderRequest(null);
-            $response->setRedirect(Mage::getUrl('checkout/onepage/success'))->sendResponse();
-            return;
-        } else {
-            $error = (isset($orderResult['error_messages']) && $orderResult['error']) ? $orderResult['error_messages'] :
-                Mage::helper('affirm')->__('Error encountered while processing affirm order.');
-            Mage::log('The order could not be saved. Please contact Affirm Developer Support for more info.');
-            $session->addError($error);
-            $session->setAffirmOrderRequest(null);
-            $response->setRedirect(Mage::getUrl('checkout/cart'))->sendResponse();
-            return;
-        }
+        $session->setPreOrderRender(null);
+        $session->setLastAffirmSuccess($checkoutToken);
+        $session->setAffirmOrderRequest(null);
+        $response->setRedirect(Mage::getUrl('checkout/onepage/success'))->sendResponse();
+        return;
     }
 }

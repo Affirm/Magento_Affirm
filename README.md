@@ -1,4 +1,4 @@
-[![](docs/splash.png)](https://affirm.com) 
+ [![](docs/splash.png)](https://affirm.com) 
 
 **Compatible with**
 
@@ -57,7 +57,12 @@ modman update Magento_Affirm
 2. Copy to MAGENTO_ROOT
 3. To install, run `make install`
 4. To update, run `make update`
- 
+
+####To install using [magento-composer-installer](https://github.com/Cotya/magento-composer-installer)
+```
+composer require affirm/affirm-php
+```
+
 ####Known Issue with SSH installation
 If you are upgrading from 2.x to 3.x version of the extension via SSH, double promo banners may be displayed. 
 To fix the issue, remove the following to from the Magento directory:
@@ -68,31 +73,14 @@ MAGENTO_ROOT/app/design/frontend/base/default/template: affirmpromo
 MAGENTO_ROOT/app/etc/modules: Affirm_AffirmPromo.xml
 MAGENTO_ROOT/lib: Affirm
 ```
- 
- 
+
+
 
 Configure
 ---------
 
-**Payment Method**
+Visit https://docs.affirm.com/Integrate_Affirm/Platform_Integration/Magento_Integration#configure_the_affirm payment_method for details
 
-1. Log in to your Magento Admin portal.
-2. Visit System > Cache Management. Then, click _Flush Magento Cache_
-2. Visit System > Configuration > Sales > Payment Methods > Affirm
-3. Set the API URL. In a test environment, use ```https://sandbox.affirm.com```. On your live site, use ```https://api.affirm.com```.
-4. Provide your 3 keys (merchant API key, secret key, financial product key)
-5. Adjust the order total minimum and maximum options to control when Affirm is
-   shown to your customers.
- 
-	![](docs/config.png)
-
-**Promos**
-
-1. Visit System > Configuration > Affirm Promos (under General)
-2. Set the Promo Key and enable the extension.
-3. (optional) Customize the size and position of your promos.
-	
-	![](docs/promo-config.png)
 
 Developers
 ----------

@@ -24,37 +24,52 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
     /**
      * MFP default value
      */
-    const PAYMENT_AFFIRM_FINANCING_PROGRAM_VALUE_DEFAULT = 'payment/affirm/financing_program_value_default';
+    const PROMO_AFFIRM_FINANCING_PROGRAM_VALUE_DEFAULT = 'affirmpromo/mfp/financing_program_value_default';
+
+    /**
+     * Promo ID default value
+     */
+    const PROMO_AFFIRM_PROMO_ID_VALUE_DEFAULT = 'affirmpromo/as_low_as/promo_id_value_default';
 
     /**
      * MFP value
      */
-    const PAYMENT_AFFIRM_FINANCING_PROGRAM_VALUE = 'payment/affirm/financing_program_value';
+    const PROMO_AFFIRM_FINANCING_PROGRAM_VALUE = 'affirmpromo/mfp/financing_program_value';
+
+    /**
+     * Promo ID value
+     */
+    const PROMO_AFFIRM_PROMO_ID_VALUE = 'affirmpromo/mfp/promo_id_value';
 
     /**
      * Start date
      */
-    const PAYMENT_AFFIRM_START_DATE_MFP = 'payment/affirm/start_date_mfp';
+    const PROMO_AFFIRM_START_DATE_MFP = 'affirmpromo/mfp/start_date_mfp';
 
     /**
      * End date
      */
-    const PAYMENT_AFFIRM_END_DATE_MFP = 'payment/affirm/end_date_mfp';
+    const PROMO_AFFIRM_END_DATE_MFP = 'affirmpromo/mfp/end_date_mfp';
 
     /**
      * Cart size
      */
-    const PAYMENT_AFFIRM_CART_SIZE_MFP_VALUE = 'payment/affirm/cart_size_mfp_value';
+    const PROMO_AFFIRM_CART_SIZE_MFP_VALUE = 'affirmpromo/mfp/cart_size_mfp_value';
+
+    /**
+     * Cart size Promo ID
+     */
+    const PROMO_AFFIRM_CART_SIZE_PROMO_ID_VALUE = 'affirmpromo/mfp/cart_size_promo_id_value';
 
     /**
      * Min order total MFP
      */
-    const PAYMENT_AFFIRM_MIN_ORDER_TOTAL_MFP = 'payment/affirm/min_order_total_mfp';
+    const PROMO_AFFIRM_MIN_ORDER_TOTAL_MFP = 'affirmpromo/mfp/min_order_total_mfp';
 
     /**
      * Max order total MFP
      */
-    const PAYMENT_AFFIRM_MAX_ORDER_TOTAL_MFP = 'payment/affirm/max_order_total_mfp';
+    const PROMO_AFFIRM_MAX_ORDER_TOTAL_MFP = 'affirmpromo/mfp/max_order_total_mfp';
 
     /**
      * Customer MFP
@@ -78,11 +93,39 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
     protected $_productMfp;
 
     /**
+     * Product date range MFP
+     *
+     * @var string
+     */
+    protected $_productDateRangeMfp;
+
+    /**
      * Category MFP
      *
      * @var string
      */
     protected $_categoryMfp;
+
+    /**
+     * Category MFPALS
+     *
+     * @var string
+     */
+    protected $_categoryMfpALS = array();
+
+    /**
+     * Category date range MFP
+     *
+     * @var string
+     */
+    protected $_categoryDateRangeMfp;
+
+    /**
+     * Category date range MFPALS
+     *
+     * @var string
+     */
+    protected $_categoryDateRangeMfpALS;
 
     /**
      * Get MFP default
@@ -92,18 +135,41 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      */
     public function getMFPDefault($store = null)
     {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_FINANCING_PROGRAM_VALUE_DEFAULT, $store);
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_FINANCING_PROGRAM_VALUE_DEFAULT, $store);
     }
 
     /**
-     * Get MFP for date range
+     * Get PromoId default
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getPromoIdDefault($store = null)
+    {
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_PROMO_ID_VALUE_DEFAULT, $store);
+    }
+
+    /**
+     * Get PromoId for date range
      *
      * @param Mage_Core_Model_Store $store
      * @return string
      */
     public function getMFPDateRange($store = null)
     {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_FINANCING_PROGRAM_VALUE, $store);
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_FINANCING_PROGRAM_VALUE, $store);
+    }
+
+
+    /**
+     * Get PromoId for date range
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getPromoIdDateRange($store = null)
+    {
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_PROMO_ID_VALUE, $store);
     }
 
     /**
@@ -114,7 +180,7 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      */
     public function getMFPStartDate($store = null)
     {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_START_DATE_MFP, $store);
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_START_DATE_MFP, $store);
     }
 
     /**
@@ -125,7 +191,7 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      */
     public function getMFPEndDate($store = null)
     {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_END_DATE_MFP, $store);
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_END_DATE_MFP, $store);
     }
 
     /**
@@ -136,7 +202,18 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      */
     public function getMFPCartSizeValue($store = null)
     {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_CART_SIZE_MFP_VALUE, $store);
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_CART_SIZE_MFP_VALUE, $store);
+    }
+
+    /**
+     * Get PromoId cart size
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getPromoIdCartSizeValue($store = null)
+    {
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_CART_SIZE_PROMO_ID_VALUE, $store);
     }
 
     /**
@@ -147,7 +224,7 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      */
     public function getMinOrderTotalMFP($store = null)
     {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_MIN_ORDER_TOTAL_MFP, $store);
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_MIN_ORDER_TOTAL_MFP, $store);
     }
 
     /**
@@ -158,7 +235,7 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      */
     public function getMaxOrderTotalMFP($store = null)
     {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_MAX_ORDER_TOTAL_MFP, $store);
+        return Mage::getStoreConfig(self::PROMO_AFFIRM_MAX_ORDER_TOTAL_MFP, $store);
     }
 
     /**
@@ -239,6 +316,56 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Get MFP from entities
+     *
+     * @param array $entityItemsMFP
+     * @return string
+     */
+    protected function _getMfpFromEntityItemsByDateRange(array $entityItemsMFP)
+    {
+        $exclusiveMFP = array(); $inclusiveMFP = array(); $existItemWithoutMFP = false;
+        $inclusiveMFPTemp = array(); $this->_entityMfp = '';
+        foreach ($entityItemsMFP as $entityItemMFP) {
+            if (!$entityItemMFP['timebased_value']) {
+                $existItemWithoutMFP = true;
+            } else {
+                if (Mage::app()->getLocale()->isStoreDateInInterval(null, $entityItemMFP['start_date'], $entityItemMFP['end_data'])) {
+                    if (!$entityItemMFP['type']) {
+                        if (!in_array($entityItemMFP['timebased_value'], $exclusiveMFP)) {
+                            $exclusiveMFP[] = $entityItemMFP['timebased_value'];
+                        }
+                    } else {
+                        if (!in_array($entityItemMFP['timebased_value'], $inclusiveMFPTemp)) {
+                            $inclusiveMFPTemp[] = $entityItemMFP['timebased_value'];
+                            $inclusiveMFP[] = array(
+                                'value' => $entityItemMFP['timebased_value'],
+                                'priority' => $entityItemMFP['timebased_value']
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        if (count($inclusiveMFP) == 1) {
+            $this->_entityMfp = $inclusiveMFP[0]['value'];
+        } elseif ((count($exclusiveMFP) == 1) && (count($inclusiveMFP) == 0) && !$existItemWithoutMFP) {
+            $this->_entityMfp = $exclusiveMFP[0];
+        } elseif (count($inclusiveMFP) > 1) {
+            $higherPriority = -1;
+            foreach ($inclusiveMFP as $inclusiveMFPValue) {
+                if ($inclusiveMFPValue['priority'] > $higherPriority) {
+                    $higherPriority = $inclusiveMFPValue['priority'];
+                    $this->_entityMfp = $inclusiveMFPValue['value'];
+                }
+            }
+        } else {
+            $this->_entityMfp = '';
+        }
+        return $this->_entityMfp;
+    }
+
+    /**
      * Get MFP from quote products
      *
      * @param array $productItemsMFP
@@ -253,6 +380,20 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Get MFP from quote products by date range
+     *
+     * @param array $productItemsMFP
+     * @return string
+     */
+    protected function _getMFPFromProductsByDateRange(array $productItemsMFP)
+    {
+        if (null === $this->_productDateRangeMfp) {
+            $this->_productDateRangeMfp = $this->_getMfpFromEntityItemsByDateRange($productItemsMFP);
+        }
+        return $this->_productDateRangeMfp;
+    }
+
+    /**
      * Get MFP from products categories
      *
      * @param array $categoryItemsIds
@@ -263,13 +404,25 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
         if (null === $this->_categoryMfp) {
             $categories = Mage::getModel('catalog/category')->getCollection()
                 ->addAttributeToSelect(
-                    array('affirm_category_mfp', '', 'affirm_category_mfp_type', 'affirm_category_mfp_priority')
+                    array('affirm_category_mfp', '', 'affirm_category_mfp_type', 'affirm_category_mfp_priority', 'affirm_category_mfp_start_date', 'affirm_category_mfp_end_date')
                 )
                 ->addAttributeToFilter('entity_id', array('in' => $categoryItemsIds));
             $categoryItemsMFP = array();
             foreach ($categories as $category) {
+                $start_date = $category->getAffirmCategoryMfpStartDate();
+                $end_date = $category->getAffirmCategoryMfpEndDate();
+                if(empty($start_date) || empty($end_date)) {
+                    $mfpValue = $category->getAffirmCategoryMfp();
+                } else {
+                    if(Mage::app()->getLocale()->isStoreDateInInterval(null, $start_date, $end_date)) {
+                        $mfpValue = $category->getAffirmCategoryMfp();
+                    } else {
+                        $mfpValue = "";
+                    }
+                }
+
                 $categoryItemsMFP[] = array(
-                    'value' => $category->getAffirmCategoryMfp(),
+                    'value' => $mfpValue,
                     'type' => $category->getAffirmCategoryMfpType(),
                     'priority' => $category->getAffirmCategoryMfpPriority() ?
                         $category->getAffirmCategoryMfpPriority() : 0
@@ -279,6 +432,37 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
             $this->_categoryMfp = $this->_getMfpFromEntityItems($categoryItemsMFP);
         }
         return $this->_categoryMfp;
+    }
+
+    /**
+     * Get MFP from products categories by date range
+     *
+     * @param array $categoryItemsIds
+     * @return string
+     */
+    protected function _getMFPFromCategoriesByDateRange(array $categoryItemsIds)
+    {
+        if (null === $this->_categoryDateRangeMfp) {
+            $categories = Mage::getModel('catalog/category')->getCollection()
+                ->addAttributeToSelect(
+                    array('affirm_category_mfp', '', 'affirm_category_mfp_type', 'affirm_category_mfp_priority', 'affirm_category_mfp_start_date', 'affirm_category_mfp_end_date')
+                )
+                ->addAttributeToFilter('entity_id', array('in' => $categoryItemsIds));
+            $categoryItemsMFP = array();
+            foreach ($categories as $category) {
+                $categoryItemsMFP[] = array(
+                    'value' => $category->getAffirmCategoryMfp(),
+                    'type' => $category->getAffirmCategoryMfpType(),
+                    'priority' => $category->getAffirmCategoryMfpPriority() ?
+                        $category->getAffirmCategoryMfpPriority() : 0,
+                    'start_date' => $category->getAffirmCategoryMfpSatrtDate(),
+                    'end_date' => $category->getAffirmCategoryMfpEndDate(),
+                );
+            }
+
+            $this->_categoryDateRangeMfp = $this->_getMfpFromEntityItemsByDateRange($categoryItemsMFP);
+        }
+        return $this->_categoryDateRangeMfp;
     }
 
     /**
@@ -295,6 +479,133 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
             return false;
         }
         return true;
+    }
+
+    /**
+     * Is PromoId based on the cart size
+     *
+     * @param int $cartTotal
+     * @return bool
+     */
+    public function isPromoIdBasedOnCartSize($cartTotal)
+    {
+        $minTotal = $this->getMinOrderTotalMFP();
+        $maxTotal = $this->getMaxOrderTotalMFP();
+        if (!$this->getPromoIdCartSizeValue() || (!empty($minTotal) && $cartTotal < $minTotal || !empty($maxTotal) && $cartTotal > $maxTotal)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Get MFP from quote product ALS
+     *
+     * @param $productItemMFP
+     * @return string
+     */
+    public function getMFPFromProductALS($productItemMFP)
+    {
+        return $this->_getMfpFromEntityItems($productItemMFP);
+    }
+
+    /**
+     * Get MFP from quote products by date range ALS
+     *
+     * @param array $productItemsMFP
+     * @return string
+     */
+    public function getMFPFromProductByDateRangeALS($productItemMFP)
+    {
+        return $this->_getMfpFromEntityItemsByDateRange(array($productItemMFP));
+    }
+
+    /**
+     * Get MFP from products categories ALS
+     *
+     * @param array $categoryItemsIds
+     * @return string
+     */
+    public function getMFPFromCategoriesALS(array $categoryItemsIds)
+    {
+        $newCategories = array_diff($categoryItemsIds, array_keys($this->_categoryMfpALS));
+
+        if(sizeof($newCategories)) {
+            $categories = Mage::getModel('catalog/category')->getCollection()
+                ->addAttributeToSelect(
+                    array('affirm_category_promo_id', 'affirm_category_mfp_type', 'affirm_category_mfp_priority', 'affirm_category_mfp_start_date', 'affirm_category_mfp_end_date')
+                )
+                ->addAttributeToFilter('entity_id', array('in' => $newCategories));
+            foreach ($categories as $category) {
+
+                $start_date = $category->getAffirmCategoryMfpStartDate();
+                $end_date = $category->getAffirmCategoryMfpEndDate();
+                if(empty($start_date) || empty($end_date)) {
+                    $mfpValue = $category->getAffirmCategoryPromoId();
+                } else {
+                    if(Mage::app()->getLocale()->isStoreDateInInterval(null, $start_date, $end_date)) {
+                        $mfpValue = $category->getAffirmCategoryPromoId();
+                    } else {
+                        $mfpValue = "";
+                    }
+                }
+
+                $this->_categoryMfpALS[$category->getId()] = array(
+                    'value' => $mfpValue,
+                    'type' => $category->getAffirmCategoryMfpType(),
+                    'priority' => $category->getAffirmCategoryMfpPriority() ?
+                        $category->getAffirmCategoryMfpPriority() : 0
+                );
+            }
+        }
+
+        $categoryItemsMFP = array_intersect_key($this->_categoryMfpALS, array_flip($categoryItemsIds));
+
+        return $this->_getMfpFromEntityItems($categoryItemsMFP);
+    }
+
+    /**
+     * Get MFP from products categories by date range ALS
+     *
+     * @param array $categoryItemsIds
+     * @return string
+     */
+    public function getMFPFromCategoriesByDateRangeALS(array $categoryItemsIds)
+    {
+        $newCategories = array_diff($categoryItemsIds, array_keys($this->_categoryDateRangeMfpALS));
+
+        if(sizeof($newCategories)) {
+            $categories = Mage::getModel('catalog/category')->getCollection()
+                ->addAttributeToSelect(
+                    array('affirm_category_mfp', '', 'affirm_category_mfp_type', 'affirm_category_mfp_priority', 'affirm_category_mfp_start_date', 'affirm_category_mfp_end_date')
+                )
+                ->addAttributeToFilter('entity_id', array('in' => $newCategories));
+            foreach ($categories as $category) {
+                $this->_categoryDateRangeMfpALS[$category->getId()] = array(
+                    'value' => $category->getAffirmCategoryMfp(),
+                    'type' => $category->getAffirmCategoryMfpType(),
+                    'priority' => $category->getAffirmCategoryMfpPriority() ?
+                        $category->getAffirmCategoryMfpPriority() : 0,
+                    'timebased_value' => $category->getAffirmCategoryMfpTimebase(),
+                    'start_date' => $category->getAffirmCategoryMfpSatrtDate(),
+                    'end_date' => $category->getAffirmCategoryMfpEndDate(),
+                );
+            }
+        }
+
+        $categoryItemsMFP = array_intersect_key($this->_categoryDateRangeMfpALS, array_flip($categoryItemsIds));
+
+        return $this->_getMfpFromEntityItemsByDateRange($categoryItemsMFP);
+    }
+
+    /**
+     * Is MFP valid for current date ALS
+     *
+     * @return bool
+     */
+    public function isMFPValidCurrentDateALS()
+    {
+        return $this->getPromoIdDateRange() &&
+            Mage::app()->getLocale()->isStoreDateInInterval(null, $this->getMFPStartDate(), $this->getMFPEndDate());
     }
 
     /**

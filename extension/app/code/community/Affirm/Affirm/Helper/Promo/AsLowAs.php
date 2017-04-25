@@ -43,9 +43,21 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     protected $_affirmDisabledBackOrderedPdp;
 
     /**
+     * Disabled back ordered on PLP
+     *
+     * @var bool
+     */
+    protected $_affirmDisabledBackOrderedPlp;
+
+    /**
      * Visibility as low as on PDP
      */
     const AFFIRM_PROMO_AS_LOW_AS_PDP = 'affirmpromo/as_low_as/as_low_as_pdp';
+
+    /**
+     * Visibility as low as on PLP
+     */
+    const AFFIRM_PROMO_AS_LOW_AS_PLP = 'affirmpromo/as_low_as/as_low_as_plp';
 
     /**
      * Visibility as low as on cart
@@ -63,6 +75,11 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     const AFFIRM_PROMO_AS_LOW_AS_PROMO_MONTHS = 'affirmpromo/as_low_as/promo_months';
 
     /**
+     * MPP min amount value
+     */
+    const MPP_MIN_DISPLAY_VALUE = 'affirmpromo/as_low_as/min_mpp_display_value';
+
+    /**
      * Check is visible on PDP
      *
      * @param null|Mage_Core_Model_Store $store
@@ -71,6 +88,17 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     public function isVisibleOnPDP($store = null)
     {
         return Mage::getStoreConfig(self::AFFIRM_PROMO_AS_LOW_AS_PDP, $store);
+    }
+
+    /**
+     * Check is visible on PLP
+     *
+     * @param null|Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function isVisibleOnPLP($store = null)
+    {
+        return Mage::getStoreConfig(self::AFFIRM_PROMO_AS_LOW_AS_PLP, $store);
     }
 
     /**
@@ -107,6 +135,17 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Get Minimum amount for displaying the (MPP - monthly payment pricing)
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getMinMPP($store = null)
+    {
+        return Mage::getStoreConfig(self::MPP_MIN_DISPLAY_VALUE, $store);
+    }
+
+    /**
      * Skip As Low As message for specific product types
      *
      * @return bool
@@ -129,8 +168,8 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     {
         if (null === $this->_affirmDisabledBackOrderedCart) {
             $this->_affirmDisabledBackOrderedCart = Mage::helper('affirm')->isDisableQuoteBackOrdered() ||
-                Mage::helper('affirm')->isDisableModuleFunctionality() ||
-                !$this->isVisibleOnCart() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled();
+                    Mage::helper('affirm')->isDisableModuleFunctionality() ||
+                    !$this->isVisibleOnCart() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled();
         }
         return $this->_affirmDisabledBackOrderedCart;
     }
@@ -144,10 +183,48 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     {
         if (null === $this->_affirmDisabledBackOrderedPdp) {
             $this->_affirmDisabledBackOrderedPdp = Mage::helper('affirm')->isDisableProductBackOrdered() ||
-                Mage::helper('affirm')->isDisableModuleFunctionality() ||
-                !$this->isVisibleOnPDP() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled() ||
-                $this->_isSkipProductByType();
+                    Mage::helper('affirm')->isDisableModuleFunctionality() ||
+                    !$this->isVisibleOnPDP() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled() ||
+                    $this->_isSkipProductByType();
         }
         return $this->_affirmDisabledBackOrderedPdp;
+    }
+
+    /**
+     * Is As Low As disabled on PLP
+     *
+     * @return bool
+     */
+    public function isAsLowAsDisabledOnPLP()
+    {
+        if (null === $this->_affirmDisabledBackOrderedPlp) {
+            $this->_affirmDisabledBackOrderedPlp = Mage::helper('affirm')->isDisableModuleFunctionality() ||
+                    !$this->isVisibleOnPLP() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled();
+        }
+        return $this->_affirmDisabledBackOrderedPlp;
+    }
+
+    /**
+     * Get affirm MFP value
+     *
+     * @param array $product
+     * @param array $categoryItemsIds
+     * @return string
+     */
+    public function getAffirmMFPValue(array $product, array $categoryItemsIds, $cartTotal = 0)
+    {
+        /** @var Affirm_Affirm_Helper_Mfp $mfpHelper */
+        $mfpHelper = Mage::helper('affirm/mfp');
+        if ($mfpValue = $mfpHelper->getMFPFromProductALS($product)) {
+            return $mfpValue;
+        } elseif ($mfpValue = $mfpHelper->getMFPFromCategoriesALS($categoryItemsIds)) {
+            return $mfpValue;
+        } elseif ($cartTotal > 0 && $mfpHelper->isPromoIdBasedOnCartSize($cartTotal)) {
+            return $mfpHelper->getPromoIdCartSizeValue();
+        } elseif ($mfpHelper->isMFPValidCurrentDateALS()) {
+            return $mfpHelper->getPromoIdDateRange();
+        } else {
+            return $mfpHelper->getPromoIdDefault();
+        }
     }
 }

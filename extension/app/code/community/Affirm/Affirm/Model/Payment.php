@@ -524,8 +524,20 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 'unit_price' => Mage::helper('affirm/util')->formatCents($orderItem->getPrice())
             );
 
+            $start_date = $product->getAffirmProductMfpStartDate();
+            $end_date = $product->getAffirmProductMfpEndDate();
+            if(empty($start_date) || empty($end_date)) {
+                $mfpValue = $product->getAffirmProductMfp();
+            } else {
+                if(Mage::app()->getLocale()->isStoreDateInInterval(null, $start_date, $end_date)) {
+                    $mfpValue = $product->getAffirmProductMfp();
+                } else {
+                    $mfpValue = "";
+                }
+            }
+
             $productItemsMFP[] = array(
-                'value' => $product->getAffirmProductMfp(),
+                'value' => $mfpValue,
                 'type' => $product->getAffirmProductMfpType(),
                 'priority' => $product->getAffirmProductMfpPriority() ?
                     $product->getAffirmProductMfpPriority() : 0
@@ -536,6 +548,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 $categoryItemsIds = array_merge($categoryItemsIds, $categoryIds);
             }
         }
+
         $checkout = array(
             'checkout_id' => $order->getIncrementId(),
             'currency' => $order->getOrderCurrencyCode(),
@@ -546,6 +559,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 'public_api_key' => Mage::helper('affirm')->getApiKey(),
                 'user_confirmation_url' => Mage::getUrl('affirm/payment/confirm', array('_secure' => true)),
                 'user_cancel_url' => Mage::helper('checkout/url')->getCheckoutUrl(),
+                'user_confirmation_url_action' => 'GET',
                 'charge_declined_url' => Mage::helper('checkout/url')->getCheckoutUrl()
             ),
             'config' => array('required_billing_fields' => 'name,address,email'),
@@ -573,12 +587,17 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             'shipping_type' => $order->getShippingDescription(),
             'platform_type' => 'Magento',
             'platform_version' => Mage::getVersion(),
-            'platform_affirm' => '3.3.1'
+            'platform_affirm' => Mage::helper('affirm')->getExtensionVersion()
         );
         $affirmMFPValue = Mage::helper('affirm/mfp')->getAffirmMFPValue($productItemsMFP, $categoryItemsIds, $order->getBaseGrandTotal());
         if ($affirmMFPValue) {
             $checkout['financing_program'] = $affirmMFPValue;
         }
+
+        $checkoutObject = new Varien_Object($checkout);
+        Mage::dispatchEvent('affirm_get_checkout_object_after', array('checkout_object' => $checkoutObject));
+        $checkout = $checkoutObject->getData();
+
         return $checkout;
     }
 
