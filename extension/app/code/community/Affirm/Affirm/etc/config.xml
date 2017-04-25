@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>3.3.1</version>
+            <version>3.3.6</version>
         </Affirm_Affirm>
     </modules>
     <global>
@@ -10,6 +10,11 @@
             <affirm>
                 <class>Affirm_Affirm_Block</class>
             </affirm>
+            <catalog>
+                <rewrite>
+                    <product_list>Affirm_Affirm_Block_Product_List</product_list>
+                </rewrite>
+            </catalog>
         </blocks>
         <helpers>
             <affirm>
@@ -28,6 +33,17 @@
                 </setup>
             </affirm_setup>
         </resources>
+        <events>
+            <affirm_action_saveorder>
+                <observers>
+                    <controller_action_postdispatch_affirm_payment_confirm>
+                        <type>singleton</type>
+                        <class>affirm/order_observer_afterSaveOrder</class>
+                        <method>postDispatchSaveOrder</method>
+                    </controller_action_postdispatch_affirm_payment_confirm>
+                </observers>
+            </affirm_action_saveorder>
+        </events>
     </global>
     <frontend>
         <events>
@@ -67,15 +83,15 @@
                     </affirm_affirm_model_order_observer>
                 </observers>
             </checkout_type_onepage_save_order_after>
-            <controller_action_postdispatch_checkout_onepage_saveOrder>
+            <controller_action_postdispatch>
                 <observers>
-                    <controller_action_postdispatch_affirm_payment_confirm>
+                    <controller_action_postdispatch_affirm_all>
                         <type>singleton</type>
-                        <class>affirm/order_observer_afterSaveOrder</class>
-                        <method>postDispatchSaveOrder</method>
-                    </controller_action_postdispatch_affirm_payment_confirm>
+                        <class>affirm/order_observer</class>
+                        <method>postDispatchAll</method>
+                    </controller_action_postdispatch_affirm_all>
                 </observers>
-            </controller_action_postdispatch_checkout_onepage_saveOrder>
+            </controller_action_postdispatch>
             <controller_action_predispatch>
                 <observers>
                     <controller_action_predispatch_affirm_mfp_identify>
@@ -161,14 +177,12 @@
                 <model>affirm/payment</model>
                 <!-- WARNING: default value for title removed to prevent it from appearing on checkout page on MCE 1.4.0.1 -->
                 <title>Affirm: Buy with Monthly Payments</title>
-                <label_html_custom><![CDATA[<img src="https://cdn-assets.affirm.com/images/blue_logo-transparent_bg.png" width="57" height="17" class="v-middle" style="margin-right:3px;">&nbsp;Buy with Monthly Payments]]></label_html_custom>
+                <label_html_custom><![CDATA[<img src="https://cdn-assets.affirm.com/images/blue_logo-transparent_bg.png" width="52" height="16" class="v-middle">&nbsp;Buy with Monthly Payments]]></label_html_custom>
                 <checkout_button_active>0</checkout_button_active>
                 <checkout_button_code>https://cdn-assets.affirm.com/images/buttons/30_148-white.png</checkout_button_code>
                 <payment_action>authorize</payment_action>
-                <api_url_sandbox>https://sandbox.affirm.com</api_url_sandbox>
                 <api_key_sandbox />
                 <secret_key_sandbox backend_model="adminhtml/system_config_backend_encrypted"/>
-                <api_url_production>https://api.affirm.com</api_url_production>
                 <api_key_production />
                 <secret_key_production backend_model="adminhtml/system_config_backend_encrypted"/>
                 <line_items_enabled>1</line_items_enabled>

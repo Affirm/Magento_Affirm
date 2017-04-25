@@ -17,6 +17,20 @@
  */
 class Affirm_Affirm_Model_Order_Observer
 {
+    private $_isAffirmOrderSaveAfter = false;
+    /**
+     * Apply affirm logic
+     *
+     * @param Varien_Event_Observer $observer
+     */
+    public function postDispatchAll($observer)
+    {
+        if($this->_isAffirmOrderSaveAfter) {
+            Mage::dispatchEvent('affirm_action_saveorder', $observer->getData());
+            $this->_isAffirmOrderSaveAfter = false;
+        }
+    }
+
     /**
      * Is create order after confirmation
      *
@@ -97,6 +111,13 @@ class Affirm_Affirm_Model_Order_Observer
                     'POST'       => Mage::app()->getRequest()->getPost(), //need post for some cross site issues
                     'quote_id'   => $quote->getId()
                 );
+
+                $orderRequest['routing_info'] = array(
+                    'requested_route' => $request->getRequestedRouteName(),
+                    'requested_controller' => $request->getRequestedControllerName(),
+                    'requested_action' => $request->getRequestedActionName()
+                );
+
                 Mage::helper('affirm')->getCheckoutSession()->setAffirmOrderRequest(serialize($orderRequest));
 
                 $this->_callToPreOrderActionAndExit($order, $quote);
@@ -113,6 +134,7 @@ class Affirm_Affirm_Model_Order_Observer
      */
     public function reactivateQuote($observer)
     {
+        $this->_isAffirmOrderSaveAfter = true;
         $quote = $observer->getQuote();
         $methodInst = $quote->getPayment()->getMethodInstance();
         if (($methodInst->getCode() == Affirm_Affirm_Model_Payment::METHOD_CODE) && !$methodInst->redirectPreOrder()) {

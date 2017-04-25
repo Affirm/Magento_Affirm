@@ -24,7 +24,7 @@ class Affirm_Affirm_Model_Credential_Sandbox extends Affirm_Affirm_Model_Credent
     /**
      * Payment affirm api url
      */
-    const PAYMENT_AFFIRM_API_URL = 'payment/affirm/api_url_sandbox';
+    const PAYMENT_AFFIRM_API_URL = 'https://sandbox.affirm.com';
 
     /**
      * Payment affirm api key
@@ -44,12 +44,11 @@ class Affirm_Affirm_Model_Credential_Sandbox extends Affirm_Affirm_Model_Credent
     /**
      * Get api url
      *
-     * @param Mage_Core_Model_Store $store
      * @return string
      */
-    public function getApiUrl($store = null)
+    public function getApiUrl()
     {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_API_URL, $store);
+        return self::PAYMENT_AFFIRM_API_URL;
     }
 
     /**
