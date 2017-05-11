@@ -1,11 +1,13 @@
-<script type="text/javascript">
-    if (!AFFIRM_AFFIRM.promos.getIsInitialized()) {
-        AFFIRM_AFFIRM.promos.initialize("<?php echo $this->helper('affirm')->getApiKey(); ?>",
-            "<?php echo $this->helper('affirm')->getAffirmJsUrl(); ?>");
-    }
-    AFFIRM_AFFIRM.promos.initLimitation("<?php echo $this->helper('affirm')->getMinOrderThreshold(); ?>", "<?php echo $this->helper('affirm')->getMaxOrderThreshold(); ?>");
+<?php if (!Mage::helper('affirm/promo_asLowAs')->isAsLowAsDisabledOnPLP()) : ?>
+    <script type="text/javascript">
+        if (!AFFIRM_AFFIRM.promos.getIsInitialized()) {
+            AFFIRM_AFFIRM.promos.initialize("<?php echo $this->helper('affirm')->getApiKey(); ?>",
+                "<?php echo $this->helper('affirm')->getAffirmJsUrl(); ?>");
+        }
+        AFFIRM_AFFIRM.promos.initLimitation("<?php echo $this->helper('affirm')->getMinOrderThreshold(); ?>", "<?php echo $this->helper('affirm')->getMaxOrderThreshold(); ?>");
 
-    if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {
-        AFFIRM_AFFIRM.promos.loadScript();
-    }
-</script>
+        if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {
+            AFFIRM_AFFIRM.promos.loadScript();
+        }
+    </script>
+<?php endif; ?>
