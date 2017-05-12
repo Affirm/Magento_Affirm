@@ -1,0 +1,1 @@
+var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};

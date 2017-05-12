@@ -6,24 +6,15 @@
         display: none;
     }
 
-    .affirm_payment_info1 {
-        color: #034082;
-        font-size: 16px;
-    }
-    .affirm_payment_info2 {
+    .affirm_payment_info {
         color: #6f6f6f;
         font-size: 14px;
     }
 </style>
 <ul class="form-list affirm" id="payment_form_affirm" style="display:none;">
     <li class="form-alt">
-        <div class="affirm_payment_info1"><?php echo $this->__('How does Affirm work ?'); ?></div>
-            <div class="affirm_payment_info2">
-                <?php echo $this->__('Just enter some basic personal information and get a real-time credit decision.'); ?>
-                <br>
-                <?php echo $this->__('You will complete your application on the Affirm website.'); ?>
-                <br>
-                <?php echo $this->__('If you\'re approved and confirm a loan, your purchase will be on its way as soon as it\'s ready.'); ?>
+            <div class="affirm_payment_info">
+                <p><?php echo $this->__('You will be redirected to Affirm to securely complete your purchase. Just fill out a few pieces of basic information and get a real-time decision. Checking your eligibility won\'t affect your credit score.'); ?></p>
             </div>
     </li>
 </ul>

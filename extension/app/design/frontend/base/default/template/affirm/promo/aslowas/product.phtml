@@ -2,7 +2,7 @@
     $mfpValue = $this->getMFPValue();
 ?>
 <div>
-    <?php echo '<div class="affirm-as-low-as" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->getFinalPrice() .'"></div>'; ?>
+    <?php echo '<div style="margin-bottom:5px;" class="affirm-as-low-as" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->getFinalPrice() .'"></div>'; ?>
 </div>
 
 <script type="text/javascript">

@@ -1,11 +1,11 @@
 <?php
 return array(
 'base_dir'             => realpath('../var/'),
-'archive_files'        => 'Affirm_Affirm-3.1.0.tgz',
+'archive_files'        => 'Affirm_Affirm-3.4.1.tgz',
 'extension_name'       => 'Affirm_Magento',
 'skip_version_compare' => true,
-'extension_version'    => '3.1.0',
-'archive_connect'      => 'Affirm_Affirm-3.1.0.tgz',
+'extension_version'    => '3.4.1',
+'archive_connect'      => 'Affirm_Affirm-3.4.1.tgz',
 'path_output'          => realpath('../var/'),
 
 'stability'            => 'stable',
@@ -16,7 +16,7 @@ return array(
 'notes'                => 'Initial Release',
 
 'author_name'          => 'Affirm, Inc.',
-'author_user'          => 'bmoaffirm',
+'author_user'          => 'affirm',
 'author_email'         => 'mts@affirm.com',
 'php_min'              => '5.2.0',
 'php_max'              => '6.0.0',
