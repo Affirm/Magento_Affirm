@@ -67,24 +67,6 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
             return this;
         },
 
-         /**
-          * Init limitation
-          *
-          * @param {String} minTotal
-          * @param {String} maxTotal
-          * @returns {AFFIRM_AFFIRM.promos}
-         */
-         initLimitation: function(minTotal, maxTotal) {
-             minTotal = parseInt(minTotal);
-             maxTotal = parseInt(maxTotal);
-             if (!isNaN(minTotal)) {
-                 this.minTotal = this.formatPriceToCents(minTotal);
-             }
-             if (!isNaN(maxTotal)) {
-                 this.maxTotal = this.formatPriceToCents(maxTotal);
-             }
-             return this;
-         },
 
         /**
          * Get options
@@ -184,19 +166,6 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
             }
             return this.deBounceUpdateAsLowAs;
         },
-
-         /**
-          * Format price to cents
-          *
-          * @param {Number} amount
-          * @returns {Number}
-          */
-         formatPriceToCents: function(amount) {
-             var price;
-             price = amount.toFixed(2);
-             price = price.replace('.', '');
-             return parseInt(price);
-         },
 
          /**
           * Parse price to extract main price
