@@ -51,6 +51,13 @@ to update:
 modman update Magento_Affirm
 ```
 
+
+####To install user [magento-composer-installer](https://github.com/Cotya/magento-composer-installer)
+
+```
+composer require affirm/affirm-php
+```
+
 ####To install using Affirm's deploy script
 
 1. Download the [Makefile](https://raw.githubusercontent.com/Affirm/Magento_Affirm/master/util/Makefile) (requires git, wget)
