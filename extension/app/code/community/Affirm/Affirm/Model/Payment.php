@@ -559,7 +559,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 'public_api_key' => Mage::helper('affirm')->getApiKey(),
                 'user_confirmation_url' => Mage::getUrl('affirm/payment/confirm', array('_secure' => true)),
                 'user_cancel_url' => Mage::helper('checkout/url')->getCheckoutUrl(),
-                'user_confirmation_url_action' => 'GET',
+                'user_confirmation_url_action' => 'POST',
                 'charge_declined_url' => Mage::helper('checkout/url')->getCheckoutUrl()
             ),
             'config' => array('required_billing_fields' => 'name,address,email'),
