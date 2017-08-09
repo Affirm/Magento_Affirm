@@ -582,9 +582,13 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $checkout['shipping'] = $shipping;
         }
         $checkout['total'] = Mage::helper('affirm/util')->formatCents(self::_affirmTotal($order));
+        if (method_exists('Mage', 'getEdition')){
+            $platform_edition = Mage::getEdition();
+        }
+        $platform_type = isset($platform_edition) ? "Magento ".$platform_edition : "Magento";
         $checkout['metadata'] = array(
             'shipping_type' => $order->getShippingDescription(),
-            'platform_type' => 'Magento',
+            'platform_type' => $platform_type,
             'platform_version' => Mage::getVersion(),
             'platform_affirm' => Mage::helper('affirm')->getExtensionVersion()
         );
