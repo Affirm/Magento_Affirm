@@ -65,17 +65,6 @@
                                 <account_mode>sandbox</account_mode>
                             </depends>
                         </secret_key_sandbox>
-                        <financial_product_key_sandbox translate="label">
-                            <label>Financial Product Key</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>25</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <depends>
-                                <account_mode>sandbox</account_mode>
-                            </depends>
-                        </financial_product_key_sandbox>
                         <api_key_production translate="label">
                             <label>Public API Key</label>
                             <frontend_type>text</frontend_type>
@@ -99,17 +88,6 @@
                                 <account_mode>production</account_mode>
                             </depends>
                         </secret_key_production>
-                        <financial_product_key_production translate="label">
-                            <label>Financial Product Key</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>25</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                            <depends>
-                                <account_mode>production</account_mode>
-                            </depends>
-                        </financial_product_key_production>
                         <payment_action translate="label">
                             <label>Payment Action</label>
                             <frontend_type>select</frontend_type>

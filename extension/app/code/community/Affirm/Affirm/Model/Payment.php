@@ -581,7 +581,6 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         if ($shipping) {
             $checkout['shipping'] = $shipping;
         }
-        $checkout['financial_product_key'] = Mage::helper('affirm')->getFinancialProductKey();
         $checkout['total'] = Mage::helper('affirm/util')->formatCents(self::_affirmTotal($order));
         $checkout['metadata'] = array(
             'shipping_type' => $order->getShippingDescription(),

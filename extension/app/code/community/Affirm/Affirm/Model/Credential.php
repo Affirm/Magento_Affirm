@@ -114,15 +114,4 @@ class Affirm_Affirm_Model_Credential
     {
         return $this->_getCredentialModel($store)->getSecretKey($store);
     }
-
-    /**
-     * Get secret key
-     *
-     * @param Mage_Core_Model_Store $store
-     * @return string
-     */
-    public function getFinancialProductKey($store = null)
-    {
-        return $this->_getCredentialModel($store)->getFinancialProductKey($store);
-    }
 }

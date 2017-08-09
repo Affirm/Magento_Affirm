@@ -205,20 +205,6 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Get financial product key
-     *
-     * @param Mage_Core_Model_Store $store
-     * @return string
-     */
-    public function getFinancialProductKey($store = null)
-    {
-        if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
-        }
-        return Mage::getSingleton('affirm/credential')->getFinancialProductKey($store);
-    }
-
-    /**
      * Get detect xhr checkout
      *
      * @param Mage_Core_Model_Store $store

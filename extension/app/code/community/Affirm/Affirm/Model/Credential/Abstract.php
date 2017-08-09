@@ -41,11 +41,4 @@ abstract class Affirm_Affirm_Model_Credential_Abstract
      * @return string
      */
     abstract public function getSecretKey();
-
-    /**
-     * Get financial product key
-     *
-     * @return string
-     */
-    abstract public function getFinancialProductKey();
 }
