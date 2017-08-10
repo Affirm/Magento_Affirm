@@ -178,6 +178,6 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
     public function setPaymentFlagAndCheckoutAction()
     {
         Mage::helper('affirm')->getCheckoutSession()->setAffirmPaymentFlag(true);
-        $this->_redirect('checkout/onepage');
+        $this->_redirectUrl(Mage::helper('checkout/url')->getCheckoutUrl());
     }
 }
