@@ -469,4 +469,18 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return Mage::helper('core')->jsonEncode($result);
     }
+
+    /**
+     * Get assets url
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getAffirmAssetsUrl()
+    {
+        $prefix = "cdn-assets";
+        $domain = "affirm.com";
+        $assetPath = "images/banners";
+        return 'https://' . $prefix . '.' . $domain . '/' . $assetPath ;
+    }
 }
