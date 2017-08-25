@@ -50,10 +50,8 @@ class Affirm_Affirm_Block_Promo_Promo extends Mage_Core_Block_Template
      */
     public function getMFPValue()
     {
-        Mage::log(__METHOD__);
         $currentController = Mage::app()->getFrontController()->getRequest()->getControllerName();
         $mfpHelper = Mage::helper('affirm/mfp');
-        Mage::log($currentController);
         switch($currentController) {
             case 'product':
                 return $this->getProductMFPValue();
