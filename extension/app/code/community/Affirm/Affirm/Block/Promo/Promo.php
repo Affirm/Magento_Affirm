@@ -34,28 +34,137 @@ class Affirm_Affirm_Block_Promo_Promo extends Mage_Core_Block_Template
     }
 
     /**
-     * Get snippet code
+     * Get product on PDP
      *
-     * @return string
+     * @return Mage_Catalog_Model_Product|null
      */
-    /**
-     * Get html code for promo snippet
-     *
-     * @return string
-     */
-    public function getSnippetCode()
+    public function getProduct()
     {
-        if (!$this->_helper->isPromoActive() || !$this->_helper->getSectionConfig()->getDisplay()) {
-            return '';
+        return $this->helper('catalog')->getProduct();
+    }
+
+    /**
+     * Get MFP value
+     *
+     * @return string
+     */
+    public function getMFPValue()
+    {
+        Mage::log(__METHOD__);
+        $currentController = Mage::app()->getFrontController()->getRequest()->getControllerName();
+        $mfpHelper = Mage::helper('affirm/mfp');
+        Mage::log($currentController);
+        switch($currentController) {
+            case 'product':
+                return $this->getProductMFPValue();
+                break;
+            case 'category':
+                $categoryId = Mage::registry('current_category')->getId();
+                $categoryIds = array();
+                $categoryIds[] = $categoryId;
+                return $this->helper('affirm/promo_asLowAs')->getAffirmMFPValue(array(), $categoryIds);
+                break;
+            case 'cart':
+                return $this->getCheckoutMFPValue();
+                break;
+            default:
+                return $mfpHelper->getPromoIdDefault();
+                break;
+        }
+    }
+
+    /**
+     * Get Product MFP value
+     *
+     * @return string
+     */
+    public function getProductMFPValue()
+    {
+        $product = $this->getProduct();
+
+        $categoryIds = $product->getCategoryIds();
+
+        $start_date = $product->getAffirmProductMfpStartDate();
+        $end_date = $product->getAffirmProductMfpEndDate();
+        if(empty($start_date) || empty($end_date)) {
+            $mfpValue = $product->getAffirmProductPromoId();
+        } else {
+            if(Mage::app()->getLocale()->isStoreDateInInterval(null, $start_date, $end_date)) {
+                $mfpValue = $product->getAffirmProductPromoId();
+            } else {
+                $mfpValue = "";
+            }
         }
 
-        $sectionConfig = $this->_helper->getSectionConfig();
-        $container = $sectionConfig->getContainer();
-        $snippet = $this->getChildHtml('affirmpromo_snippet');
+        $productItemMFP = array(
+            'value' => $mfpValue,
+            'type' => $product->getAffirmProductMfpType(),
+            'priority' => $product->getAffirmProductMfpPriority() ?
+                $product->getAffirmProductMfpPriority() : 0
+        );
 
-        if (!empty($container)) {
-            $snippet = str_replace('{container}', $snippet, $container);
+        return $this->helper('affirm/promo_asLowAs')->getAffirmMFPValue(array($productItemMFP), $categoryIds);
+    }
+
+    /**
+     * Get Cart MFP value
+     *
+     * @return string
+     */
+    public function getCheckoutMFPValue()
+    {
+        $cart = Mage::getModel('checkout/cart')->getQuote();
+        $productIds = array();
+        $productItemMFP = array();
+        $categoryItemsIds = array();
+        $categoryIds = array();
+        foreach ($cart->getAllVisibleItems() as $item) {
+            $productIds[] = $item->getProduct()->getId();
         }
-        return $snippet;
+        if($productIds) {
+            $products = Mage::getModel('catalog/product')->getCollection()
+                ->addAttributeToSelect(
+                    array('affirm_product_promo_id', 'affirm_product_mfp_type', 'affirm_product_mfp_priority')
+                )
+                ->addAttributeToFilter('entity_id', array('in' => $productIds));
+            $productItems = $products->getItems();
+
+            foreach ($cart->getAllVisibleItems() as $item) {
+                $product = $productItems[$item->getProduct()->getId()];
+                if (Mage::helper('affirm')->isPreOrder() && $item->getProduct()->getParentItem() &&
+                    ($item->getProduct()->getParentItem()->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE)
+                ) {
+                    continue;
+                }
+
+                $start_date = $product->getAffirmProductMfpStartDate();
+                $end_date = $product->getAffirmProductMfpEndDate();
+                if (empty($start_date) || empty($end_date)) {
+                    $mfpValue = $product->getAffirmProductPromoId();
+                } else {
+                    if (Mage::app()->getLocale()->isStoreDateInInterval(null, $start_date, $end_date)) {
+                        $mfpValue = $product->getAffirmProductPromoId();
+                    } else {
+                        $mfpValue = "";
+                    }
+                }
+
+                $productItemMFP[] = array(
+                    'value' => $mfpValue,
+                    'type' => $product->getAffirmProductMfpType(),
+                    'priority' => $product->getAffirmProductMfpPriority() ?
+                        $product->getAffirmProductMfpPriority() : 0
+                );
+
+                $categoryIds = $product->getCategoryIds();
+                if (!empty($categoryIds)) {
+                    $categoryItemsIds = array_merge($categoryItemsIds, $categoryIds);
+                }
+            }
+
+            $categoryIds = $product->getCategoryIds();
+        }
+
+        return Mage::helper('affirm/promo_asLowAs')->getAffirmMFPValue($productItemMFP, $categoryIds, $this->helper('checkout/cart')->getQuote()->getGrandTotal());
     }
 }

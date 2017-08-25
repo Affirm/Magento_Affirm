@@ -57,9 +57,6 @@ class Affirm_Affirm_Model_Promo_Observer
                 '<reference name="' . $name . '">
                     <block type="affirm/promo_promo" name="affirmpromo"
                         template="affirm/promo/promo.phtml" ' . $vertical . '>
-                        <block type="core/template" name="affirmpromo_snippet"
-                            template="affirm/promo/snippet.phtml">
-                        </block>
                     </block>
                 </reference>');
         }
