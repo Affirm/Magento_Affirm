@@ -66,7 +66,11 @@ class Affirm_Affirm_Block_Promo_Promo extends Mage_Core_Block_Template
                 return $this->getCheckoutMFPValue();
                 break;
             default:
-                return $mfpHelper->getPromoIdDefault();
+                if ($mfpHelper->isMFPValidCurrentDateALS()) {
+                    return $mfpHelper->getPromoIdDateRange();
+                } else {
+                    return $mfpHelper->getPromoIdDefault();
+                }
                 break;
         }
     }
