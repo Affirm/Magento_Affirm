@@ -34,11 +34,10 @@ class Affirm_Affirm_Block_Promo_AsLowAs_Product extends Mage_Core_Block_Template
 
         $mpp = $this->helper('affirm/promo_asLowAs')->getMinMPP();
         if (!empty($mpp)) {
-            if ($this->getProduct()->getFinalPrice() < $mpp) {
+            if ($this->getFinalPrice() < $mpp) {
                 return "";
             }
         }
-
         return parent::_toHtml();
     }
 
@@ -59,8 +58,37 @@ class Affirm_Affirm_Block_Promo_AsLowAs_Product extends Mage_Core_Block_Template
      */
     public function getFinalPrice()
     {
-        $price = $this->getProduct()->getFinalPrice();
-        return $this->helper('affirm/util')->formatCents($price);
+        $product = $this->getProduct();
+        if($product->getFinalPrice()) {
+            return $this->helper('affirm/util')->formatCents($product->getFinalPrice());
+        } else if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE) {
+            $optionCol= $product->getTypeInstance(true)
+                ->getOptionsCollection($product);
+            $selectionCol= $product->getTypeInstance(true)
+                ->getSelectionsCollection(
+                    $product->getTypeInstance(true)->getOptionsIds($product),
+                    $product
+                );
+            $optionCol->appendSelections($selectionCol);
+            $price = $product->getPrice();
+
+            foreach ($optionCol as $option) {
+                if($option->required) {
+                    $selections = $option->getSelections();
+                    $minPrice = min(array_map(function ($s) {
+                        return $s->price;
+                    }, $selections));
+                    if($product->getSpecialPrice() > 0) {
+                        $minPrice *= $product->getSpecialPrice()/100;
+                    }
+
+                    $price += round($minPrice,2);
+                }
+            }
+            return $this->helper('affirm/util')->formatCents($price);
+        } else {
+            return "";
+        }
     }
 
     /**
