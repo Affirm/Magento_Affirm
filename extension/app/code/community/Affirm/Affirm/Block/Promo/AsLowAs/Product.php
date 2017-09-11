@@ -52,6 +52,16 @@ class Affirm_Affirm_Block_Promo_AsLowAs_Product extends Mage_Core_Block_Template
     }
 
     /**
+     * Get product id on PDP
+     *
+     * @return Mage_Catalog_Model_Product|null
+     */
+    public function getProductId()
+    {
+        return $this->helper('catalog')->getProduct()->getId();
+    }
+
+    /**
      * Get final price
      *
      * @return int
