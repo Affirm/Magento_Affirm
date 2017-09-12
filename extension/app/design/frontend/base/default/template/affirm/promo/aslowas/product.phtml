@@ -23,11 +23,11 @@
     }
 </script>
 <script type="text/javascript">
-    jQuery(".bundle-option-select").on('change', function () {
-        if(jQuery('#product-price-'+<?php echo $productId; ?>)) {
+    jQuery(".change-container-classname").on('change click', function () {
+        if (jQuery('#product-price-' +<?php echo $productId; ?>)) {
             var refreshable = document.getElementById('as-low-as-refreshable');
             var amount = jQuery('#product-price-' +<?php echo $productId; ?>).html();
-            var finalAmount = Number(amount.replace(/[^0-9\.-]+/g,"")) * 100;
+            var finalAmount = Number(amount.replace(/[^0-9\.-]+/g, "")) * 100;
             refreshable.setAttribute('data-amount', finalAmount);
             console.log('refreshALA', refreshable);
             affirm.ui.refresh();
