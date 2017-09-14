@@ -37,11 +37,6 @@ class Affirm_Affirm_Model_Credential_Production extends Affirm_Affirm_Model_Cred
     const PAYMENT_AFFIRM_SECRET_KEY = 'payment/affirm/secret_key_production';
 
     /**
-     * Payment affirm financial product key
-     */
-    const PAYMENT_AFFIRM_FINANCIAL_PRODUCT_KEY = 'payment/affirm/financial_product_key_production';
-
-    /**
      * Get api url
      *
      * @return string
@@ -71,16 +66,5 @@ class Affirm_Affirm_Model_Credential_Production extends Affirm_Affirm_Model_Cred
     public function getSecretKey($store = null)
     {
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_SECRET_KEY, $store);
-    }
-
-    /**
-     * Get secret key
-     *
-     * @param Mage_Core_Model_Store $store
-     * @return string
-     */
-    public function getFinancialProductKey($store = null)
-    {
-        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_FINANCIAL_PRODUCT_KEY, $store);
     }
 }

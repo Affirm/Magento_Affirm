@@ -581,12 +581,16 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         if ($shipping) {
             $checkout['shipping'] = $shipping;
         }
-        $checkout['financial_product_key'] = Mage::helper('affirm')->getFinancialProductKey();
         $checkout['total'] = Mage::helper('affirm/util')->formatCents(self::_affirmTotal($order));
+        if (method_exists('Mage', 'getEdition')){
+            $platform_edition = Mage::getEdition();
+        }
+        $platform_version = Mage::getVersion();
+        $platform_version_edition = isset($platform_edition) ? $platform_version.' '.$platform_edition : $platform_version;
         $checkout['metadata'] = array(
             'shipping_type' => $order->getShippingDescription(),
             'platform_type' => 'Magento',
-            'platform_version' => Mage::getVersion(),
+            'platform_version' => $platform_version_edition,
             'platform_affirm' => Mage::helper('affirm')->getExtensionVersion()
         );
         $affirmMFPValue = Mage::helper('affirm/mfp')->getAffirmMFPValue($productItemsMFP, $categoryItemsIds, $order->getBaseGrandTotal());
