@@ -5,4 +5,4 @@ extension/app/design/frontend/base/default/layout/affirm            app/design/f
 extension/app/design/frontend/base/default/template/affirm          app/design/frontend/base/default/template/affirm
 extension/app/etc/modules/Affirm_Affirm.xml             		    app/etc/modules/Affirm_Affirm.xml
 extension/skin/adminhtml/default/default/js/affirm                  skin/adminhtml/default/default/js/affirm
-extension/skin/frontend/base/default/js/affirm                      extension/skin/frontend/base/default/js/affirm
+extension/skin/frontend/base/default/js/affirm                      skin/frontend/base/default/js/affirm
