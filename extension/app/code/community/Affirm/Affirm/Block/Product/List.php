@@ -45,6 +45,8 @@ class Affirm_Affirm_Block_Product_List extends Mage_Catalog_Block_Product_List
         $price = $product->getFinalPrice();
         if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE) {
             $price = Mage::getModel('bundle/product_price')->getTotalPrices($product,'min',1);
+        } else if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_GROUPED) {
+            $price = $product->getMinimalPrice();
         }
         if ($price > $mpp) {
             $categoryIds = $product->getCategoryIds();

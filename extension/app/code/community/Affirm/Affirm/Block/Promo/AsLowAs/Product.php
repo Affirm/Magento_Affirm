@@ -71,6 +71,19 @@ class Affirm_Affirm_Block_Promo_AsLowAs_Product extends Mage_Core_Block_Template
         $product = $this->getProduct();
         if($product->getFinalPrice()) {
             return $this->helper('affirm/util')->formatCents($product->getFinalPrice());
+        } else if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_GROUPED) {
+            $grouped_product_model = Mage::getModel('catalog/product_type_grouped');
+            $groupedParentId = $grouped_product_model->getParentIdsByChild($product->getId());
+            $_associatedProducts = $product->getTypeInstance(true)->getAssociatedProducts($product);
+
+            foreach($_associatedProducts as $_associatedProduct) {
+                if($price = $_associatedProduct->getPrice()) {
+                    $price = $_associatedProduct->getPrice();
+                }
+            }
+
+            $price = number_format((float)$price, 2, '.', '');
+            return $this->helper('affirm/util')->formatCents($price);
         } else if ($product->getTypeId() == Mage_Catalog_Model_Product_Type::TYPE_BUNDLE) {
             $optionCol= $product->getTypeInstance(true)
                 ->getOptionsCollection($product);
