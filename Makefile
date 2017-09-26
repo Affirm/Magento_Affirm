@@ -18,7 +18,7 @@ dependencies:
 
 package: validate_version
 	mkdir -p ./var/
-	cd ./extension && tar -cvf ../var/Affirm_Affirm-3.4.0.tgz *
+	cd ./extension && tar -cvf ../var/Affirm_Affirm-3.5.0.tgz *
 	cd ./build && ./magento-tar-to-connect.phar affirm_tar_to_connect_config.php
 
 clean:

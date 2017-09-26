@@ -17,14 +17,6 @@ def version(namespace, module):
     config = tree.getroot()
     return config.find("modules").find(x).find("version").text
 
-if version("Affirm", "Affirm") != version("Affirm", "AffirmPromo"):
-    print ""
-    print "ERROR: version mismatch"
-    print "Affirm_Affirm {0}".format(version("Affirm", "Affirm"))
-    print "Affirm_AffirmPromo {0}".format(version("Affirm", "AffirmPromo"))
-    print ""
-    exit(1)
-
 if version("Affirm", "Affirm") != version_in_tarball_config("build/affirm_tar_to_connect_config.php"):
     print ""
     print "ERROR: version mismatch"
