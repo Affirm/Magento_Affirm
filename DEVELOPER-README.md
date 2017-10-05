@@ -21,7 +21,6 @@ This project uses semantic versioning. When updating the extension, bump the
 version in the following locations:
 
 1. extension/app/code/community/Affirm/Affirm/etc/config.xml
-1. extension/app/code/community/Affirm/AffirmPromo/etc/config.xml
 1. build/affirm_tar_to_connect_config.php
 
 To avoid drift, validate by executing `make validate_version`

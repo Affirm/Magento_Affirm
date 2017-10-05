@@ -1,8 +1,9 @@
 <?php
     $mfpValue = $this->getMFPValue();
+    $productId = $this->getProductId();
 ?>
 <div>
-    <?php echo '<div style="margin-bottom:5px;" class="affirm-as-low-as" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->getFinalPrice() .'"></div>'; ?>
+    <?php echo '<div style="margin-bottom:5px;" class="affirm-as-low-as" id="as-low-as-refreshable" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->getFinalPrice() .'"></div>'; ?>
 </div>
 
 <script type="text/javascript">
@@ -21,4 +22,15 @@
         AFFIRM_AFFIRM.promos.loadScript();
     }
 </script>
-
+<script type="text/javascript">
+    jQuery(".change-container-classname").on('change click', function () {
+        if (jQuery('#product-price-' +<?php echo $productId; ?>)) {
+            var refreshable = document.getElementById('as-low-as-refreshable');
+            var amount = jQuery('#product-price-' +<?php echo $productId; ?>).html();
+            var finalAmount = Number(amount.replace(/[^0-9\.-]+/g, "")) * 100;
+            refreshable.setAttribute('data-amount', finalAmount);
+            console.log('refreshALA', refreshable);
+            affirm.ui.refresh();
+        }
+    });
+</script>
