@@ -54,12 +54,10 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
             ->setOrder($order)->toHtml();
         $serializedRequest = $checkoutSession->getAffirmOrderRequest();
         $proxyRequest = unserialize($serializedRequest);
-
         //only reserve this order id
         $modQuote = Mage::getModel('sales/quote')->load($quote->getId());
         $modQuote->setReservedOrderId($order->getIncrementId());
         $modQuote->save();
-
         if (Mage::helper('affirm')->isXhrRequest($proxyRequest)) {
             $checkoutSession->setPreOrderRender($string);
             $result = array('redirect' => Mage::getUrl('affirm/payment/redirectPreOrder',
@@ -96,13 +94,58 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
      */
     public function confirmAction()
     {
-        $serializedRequest = Mage::helper('affirm')->getCheckoutSession()->getAffirmOrderRequest();
-        $checkoutToken = $this->getRequest()->getParam('checkout_token');
+        Mage::log(__METHOD__);
+        if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+            $checkoutToken = $this->getRequest()->getParam('checkout_token');
+            $session = Mage::getSingleton('checkout/session');
+            Mage::log(__METHOD__ . 'checkoutToken: ' . $checkoutToken);
 
-        if ($this->_isPlaceOrderAfterConf($serializedRequest, $checkoutToken)) {
-            $this->_processConfWithSaveOrder($checkoutToken, $serializedRequest);
+            $quote = $session->getQuote();
+            if ($quote && $checkoutToken) {
+                $quote->collectTotals()->save();
+                $service = Mage::getModel('sales/service_quote', $quote);
+                $service->submitAll();
+
+                $session->setLastQuoteId($quote->getId())
+                    ->setLastSuccessQuoteId($quote->getId())
+                    ->clearHelperData();
+                $session->getQuote()->setIsActive(false)->save();
+                $order = $service->getOrder();
+                if ($order) {
+                    $order->getPayment()->getMethodInstance()->processConfirmOrder($order, $checkoutToken);
+                    $order->sendNewOrderEmail();
+                    Mage::dispatchEvent(
+                        'checkout_type_onepage_save_order_after', array(
+                            'order' => $order,
+                            'quote' => $quote
+                        )
+                    );
+                    Mage::log(__METHOD__ . 'orderedId: ' . $order->getId());
+                    Mage::log(__METHOD__ . 'orderedId: ' . $order->getIncrementId());
+                    // add order information to the session
+                    $session->setLastOrderId($order->getId())
+                        ->setLastRealOrderId($order->getIncrementId());
+
+                    // as well a billing agreement can be created
+                    $agreement = $order->getPayment()->getBillingAgreement();
+                    if ($agreement) {
+                        $session->setLastBillingAgreementId($agreement->getId());
+                    }
+                }
+                Mage::dispatchEvent(
+                    'checkout_submit_all_after',
+                    array('order' => $order, 'quote' => $quote, 'recurring_profiles' => array())
+                );
+            }
+            $this->_redirect('checkout/onepage/success', array('_secure' => true));
         } else {
-            $this->_processConfWithoutSaveOrder($checkoutToken);
+            $serializedRequest = Mage::helper('affirm')->getCheckoutSession()->getAffirmOrderRequest();
+            $checkoutToken = $this->getRequest()->getParam('checkout_token');
+            if ($this->_isPlaceOrderAfterConf($serializedRequest, $checkoutToken)) {
+                $this->_processConfWithSaveOrder($checkoutToken, $serializedRequest);
+            } else {
+                $this->_processConfWithoutSaveOrder($checkoutToken);
+            }
         }
     }
 

@@ -57,6 +57,11 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     const PAYMENT_AFFIRM_DISABLE_BACK_ORDERED_ITEMS = 'payment/affirm/disable_for_backordered_items';
 
     /**
+     * Checkout Flow Type
+     */
+    const PAYMENT_AFFIRM_CHECKOUT_FLOW_TYPE = 'payment/affirm/checkout_flow_type';
+
+    /**
      * Disabled module
      *
      * @var bool
@@ -258,6 +263,36 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
             $store = Mage::app()->getStore()->getStoreId();
         }
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_PRE_ORDER, $store);
+    }
+
+    /**
+     * Checkout flow type
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getCheckoutFlowType($store = null)
+    {
+        if($store == null) {
+            $store = Mage::app()->getStore()->getStoreId();
+        }
+        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_CHECKOUT_FLOW_TYPE, $store);
+    }
+
+    /**
+     * Is Checkout flow type Modal
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return bool
+     */
+    public function isCheckoutFlowTypeModal($store = null)
+    {
+        $configCheckoutType = Mage::helper('affirm')->getCheckoutFlowType();
+        if ($configCheckoutType == Affirm_Affirm_Model_Payment::CHECKOUT_FLOW_MODAL) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -482,5 +517,29 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
         $domain = "affirm.com";
         $assetPath = "images/banners";
         return 'https://' . $prefix . '.' . $domain . '/' . $assetPath ;
+    }
+
+    /**
+     * Get template for button in order review page if Affirm method was selected and checkout flow type is modal
+     *
+     * @param string $name template name
+     * @param string $block buttons block name
+     * @return string
+     */
+    public function getReviewButtonTemplate($name, $block)
+    {
+        $quote = Mage::getSingleton('checkout/session')->getQuote();
+        if ($quote) {
+            $payment = $quote->getPayment();
+            if ($payment && ($payment->getMethod() == Affirm_Affirm_Model_Payment::METHOD_CODE) && $this->isCheckoutFlowTypeModal()) {
+                return $name;
+            }
+        }
+
+        if ($blockObject = Mage::getSingleton('core/layout')->getBlock($block)) {
+            return $blockObject->getTemplate();
+        }
+
+        return '';
     }
 }

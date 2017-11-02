@@ -1,0 +1,31 @@
+<button id="affirm-submit" type="submit" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Continue with Affirm')) ?>" class="button btn-checkout">
+    <span><span><?php echo $this->__('Continue with Affirm') ?></span></span>
+</button>
+
+<?php
+$checkoutSession = Mage::getSingleton('checkout/session');
+$quote = $checkoutSession->getQuote();
+$paymentMethod = $quote->getPayment()->getMethodInstance();
+
+?>
+<script type="text/javascript">
+    //<![CDATA[
+    jQuery('#affirm-submit').click(function (event){
+        //alert(JSON.stringify(<?php echo json_encode($paymentMethod->getCheckoutQuoteObject($quote)); ?>));
+        affirm.checkout(<?php echo json_encode($paymentMethod->getCheckoutQuoteObject($quote)); ?>);
+        affirm.ui.error.on("close", function () {
+            window.location = "<?php echo $this->helper('checkout/url')->getCheckoutUrl(); ?> ";
+        });
+        affirm.checkout.open({
+            onFail: function () {
+                console.log("User cancelled the Affirm checkout flow")
+            },
+            onSucces: function (a) {
+                console.log("Affirm checkout successful, checkout token is: " + a.checkout_token);
+            }
+        });
+    });
+    //]]>
+</script>
+
+

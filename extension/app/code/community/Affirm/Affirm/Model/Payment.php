@@ -29,6 +29,8 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     const CHECKOUT_XHR_AUTO = 'auto';
     const CHECKOUT_XHR = 'xhr';
     const CHECKOUT_REDIRECT = 'redirect';
+    const CHECKOUT_FLOW_REDIRECT = 'redirect';
+    const CHECKOUT_FLOW_MODAL = 'modal';
     /**#@-*/
 
     /**
@@ -171,29 +173,24 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     {
         $url = trim($this->getBaseApiUrl(), '/') . $resourcePath . $path;
         Mage::log($url);
-
         $client = new Zend_Http_Client($url);
-
         if ($method == Zend_Http_Client::POST && $data) {
             $json = json_encode($data);
             $client->setRawData($json, 'application/json');
         }
-
         $client->setAuth(Mage::helper('affirm')->getApiKey(),
             Mage::helper('affirm')->getSecretKey(), Zend_Http_Client::AUTH_BASIC
         );
-
         $rawResult = $client->request($method)->getRawBody();
         try {
             $retJson = Zend_Json::decode($rawResult, Zend_Json::TYPE_ARRAY);
         } catch (Zend_Json_Exception $e) {
             throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Invalid affirm response: '. $rawResult));
         }
-
         //validate to make sure there are no errors here
         if (isset($retJson['status_code'])) {
             throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Affirm error code:'.
-                    $retJson['status_code'] . ' error: '. $retJson['message']));
+                $retJson['status_code'] . ' error: '. $retJson['message']));
         }
         return $retJson;
     }
@@ -602,6 +599,155 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         Mage::dispatchEvent('affirm_get_checkout_object_after', array('checkout_object' => $checkoutObject));
         $checkout = $checkoutObject->getData();
 
+        return $checkout;
+    }
+
+    /**
+     * Get checkout object from quote
+     *
+     * @param Mage_Sales_Model_Quote $quote
+     * @return array
+     */
+    public function getCheckoutQuoteObject($quote)
+    {
+        $shippingAddress = $quote->getShippingAddress();
+        $shipping = null;
+        if ($shippingAddress) {
+            $shipping = array(
+                'name' => array('full' => $shippingAddress->getName()),
+                'phone_number' => $shippingAddress->getTelephone(),
+                'phone_number_alternative' => $shippingAddress->getAltTelephone(),
+                'address' => array(
+                    'line1'   => $shippingAddress->getStreet(1),
+                    'line2'   => $shippingAddress->getStreet(2),
+                    'city'    => $shippingAddress->getCity(),
+                    'state'   => $shippingAddress->getRegion(),
+                    'country' => $shippingAddress->getCountryModel()->getIso2Code(),
+                    'zipcode' => $shippingAddress->getPostcode(),
+                ));
+        }
+
+        $billingAddress = $quote->getBillingAddress();
+        $billing = array(
+            'name' => array('full' => $billingAddress->getName()),
+            'email' => $quote->getCustomerEmail(),
+            'phone_number' => $billingAddress->getTelephone(),
+            'phone_number_alternative' => $billingAddress->getAltTelephone(),
+            'address' => array(
+                'line1'   => $billingAddress->getStreet(1),
+                'line2'   => $billingAddress->getStreet(2),
+                'city'    => $billingAddress->getCity(),
+                'state'   => $billingAddress->getRegion(),
+                'country' => $billingAddress->getCountryModel()->getIso2Code(),
+                'zipcode' => $billingAddress->getPostcode(),
+            ));
+
+        $items = array();
+        $productIds = array();
+        $productItemsMFP = array();
+        $categoryItemsIds = array();
+        foreach ($quote->getAllVisibleItems() as $orderItem) {
+            $productIds[] = $orderItem->getProductId();
+        }
+        $products = Mage::getModel('catalog/product')->getCollection()
+            ->addAttributeToSelect(
+                array('affirm_product_mfp', 'affirm_product_mfp_type', 'affirm_product_mfp_priority')
+            )
+            ->addAttributeToFilter('entity_id', array('in' => $productIds));
+        $productItems = $products->getItems();
+        foreach ($quote->getAllVisibleItems() as $orderItem) {
+            $product = $productItems[$orderItem->getProductId()];
+            if (Mage::helper('affirm')->isPreOrder() && $orderItem->getParentItem() &&
+                ($orderItem->getParentItem()->getProductType() == Mage_Catalog_Model_Product_Type::TYPE_CONFIGURABLE)
+            ) {
+                continue;
+            }
+            $items[] = array(
+                'sku' => $orderItem->getSku(),
+                'display_name' => $orderItem->getName(),
+                'item_url' => $product->getProductUrl(),
+                'item_image_url' => $product->getImageUrl(),
+                'qty' => intval($orderItem->getQtyOrdered()),
+                'unit_price' => Mage::helper('affirm/util')->formatCents($orderItem->getPrice())
+            );
+
+            $start_date = $product->getAffirmProductMfpStartDate();
+            $end_date = $product->getAffirmProductMfpEndDate();
+            if(empty($start_date) || empty($end_date)) {
+                $mfpValue = $product->getAffirmProductMfp();
+            } else {
+                if(Mage::app()->getLocale()->isStoreDateInInterval(null, $start_date, $end_date)) {
+                    $mfpValue = $product->getAffirmProductMfp();
+                } else {
+                    $mfpValue = "";
+                }
+            }
+
+            $productItemsMFP[] = array(
+                'value' => $mfpValue,
+                'type' => $product->getAffirmProductMfpType(),
+                'priority' => $product->getAffirmProductMfpPriority() ?
+                    $product->getAffirmProductMfpPriority() : 0
+            );
+
+            $categoryIds = $product->getCategoryIds();
+            if (!empty($categoryIds)) {
+                $categoryItemsIds = array_merge($categoryItemsIds, $categoryIds);
+            }
+        }
+
+        $checkout = array(
+            'checkout_id' => $quote->getId(),
+            'currency' => $quote->getQuoteCurrencyCode(),
+            'shipping_amount' => Mage::helper('affirm/util')->formatCents($quote->getShippingAddress()->getShippingAmount()),
+            'shipping_type' => $quote->getShippingAddress()->getShippingMethod(),
+            'tax_amount' => Mage::helper('affirm/util')->formatCents($quote->getShippingAddress()->getTaxAmount()),
+            'merchant' => array(
+                'public_api_key' => Mage::helper('affirm')->getApiKey(),
+                'user_confirmation_url' => Mage::getUrl('affirm/payment/confirm', array('_secure' => true)),
+                'user_cancel_url' => Mage::helper('checkout/url')->getCheckoutUrl(),
+                'user_confirmation_url_action' => 'POST',
+                'charge_declined_url' => Mage::helper('checkout/url')->getCheckoutUrl()
+            ),
+            'config' => array('required_billing_fields' => 'name,address,email'),
+            'items' => $items,
+            'billing' => $billing
+        );
+        // By convention, Affirm expects positive value for discount amount. Magento provides negative.
+        $discountAmtAffirm = (-1) * $quote->getDiscountAmount();
+        if ($discountAmtAffirm > 0.001) {
+            $discountCode = $this->_getDiscountCode($quote);
+            $checkout['discounts'] = array(
+                $discountCode => array(
+                    'discount_amount' => Mage::helper('affirm/util')->formatCents($discountAmtAffirm)
+                )
+            );
+        }
+
+        if ($shipping) {
+            $checkout['shipping'] = $shipping;
+        }
+        $checkout['total'] = Mage::helper('affirm/util')->formatCents($quote->getGrandTotal());
+        if (method_exists('Mage', 'getEdition')){
+            $platform_edition = Mage::getEdition();
+        }
+        $platform_version = Mage::getVersion();
+        $platform_version_edition = isset($platform_edition) ? $platform_version.' '.$platform_edition : $platform_version;
+        $checkout['metadata'] = array(
+            'shipping_type' => $quote->getShippingAddress()->getShippingDescription(),
+            'platform_type' => 'Magento',
+            'platform_version' => $platform_version_edition,
+            'platform_affirm' => Mage::helper('affirm')->getExtensionVersion(),
+            'mode' => 'modal'
+        );
+        $affirmMFPValue = Mage::helper('affirm/mfp')->getAffirmMFPValue($productItemsMFP, $categoryItemsIds, $quote->getBaseGrandTotal());
+        if ($affirmMFPValue) {
+            $checkout['financing_program'] = $affirmMFPValue;
+        }
+
+        $checkoutObject = new Varien_Object($checkout);
+        Mage::dispatchEvent('affirm_get_checkout_object_after', array('checkout_object' => $checkoutObject));
+        $checkout = $checkoutObject->getData();
         return $checkout;
     }
 
