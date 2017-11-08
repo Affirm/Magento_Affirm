@@ -94,53 +94,17 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
      */
     public function confirmAction()
     {
-        Mage::log(__METHOD__);
+        $checkoutToken = $this->getRequest()->getParam('checkout_token');
+        $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
+        if (!$checkoutToken) {
+            $checkoutSession->addError($this->__('Confirm has no checkout token.'));
+            $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart'))->sendResponse();
+            return;
+        }
+        $serializedRequest = $checkoutSession->getAffirmOrderRequest();
         if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
-            $checkoutToken = $this->getRequest()->getParam('checkout_token');
-            $session = Mage::getSingleton('checkout/session');
-            Mage::log(__METHOD__ . 'checkoutToken: ' . $checkoutToken);
-
-            $quote = $session->getQuote();
-            if ($quote && $checkoutToken) {
-                $quote->collectTotals()->save();
-                $service = Mage::getModel('sales/service_quote', $quote);
-                $service->submitAll();
-
-                $session->setLastQuoteId($quote->getId())
-                    ->setLastSuccessQuoteId($quote->getId())
-                    ->clearHelperData();
-                $session->getQuote()->setIsActive(false)->save();
-                $order = $service->getOrder();
-                if ($order) {
-                    $order->getPayment()->getMethodInstance()->processConfirmOrder($order, $checkoutToken);
-                    $order->sendNewOrderEmail();
-                    Mage::dispatchEvent(
-                        'checkout_type_onepage_save_order_after', array(
-                            'order' => $order,
-                            'quote' => $quote
-                        )
-                    );
-                    Mage::log(__METHOD__ . 'orderedId: ' . $order->getId());
-                    Mage::log(__METHOD__ . 'orderedId: ' . $order->getIncrementId());
-                    // add order information to the session
-                    $session->setLastOrderId($order->getId())
-                        ->setLastRealOrderId($order->getIncrementId());
-
-                    // as well a billing agreement can be created
-                    $agreement = $order->getPayment()->getBillingAgreement();
-                    if ($agreement) {
-                        $session->setLastBillingAgreementId($agreement->getId());
-                    }
-                }
-                Mage::dispatchEvent(
-                    'checkout_submit_all_after',
-                    array('order' => $order, 'quote' => $quote, 'recurring_profiles' => array())
-                );
-            }
-            $this->_redirect('checkout/onepage/success', array('_secure' => true));
+            $this->_processConfWithSaveOrder($checkoutToken, $serializedRequest);
         } else {
-            $serializedRequest = Mage::helper('affirm')->getCheckoutSession()->getAffirmOrderRequest();
-            $checkoutToken = $this->getRequest()->getParam('checkout_token');
             if ($this->_isPlaceOrderAfterConf($serializedRequest, $checkoutToken)) {
                 $this->_processConfWithSaveOrder($checkoutToken, $serializedRequest);
             } else {

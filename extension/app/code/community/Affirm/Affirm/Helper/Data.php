@@ -542,4 +542,17 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
 
         return '';
     }
+
+    /**
+     * Get Affirm modal checkout js
+     *
+     * @return string
+     */
+    public function getAffirmCheckoutJsScript()
+    {
+        if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+            return 'js/affirm/checkout.js';
+        }
+        return '';
+    }
 }
