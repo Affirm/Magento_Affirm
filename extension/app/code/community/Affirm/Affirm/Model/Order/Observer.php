@@ -85,7 +85,7 @@ class Affirm_Affirm_Model_Order_Observer
     }
 
     /**
-     * Pre order
+     * Pre order to be executed only for redirect checkout flow type
      *
      * @param Varien_Event_Observer $observer
      */
@@ -97,30 +97,33 @@ class Affirm_Affirm_Model_Order_Observer
         if (Mage::helper('affirm')->getAffirmTokenCode()) {
             $methodInst->setAffirmCheckoutToken(Mage::helper('affirm')->getAffirmTokenCode());
         }
-
         if ($this->_isCreateOrderAfterConf($methodInst)) {
             if (!Mage::helper('affirm')->getAffirmTokenCode()) {
                 #ok record the current controller that we are using...
                 $request = Mage::app()->getRequest();
                 $orderRequest = array('action' => $request->getActionName(),
                     'controller' => $request->getControllerName(),
-                    'module'     => $request->getModuleName(),
-                    'params'     => $request->getParams(),
-                    'method'     => $request->getMethod(),
-                    'xhr'        => $request->isXmlHttpRequest(),
-                    'POST'       => Mage::app()->getRequest()->getPost(), //need post for some cross site issues
-                    'quote_id'   => $quote->getId()
+                    'module' => $request->getModuleName(),
+                    'params' => $request->getParams(),
+                    'method' => $request->getMethod(),
+                    'xhr' => $request->isXmlHttpRequest(),
+                    'POST' => Mage::app()->getRequest()->getPost(), //need post for some cross site issues
+                    'quote_id' => $quote->getId()
                 );
-
                 $orderRequest['routing_info'] = array(
                     'requested_route' => $request->getRequestedRouteName(),
                     'requested_controller' => $request->getRequestedControllerName(),
                     'requested_action' => $request->getRequestedActionName()
                 );
-
                 Mage::helper('affirm')->getCheckoutSession()->setAffirmOrderRequest(serialize($orderRequest));
-
-                $this->_callToPreOrderActionAndExit($order, $quote);
+                if (!Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+                    $this->_callToPreOrderActionAndExit($order, $quote);
+                } else {
+                    $controller = $observer->getControllerAction();
+                    $controller->getRequest()->setDispatched(true);
+                    $controller->setFlag(‘’,Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
+                    return;
+                }
             }
         } elseif ($this->_isCreateOrderBeforeConf($methodInst)) {
             Mage::helper('affirm')->getCheckoutSession()->setAffirmOrderRequest(null);

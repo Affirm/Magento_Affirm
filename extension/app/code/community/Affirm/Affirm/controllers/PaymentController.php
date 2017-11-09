@@ -54,12 +54,10 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
             ->setOrder($order)->toHtml();
         $serializedRequest = $checkoutSession->getAffirmOrderRequest();
         $proxyRequest = unserialize($serializedRequest);
-
         //only reserve this order id
         $modQuote = Mage::getModel('sales/quote')->load($quote->getId());
         $modQuote->setReservedOrderId($order->getIncrementId());
         $modQuote->save();
-
         if (Mage::helper('affirm')->isXhrRequest($proxyRequest)) {
             $checkoutSession->setPreOrderRender($string);
             $result = array('redirect' => Mage::getUrl('affirm/payment/redirectPreOrder',
@@ -96,13 +94,22 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
      */
     public function confirmAction()
     {
-        $serializedRequest = Mage::helper('affirm')->getCheckoutSession()->getAffirmOrderRequest();
         $checkoutToken = $this->getRequest()->getParam('checkout_token');
-
-        if ($this->_isPlaceOrderAfterConf($serializedRequest, $checkoutToken)) {
+        $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
+        if (!$checkoutToken) {
+            $checkoutSession->addError($this->__('Confirm has no checkout token.'));
+            $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart'))->sendResponse();
+            return;
+        }
+        $serializedRequest = $checkoutSession->getAffirmOrderRequest();
+        if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
             $this->_processConfWithSaveOrder($checkoutToken, $serializedRequest);
         } else {
-            $this->_processConfWithoutSaveOrder($checkoutToken);
+            if ($this->_isPlaceOrderAfterConf($serializedRequest, $checkoutToken)) {
+                $this->_processConfWithSaveOrder($checkoutToken, $serializedRequest);
+            } else {
+                $this->_processConfWithoutSaveOrder($checkoutToken);
+            }
         }
     }
 
