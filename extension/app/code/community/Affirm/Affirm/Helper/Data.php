@@ -315,6 +315,18 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Get affirm js text
+     *
+     * @return string
+     */
+    public function getAffirmJs()
+    {
+        $url = $this->getAffirmJsUrl();
+        $affirmJs = '<script type="text/javascript" src="'.$url.'"></script>';
+        return $affirmJs;
+    }
+
+    /**
      * Is xhr request
      *
      * @param array $proxyRequest

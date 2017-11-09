@@ -4,8 +4,7 @@
         <reference name="head">
             <block type="core/text" name="affirm.cdn.javascript">
                 <action method="setText">
-                    <text><![CDATA[<script type="text/javascript" src="https://cdn1-sandbox.affirm.com/js/v2/affirm.js"></script>]]>
-                    </text>
+                    <text helper="affirm/getAffirmJs" />
                 </action>
             </block>
             <action method="addItem">
