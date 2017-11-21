@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>3.6.0</version>
+            <version>3.6.1</version>
         </Affirm_Affirm>
     </modules>
     <global>
