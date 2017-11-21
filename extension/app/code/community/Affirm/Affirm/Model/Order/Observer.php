@@ -145,4 +145,72 @@ class Affirm_Affirm_Model_Order_Observer
             $quote->save();
         }
     }
+
+    /**
+     * Modal checkout Before save order
+     *
+     * @param Varien_Event_Observer $observer
+     * @void
+     */
+    public function preDispatchSaveOrderAction(Varien_Event_Observer $observer)
+    {
+        if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+            /* @var $controller Mage_Core_Controller_Front_Action */
+            $controller = $observer->getEvent()->getControllerAction();
+            $methodInst = Mage::helper('affirm')->_getCheckout()->getQuote()->getPayment()->getMethodInstance();
+            if (!Mage::helper('affirm')->getAffirmTokenCode()) {
+                $requiredAgreements = Mage::helper('checkout')->getRequiredAgreementIds();
+                if ($requiredAgreements) {
+                    $postedAgreements = array_keys($controller->getRequest()->getPost('agreement', array()));
+                    $diff = array_diff($requiredAgreements, $postedAgreements);
+                    if ($diff) {
+                        $result['success'] = false;
+                        $result['error'] = true;
+                        $result['error_messages'] = $this->__('Please agree to all the terms and conditions before placing the order.');
+                        $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
+                        $controller->getResponse()->setBody(
+                            Mage::helper('core')->jsonEncode($result)
+                        );
+                        $controller->getRequest()->setDispatched(true);
+                        return;
+                    }
+                }
+
+                $data = $controller->getRequest()->getPost('payment', array());
+                if ($data) {
+                    $data['checks'] = Mage_Payment_Model_Method_Abstract::CHECK_USE_CHECKOUT
+                        | Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_COUNTRY
+                        | Mage_Payment_Model_Method_Abstract::CHECK_USE_FOR_CURRENCY
+                        | Mage_Payment_Model_Method_Abstract::CHECK_ORDER_TOTAL_MIN_MAX
+                        | Mage_Payment_Model_Method_Abstract::CHECK_ZERO_TOTAL;
+                    Mage::helper('affirm')->_getCheckout()->getQuote()->getPayment()->importData($data);
+                }
+
+                if ($controller->getRequest()->getPost('newsletter')) {
+                    Mage::getSingleton('checkout/session')
+                        ->setNewsletterSubsribed(true)
+                        ->setNewsletterEmail(
+                            Mage::helper('affirm')->_getCheckout()->getQuote()->getCustomerEmail()
+                        );
+                }
+                #ok record the current controller that we are using...
+                $request = Mage::app()->getRequest();
+                $orderRequest = array('action' => $request->getActionName(),
+                    'controller' => $request->getControllerName(),
+                    'module' => $request->getModuleName(),
+                    'params' => $request->getParams(),
+                    'method' => $request->getMethod(),
+                    'xhr' => $request->isXmlHttpRequest(),
+                    'POST' => Mage::app()->getRequest()->getPost(), //need post for some cross site issues
+                    'quote_id' => Mage::helper('affirm')->_getCheckout()->getQuote()->getId()
+                );
+                Mage::helper('affirm')->getCheckoutSession()->setAffirmOrderRequest(serialize($orderRequest));
+                $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
+                $controller->getRequest()->setDispatched(true);
+                return;
+            } else {
+                $methodInst->setAffirmCheckoutToken(Mage::helper('affirm')->getAffirmTokenCode());
+            }
+        }
+    }
 }

@@ -103,14 +103,37 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
         }
         $serializedRequest = $checkoutSession->getAffirmOrderRequest();
         if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
-            $this->_processConfWithSaveOrder($checkoutToken, $serializedRequest);
+            $this->_processConfWithSaveOrderModalCheckout($checkoutToken, $serializedRequest);
         } else {
+
             if ($this->_isPlaceOrderAfterConf($serializedRequest, $checkoutToken)) {
                 $this->_processConfWithSaveOrder($checkoutToken, $serializedRequest);
             } else {
                 $this->_processConfWithoutSaveOrder($checkoutToken);
             }
         }
+    }
+
+    /**
+     * Process conf with save order for modal checkout
+     *
+     * @param string $checkoutToken
+     * @param string $serializedRequest
+     */
+    protected function _processConfWithSaveOrderModalCheckout($checkoutToken, $serializedRequest)
+    {
+        $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
+        if ($checkoutSession->getLastAffirmSuccess() == $checkoutToken) {
+            $checkoutSession->addSuccess($this->__('This order was already completed.'));
+            //Go directly to success page if this is already successful
+            $this->_redirect('checkout/onepage/success');
+            return;
+        }
+
+        $proxyRequest = unserialize($serializedRequest);
+        $this->getRequest()->setPost($proxyRequest['POST']);
+        Mage::register('affirm_token_code', $checkoutToken);
+        $this->_forward($proxyRequest['action'], $proxyRequest['controller'], $proxyRequest['module'], $proxyRequest['params']);
     }
 
     /**
