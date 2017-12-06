@@ -12,7 +12,6 @@ function isAffirmMethod()
         // This is for IWD Checkout suite
         result = $('iwd_opc_payment_method_select').value.match(/affirm/);
     }
-    alert(result);
     return result;
 }
 
