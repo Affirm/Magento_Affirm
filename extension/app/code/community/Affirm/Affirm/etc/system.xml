@@ -213,29 +213,21 @@
             <show_in_store>1</show_in_store>
             <groups>
                 <settings translate="label">
-                    <label>General Settings</label>
+                    <label>Banner Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <expanded>1</expanded>
                     <fields>
-                        <promo_key translate="label">
-                            <label>Affirm Promo Key</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>2</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </promo_key>
                         <active translate="label">
                             <label>Enabled</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>4</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </active>
                     </fields>
@@ -245,7 +237,7 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>20</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <expanded>1</expanded>
                     <fields>
@@ -255,7 +247,7 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </display>
                         <size translate="label">
@@ -264,7 +256,7 @@
                             <source_model>affirm/promo_system_config_size</source_model>
                             <sort_order>2</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </size>
                         <position translate="label">
@@ -273,7 +265,7 @@
                             <source_model>affirm/promo_system_config_position</source_model>
                             <sort_order>3</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </position>
                     </fields>
@@ -283,7 +275,7 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>30</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <expanded>1</expanded>
                     <fields>
@@ -293,7 +285,7 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </display>
                         <size translate="label">
@@ -302,7 +294,7 @@
                             <source_model>affirm/promo_system_config_size</source_model>
                             <sort_order>2</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </size>
                         <position translate="label">
@@ -311,7 +303,7 @@
                             <source_model>affirm/promo_system_config_position</source_model>
                             <sort_order>3</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </position>
                     </fields>
@@ -321,7 +313,7 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>40</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <expanded>1</expanded>
                     <fields>
@@ -331,7 +323,7 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </display>
                         <size translate="label">
@@ -340,7 +332,7 @@
                             <source_model>affirm/promo_system_config_size</source_model>
                             <sort_order>2</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </size>
                         <position translate="label">
@@ -349,7 +341,7 @@
                             <source_model>affirm/promo_system_config_position</source_model>
                             <sort_order>3</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </position>
                     </fields>
@@ -359,7 +351,7 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>50</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <expanded>1</expanded>
                     <fields>
@@ -369,7 +361,7 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>1</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </display>
                         <size translate="label">
@@ -378,7 +370,7 @@
                             <source_model>affirm/promo_system_config_size</source_model>
                             <sort_order>2</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </size>
                         <position translate="label">
@@ -387,7 +379,7 @@
                             <source_model>affirm/promo_system_config_position</source_model>
                             <sort_order>3</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </position>
                     </fields>
@@ -397,7 +389,7 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>1000</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <expanded>0</expanded>
                     <fields>
@@ -408,7 +400,7 @@
                             <frontend_type>textarea</frontend_type>
                             <sort_order>11</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </container_homepage>
                         <container_catalog_category translate="label,comment">
@@ -418,7 +410,7 @@
                             <frontend_type>textarea</frontend_type>
                             <sort_order>21</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </container_catalog_category>
                         <container_catalog_product translate="label,comment">
@@ -428,7 +420,7 @@
                             <frontend_type>textarea</frontend_type>
                             <sort_order>31</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </container_catalog_product>
                         <container_checkout_cart translate="label,comment">
@@ -438,7 +430,7 @@
                             <frontend_type>textarea</frontend_type>
                             <sort_order>41</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </container_checkout_cart>
                         <path_homepage translate="label">
@@ -446,7 +438,7 @@
                             <frontend_type>text</frontend_type>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </path_homepage>
                         <path_catalog_category translate="label">
@@ -454,7 +446,7 @@
                             <frontend_type>text</frontend_type>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </path_catalog_category>
                         <path_catalog_product translate="label">
@@ -462,7 +454,7 @@
                             <frontend_type>text</frontend_type>
                             <sort_order>30</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </path_catalog_product>
                         <path_checkout_cart translate="label">
@@ -470,7 +462,7 @@
                             <frontend_type>text</frontend_type>
                             <sort_order>40</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </path_checkout_cart>
                     </fields>
@@ -480,7 +472,7 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>1100</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <expanded>0</expanded>
                     <fields>
@@ -490,16 +482,25 @@
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </as_low_as_pdp>
-                        <as_low_as_cart translate="label">
-                            <label>Enable for Shopping Cart</label>
+                        <as_low_as_plp translate="label">
+                            <label>Enable for Category PLP</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>20</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </as_low_as_plp>
+                        <as_low_as_cart translate="label">
+                            <label>Enable for Shopping Cart</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </as_low_as_cart>
                         <min_mpp_display_value translate="label">
@@ -510,9 +511,17 @@
                                 <![CDATA[Minimum amount for displaying the (MPP - monthly payment pricing)]]></comment>
                             <sort_order>50</sort_order>
                             <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
+                            <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </min_mpp_display_value>
+                        <promo_id_value_default translate="label">
+                            <label>Default Affirm Promo ID</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>212</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </promo_id_value_default>
                     </fields>
                 </as_low_as>
                 <mfp translate="label">
@@ -520,7 +529,7 @@
                     <frontend_type>text</frontend_type>
                     <sort_order>1200</sort_order>
                     <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
+                    <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <expanded>0</expanded>
                     <fields>
@@ -600,332 +609,6 @@
                         </cart_size_promo_id_value>
                     </fields>
                 </mfp>
-            </groups>
-        </affirmpromo>
-        <affirmpromo translate="label" module="affirm">
-            <label>Affirm Promos</label>
-            <tab>general</tab>
-            <frontend_type>text</frontend_type>
-            <sort_order>9999</sort_order>
-            <show_in_default>1</show_in_default>
-            <show_in_website>1</show_in_website>
-            <show_in_store>1</show_in_store>
-            <groups>
-                <settings translate="label">
-                    <label>General Settings</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>10</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
-                        <promo_key translate="label">
-                            <label>Affirm Promo Key</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>2</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </promo_key>
-                        <active translate="label">
-                            <label>Enabled</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>4</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </active>
-                    </fields>
-                </settings>
-                <homepage>
-                    <label>Home Page Settings</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>20</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
-                        <display translate="label">
-                            <label>Display</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>1</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </display>
-                        <size translate="label">
-                            <label>Promo Size</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>affirm/promo_system_config_size</source_model>
-                            <sort_order>2</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </size>
-                        <position translate="label">
-                            <label>Promo Position</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>affirm/promo_system_config_position</source_model>
-                            <sort_order>3</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </position>
-                    </fields>
-                </homepage>
-                <catalog_category>
-                    <label>Catalog Category Page Settings</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>30</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
-                        <display translate="label">
-                            <label>Display</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>1</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </display>
-                        <size translate="label">
-                            <label>Promo Size</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>affirm/promo_system_config_size</source_model>
-                            <sort_order>2</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </size>
-                        <position translate="label">
-                            <label>Promo Position</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>affirm/promo_system_config_position</source_model>
-                            <sort_order>3</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </position>
-                    </fields>
-                </catalog_category>
-                <catalog_product>
-                    <label>Catalog Product Page Settings</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>40</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
-                        <display translate="label">
-                            <label>Display</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>1</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </display>
-                        <size translate="label">
-                            <label>Promo Size</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>affirm/promo_system_config_size</source_model>
-                            <sort_order>2</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </size>
-                        <position translate="label">
-                            <label>Promo Position</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>affirm/promo_system_config_position</source_model>
-                            <sort_order>3</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </position>
-                    </fields>
-                </catalog_product>
-                <checkout_cart>
-                    <label>Checkout Cart Page Settings</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>50</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>1</expanded>
-                    <fields>
-                        <display translate="label">
-                            <label>Display</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>1</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </display>
-                        <size translate="label">
-                            <label>Promo Size</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>affirm/promo_system_config_size</source_model>
-                            <sort_order>2</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </size>
-                        <position translate="label">
-                            <label>Promo Position</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>affirm/promo_system_config_position</source_model>
-                            <sort_order>3</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </position>
-                    </fields>
-                </checkout_cart>
-                <developer_settings translate="label">
-                    <label>Developer Settings</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>1000</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>0</expanded>
-                    <fields>
-                        <container_homepage translate="label,comment">
-                            <label>Homepage Container</label>
-                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
-                            <frontend_type>textarea</frontend_type>
-                            <sort_order>11</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </container_homepage>
-                        <container_catalog_category translate="label,comment">
-                            <label>Catalog Category Container</label>
-                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
-                            <frontend_type>textarea</frontend_type>
-                            <sort_order>21</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </container_catalog_category>
-                        <container_catalog_product translate="label,comment">
-                            <label>Catalog Product Container</label>
-                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
-                            <frontend_type>textarea</frontend_type>
-                            <sort_order>31</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </container_catalog_product>
-                        <container_checkout_cart translate="label,comment">
-                            <label>Checkout Cart Container</label>
-                            <comment><![CDATA[Place html code with "{container}"-tag inside, which will be replaced with your promo block]]></comment>
-                            <frontend_type>textarea</frontend_type>
-                            <sort_order>41</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </container_checkout_cart>
-                        <path_homepage translate="label">
-                            <label>Home Page Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>10</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </path_homepage>
-                        <path_catalog_category translate="label">
-                            <label>Catalog Category Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </path_catalog_category>
-                        <path_catalog_product translate="label">
-                            <label>Catalog Product Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </path_catalog_product>
-                        <path_checkout_cart translate="label">
-                            <label>Checkout Cart Path</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>40</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </path_checkout_cart>
-                    </fields>
-                </developer_settings>
-                <as_low_as translate="label">
-                    <label>As Low As Functionality</label>
-                    <frontend_type>text</frontend_type>
-                    <sort_order>1100</sort_order>
-                    <show_in_default>1</show_in_default>
-                    <show_in_website>0</show_in_website>
-                    <show_in_store>0</show_in_store>
-                    <expanded>0</expanded>
-                    <fields>
-                        <as_low_as_pdp translate="label">
-                            <label>Enable for Product PDP</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>10</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </as_low_as_pdp>
-                        <as_low_as_plp translate="label">
-                            <label>Enable for Category PLP</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>20</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </as_low_as_plp>
-                        <as_low_as_cart translate="label">
-                            <label>Enable for Shopping Cart</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>30</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </as_low_as_cart>
-                        <min_mpp_display_value translate="label">
-                            <label>MPP min amount</label>
-                            <frontend_type>text</frontend_type>
-                            <validate>validate-number</validate>
-                            <comment><![CDATA[Minimum amount for displaying the (MPP - monthly payment pricing)]]></comment>
-                            <sort_order>50</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </min_mpp_display_value>
-                        <promo_id_value_default translate="label">
-                            <label>Default Affirm Promo ID</label>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>212</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </promo_id_value_default>
-                    </fields>
-                </as_low_as>
             </groups>
         </affirmpromo>
     </sections>

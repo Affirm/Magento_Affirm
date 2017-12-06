@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>3.6.0</version>
+            <version>3.6.1</version>
         </Affirm_Affirm>
     </modules>
     <global>
@@ -47,6 +47,15 @@
     </global>
     <frontend>
         <events>
+            <controller_action_predispatch_checkout_onepage_saveOrder>
+                <observers>
+                    <affirm_affirm_model_order_observer>
+                        <type>singleton</type>
+                        <class>affirm/order_observer</class>
+                        <method>preDispatchSaveOrderAction</method>
+                    </affirm_affirm_model_order_observer>
+                </observers>
+            </controller_action_predispatch_checkout_onepage_saveOrder>
             <checkout_type_onepage_save_order>
                 <observers>
                     <affirm_affirm_model_pre_order_observer>
@@ -200,7 +209,6 @@
         <affirmpromo>
             <settings>
                 <active>0</active>
-                <promo_key>W6WU7UK82RS34HDH</promo_key>
             </settings>
             <developer_settings>
                 <container_homepage><![CDATA[<div style="width: 100%; text-align: center; padding-bottom: 7px ">{container}</div>]]></container_homepage>
