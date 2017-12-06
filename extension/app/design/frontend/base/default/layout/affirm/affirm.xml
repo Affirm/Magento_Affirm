@@ -72,7 +72,18 @@
             <block type="core/template" name="affirm_plp_javascript" after="-" template="affirm/promo/aslowas/list.phtml"/>
         </reference>
     </catalogsearch_result_index>
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="affirm/getAffirmCheckoutJsScript" />
+            </action>
+        </reference>
+    </checkout_onepage_index>
     <checkout_onepage_review>
+        <reference name="checkout.onepage.review.info.items.after">
+            <block type="core/template" name="affirm.js.checkout" template="affirm/affirm/checkout/review/opc.phtml"/>
+        </reference>
         <reference name="checkout.onepage.review.button">
             <action method="setTemplate"><template helper="affirm/getReviewButtonTemplate"><name>affirm/affirm/checkout/review/button.phtml</name><block>checkout.onepage.review.button</block></template></action>
         </reference>

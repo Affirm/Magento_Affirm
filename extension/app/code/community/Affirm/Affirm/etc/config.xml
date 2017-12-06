@@ -47,6 +47,15 @@
     </global>
     <frontend>
         <events>
+            <controller_action_predispatch_onestepcheckout_checkout_saveOrder>
+                <observers>
+                    <affirm_affirm_model_order_observer>
+                        <type>singleton</type>
+                        <class>affirm/order_observer</class>
+                        <method>preDispatchSaveOrderAction</method>
+                    </affirm_affirm_model_order_observer>
+                </observers>
+            </controller_action_predispatch_onestepcheckout_checkout_saveOrder>
             <controller_action_predispatch_checkout_onepage_saveOrder>
                 <observers>
                     <affirm_affirm_model_order_observer>

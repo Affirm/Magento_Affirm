@@ -1,0 +1,70 @@
+<?php
+if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+?>
+    <script type="text/javascript">
+        //<![CDATA[
+        function callAffirmModalCheckout(data) {
+            new Ajax.Request('<?php echo Mage::getUrl("affirm/payment/processCheckoutQuoteObject");?>', {
+                    method: 'post',
+                    parameters: $('amscheckout-onepage').serialize(true),
+                    onSuccess: function(transport){
+                        try{
+                            response = eval('(' + transport.responseText + ')');
+                        } catch (e) {
+                            response = {};
+                        }
+                        affirm.checkout(response.checkout);
+                        affirm.ui.error.on("close", function () {
+                            window.location = "<?php echo $this->helper('checkout/url')->getCheckoutUrl(); ?> ";
+                        });
+                        affirm.checkout.open({
+                            onFail: function () {
+                                checkout.setLoadWaiting(false);
+                                console.log("User cancelled the Affirm checkout flow")
+                            },
+                            onSucces: function (a) {
+                                checkout.setLoadWaiting(false);
+                                console.log("Affirm checkout successful");
+                            }
+                        });
+                        return;
+                    }
+                }
+            );
+        }
+
+        function callAmastyCheckoutForAffirm() {
+            if (amscheckoutForm.validator.validate() && !checkoutRunning) {
+                showLoading();
+                checkoutRunning = true;
+                if ($('checkout-agreements')) {
+                    var checkboxes = $$('#checkout-agreements input');
+                    for (var i = 0, l = checkboxes.length; i < l; i++) {
+                        if (!checkboxes[i].checked) {
+                            hideLoading();
+                            checkoutRunning = false;
+                            alert("<?php echo $this->jsQuoteEscape($this->__('Please agree to all Terms and Conditions before placing the orders.')) ?>");
+                            return false;
+                        }
+                    }
+                }
+                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                    method: 'post',
+                    parameters: $('amscheckout-onepage').serialize(true),
+                        onSuccess: function(transport){
+                              callAffirmModalCheckout($('amscheckout-onepage').serialize(true));
+                            hideLoading();
+                        },
+                        on403: function(){
+                            document.location.reload();
+                        }
+                    }
+                );
+            }
+
+        }
+        //]]>
+    </script>
+    <?php
+}
+?>

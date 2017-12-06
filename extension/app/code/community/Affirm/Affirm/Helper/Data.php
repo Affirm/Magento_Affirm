@@ -567,4 +567,25 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
         }
         return '';
     }
+
+    /**
+     * Returns a checkout object instance
+     *
+     * @return Mage_Checkout_Model_Type_Onepage
+     */
+    public function _getCheckout()
+    {
+        return Mage::getSingleton('checkout/type_onepage');
+    }
+
+    /**
+     * Get OPC save order URL
+     *
+     * @return string
+     */
+    public function getOPCCheckoutUrl()
+    {
+        $paramHttps  = (Mage::app()->getStore()->isCurrentlySecure()) ? array('_forced_secure' => true) : array();
+        return Mage::getUrl('checkout/onepage/saveOrder/form_key/' . Mage::getSingleton('core/session')->getFormKey(), $paramHttps);
+    }
 }
