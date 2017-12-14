@@ -218,29 +218,34 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
      */
     public function processCheckoutQuoteObjectAction()
     {
-        $updatedSection = $this->getRequest()->getPost('updated_section', null);
-        switch ($updatedSection){
-            case "billing":
-                $this->_saveBilling();
-                break;
-            case "shipping":
-                $this->_saveShipping();
-                break;
-            case "shipping_method":
-                $this->_saveShippingMethod();
-                break;
-            case "payment_method":
-                $this->_savePaymentMethod();
-                break;
-            default:
-                $this->_saveBilling();
-                $this->_saveShipping();
-                $this->_saveShippingMethod();
-                $this->_savePaymentMethod();
-                break;
+        $post = $this->getRequest()->getPost();
+        $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
+        $checkoutSession->setCartWasUpdated(false);
+        if($post) {
+            $updatedSection = $this->getRequest()->getPost('updated_section', null);
+            switch ($updatedSection) {
+                case "billing":
+                    $this->_saveBilling();
+                    break;
+                case "shipping":
+                    $this->_saveShipping();
+                    break;
+                case "shipping_method":
+                    $this->_saveShippingMethod();
+                    break;
+                case "payment_method":
+                    $this->_savePaymentMethod();
+                    break;
+                default:
+                    $this->_saveBilling();
+                    $this->_saveShipping();
+                    $this->_saveShippingMethod();
+                    $this->_savePaymentMethod();
+                    break;
+            }
         }
         $this->getOnepage()->getQuote()->setTotalsCollectedFlag(false);
-        $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
+
         $quote = $checkoutSession->getQuote();
         $shippingAddress = $quote->getShippingAddress();
         $shipping = null;
@@ -258,7 +263,6 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
                     'zipcode' => $shippingAddress->getPostcode(),
                 ));
         }
-
         $billingAddress = $quote->getBillingAddress();
         $billing = array(
             'name' => array('full' => $billingAddress->getName()),
@@ -327,7 +331,6 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
                 $categoryItemsIds = array_merge($categoryItemsIds, $categoryIds);
             }
         }
-
         $checkout = array(
             'checkout_id' => $quote->getId(),
             'currency' => $quote->getQuoteCurrencyCode(),
@@ -390,11 +393,8 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
 
     protected function _saveBilling(){
         $billing = $this->getRequest()->getPost('billing', array());
-
         $this->saveMethodAction();
-
         $this->saveBillingAction();
-
         $usingShippingCase = isset($billing['use_for_shipping']) ? (int)$billing['use_for_shipping'] : 0;
 
         if (!$usingShippingCase)

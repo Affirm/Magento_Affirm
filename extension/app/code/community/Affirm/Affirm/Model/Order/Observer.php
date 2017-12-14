@@ -161,7 +161,7 @@ class Affirm_Affirm_Model_Order_Observer
                     if ($diff) {
                         $result['success'] = false;
                         $result['error'] = true;
-                        $result['error_messages'] = $this->__('Please agree to all the terms and conditions before placing the order.');
+                        $result['error_messages'] = 'Please agree to all the terms and conditions before placing the order.';
                         $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
                         $controller->getResponse()->setBody(
                             Mage::helper('core')->jsonEncode($result)

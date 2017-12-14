@@ -33,5 +33,19 @@ document.observe('dom:loaded', function () {
         );
     }
 
+    // This is for Magestore_Onestepcheckout
+    if ($('one-step-checkout-form')) {
+        oscPlaceOrder = oscPlaceOrder.wrap(
+            function (parentMethod, elem) {
+                if (isAffirmMethod()) {
+                    callOscPlaceOrder();
+                } else {
+                    return parentMethod(elem);
+                }
+
+            }
+        );
+    }
+
 
 });
