@@ -2,15 +2,15 @@
 <layout>
     <default>
         <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/affirm/promos.js</name>
+            </action>
             <block type="core/text" name="affirm.cdn.javascript">
                 <action method="setText">
                     <text helper="affirm/getAffirmJs" />
                 </action>
             </block>
-            <action method="addItem">
-                <type>skin_js</type>
-                <name>js/affirm/promos.js</name>
-            </action>
         </reference>
     </default>
     <checkout_cart_index>

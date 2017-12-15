@@ -321,8 +321,14 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getAffirmJs()
     {
-        $url = $this->getAffirmJsUrl();
-        $affirmJs = '<script type="text/javascript" src="'.$url.'"></script>';
+        $affirmJs = '<script type="text/javascript">
+        if (!AFFIRM_AFFIRM.promos.getIsInitialized()) {
+            AFFIRM_AFFIRM.promos.initialize("'.  $this->getApiKey() .'","'. $this->getAffirmJsUrl() .'");
+        }
+        if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {
+            AFFIRM_AFFIRM.promos.loadScript();
+        }
+        </script>';
         return $affirmJs;
     }
 
