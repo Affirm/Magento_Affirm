@@ -33,18 +33,33 @@ document.observe('dom:loaded', function () {
         );
     }
 
-    // This is for Magestore_Onestepcheckout
     if ($('one-step-checkout-form')) {
-        oscPlaceOrder = oscPlaceOrder.wrap(
-            function (parentMethod, elem) {
-                if (isAffirmMethod()) {
-                    callOscPlaceOrder();
-                } else {
-                    return parentMethod(elem);
-                }
+        if (typeof oscPlaceOrder == 'function') {     // This is for Magestore_Onestepcheckout
+            oscPlaceOrder = oscPlaceOrder.wrap(
+                function (parentMethod, elem) {
+                    if (isAffirmMethod()) {
+                        callMageStoreOneStepCheckoutForAffirm();
+                    } else {
+                        return parentMethod(elem);
+                    }
 
+                }
+            );
+        }
+
+        if(MagecheckoutSecuredCheckoutForm) {
+            if (typeof MagecheckoutSecuredCheckoutForm.prototype.placeOrderProcess == 'function') {
+                MagecheckoutSecuredCheckoutForm.prototype.placeOrderProcess = MagecheckoutSecuredCheckoutForm.prototype.placeOrderProcess.wrap(
+                    function (parentMethod) {
+                        if (isAffirmMethod()) {
+                            callMagecheckoutSecuredCheckoutForAffirm();
+                        } else {
+                            return parentMethod();
+                        }
+                    }
+                );
             }
-        );
+        }
     }
 
 
