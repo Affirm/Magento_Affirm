@@ -34,11 +34,6 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
     const AFFIRM_PROMO_ACTIVE = 'affirmpromo/settings/active';
 
     /**
-     * Promo key
-     */
-    const AFFIRM_PROMO_KEY = 'affirmpromo/settings/promo_key';
-
-    /**
      * Is checkout button active
      */
     const PAYMENT_AFFIRM_CHECKOUT_BUTTON_ACTIVE = 'payment/affirm/checkout_button_active';
@@ -89,17 +84,6 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
         return !Mage::helper('affirm')->isDisableModuleFunctionality() &&
             Mage::getStoreConfigFlag(self::AFFIRM_PROMO_ACTIVE, $store) &&
             !Mage::registry('affirm_disabled_backordered');
-    }
-
-    /**
-     * Get promo key
-     *
-     * @param null|Mage_Core_Model_Store $store
-     * @return string
-     */
-    public function getPromoKey($store = null)
-    {
-        return Mage::getStoreConfig(self::AFFIRM_PROMO_KEY, $store);
     }
 
     /**

@@ -167,33 +167,28 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
      * @return string
      * @throws Affirm_Affirm_Exception
      */
-    protected function _apiRequest($method, $path, $data = null, $resourcePath = self::API_CHARGES_PATH)
+    protected function _apiRequest($method, $path, $data = null, $storeId = null, $resourcePath = self::API_CHARGES_PATH)
     {
         $url = trim($this->getBaseApiUrl(), '/') . $resourcePath . $path;
         Mage::log($url);
-
         $client = new Zend_Http_Client($url);
-
         if ($method == Zend_Http_Client::POST && $data) {
             $json = json_encode($data);
             $client->setRawData($json, 'application/json');
         }
-
-        $client->setAuth(Mage::helper('affirm')->getApiKey(),
-            Mage::helper('affirm')->getSecretKey(), Zend_Http_Client::AUTH_BASIC
+        $client->setAuth(Mage::helper('affirm')->getApiKey($storeId),
+            Mage::helper('affirm')->getSecretKey($storeId), Zend_Http_Client::AUTH_BASIC
         );
-
         $rawResult = $client->request($method)->getRawBody();
         try {
             $retJson = Zend_Json::decode($rawResult, Zend_Json::TYPE_ARRAY);
         } catch (Zend_Json_Exception $e) {
             throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Invalid affirm response: '. $rawResult));
         }
-
         //validate to make sure there are no errors here
         if (isset($retJson['status_code'])) {
             throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Affirm error code:'.
-                    $retJson['status_code'] . ' error: '. $retJson['message']));
+                $retJson['status_code'] . ' error: '. $retJson['message']));
         }
         return $retJson;
     }
@@ -206,7 +201,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
      */
     protected function _getCheckoutFromToken($token)
     {
-        return $this->_apiRequest(Zend_Http_Client::GET, $token, null, self::API_CHECKOUT_PATH);
+        return $this->_apiRequest(Zend_Http_Client::GET, $token, null, null,self::API_CHECKOUT_PATH);
     }
 
     /**
@@ -276,7 +271,14 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Charge id have not been set.'));
             }
         }
-        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/capture");
+        $order = $payment->getOrder();
+        if($order) {
+            $storeId = $order->getStoreId();
+        }
+        if (!$storeId) {
+            $storeId = null;
+        }
+        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/capture", null, $storeId);
         $this->_validateAmountResult($amountCents, $result['amount']);
         $payment->setIsTransactionClosed(0);
         return $this;
@@ -313,8 +315,15 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         if (!$chargeId) {
             throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Charge id have not been set.'));
         }
+        $order = $payment->getOrder();
+        if($order) {
+            $storeId = $order->getStoreId();
+        }
+        if (!$storeId) {
+            $storeId = null;
+        }
         $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/refund", array(
-                'amount' => $amountCents)
+                'amount' => $amountCents), $storeId
         );
 
         $this->_validateAmountResult($amountCents, $result['amount']);
@@ -344,7 +353,14 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         if (!$chargeId) {
             throw new Affirm_Affirm_Exception(Mage::helper('affirm')->__('Charge id have not been set.'));
         }
-        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/void");
+        $order = $payment->getOrder();
+        if($order) {
+            $storeId = $order->getStoreId();
+        }
+        if (!$storeId) {
+            $storeId = null;
+        }
+        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/void", null, $storeId);
         return $this;
     }
 
@@ -381,9 +397,15 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $token = $payment->getAdditionalInformation(self::CHECKOUT_TOKEN);
         $amountToAuthorize = $this->_getCheckoutTotalFromToken($token);
         $this->_validateAmountResult($amountCents, $amountToAuthorize);
-
+        $order = $payment->getOrder();
+        if($order) {
+            $storeId = $order->getStoreId();
+        }
+        if (!$storeId) {
+            $storeId = null;
+        }
         $result = $this->_apiRequest(Varien_Http_Client::POST, '', array(
-                self::CHECKOUT_TOKEN => $token)
+                self::CHECKOUT_TOKEN => $token), $storeId
         );
 
         $this->_setChargeResult($result);
