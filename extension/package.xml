@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>Affirm_Affirm</name>
-    <version>3.4.0</version>
+    <version>3.5.1</version>
     <stability>stable</stability>
     <license uri="http://opensource.org/licenses/osl-3.0.php">OSL-3.0</license>
     <channel>community</channel>
