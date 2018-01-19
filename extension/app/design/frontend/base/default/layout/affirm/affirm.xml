@@ -2,15 +2,15 @@
 <layout>
     <default>
         <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/affirm/promos.js</name>
+            </action>
             <block type="core/text" name="affirm.cdn.javascript">
                 <action method="setText">
                     <text helper="affirm/getAffirmJs" />
                 </action>
             </block>
-            <action method="addItem">
-                <type>skin_js</type>
-                <name>js/affirm/promos.js</name>
-            </action>
         </reference>
     </default>
     <checkout_cart_index>
@@ -72,9 +72,31 @@
             <block type="core/template" name="affirm_plp_javascript" after="-" template="affirm/promo/aslowas/list.phtml"/>
         </reference>
     </catalogsearch_result_index>
+    <checkout_onepage_index>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="affirm/getAffirmCheckoutJsScript" />
+            </action>
+        </reference>
+        <reference name="content">
+            <block type="core/template" name="affirm.js.checkout" after="-" template="affirm/affirm/checkout/review/opc.phtml"/>
+        </reference>
+    </checkout_onepage_index>
     <checkout_onepage_review>
         <reference name="checkout.onepage.review.button">
             <action method="setTemplate"><template helper="affirm/getReviewButtonTemplate"><name>affirm/affirm/checkout/review/button.phtml</name><block>checkout.onepage.review.button</block></template></action>
         </reference>
     </checkout_onepage_review>
+    <onestepcheckout_index_index>
+        <reference name="content">
+            <block type="core/template" name="affirm.js.checkout" after="-" template="affirm/affirm/checkout/review/opc.phtml"/>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="affirm/getAffirmCheckoutJsScript" />
+            </action>
+        </reference>
+    </onestepcheckout_index_index>
 </layout>

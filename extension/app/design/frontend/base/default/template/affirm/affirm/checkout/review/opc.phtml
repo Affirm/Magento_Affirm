@@ -1,0 +1,231 @@
+<?php
+if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+    ?>
+    <script type="text/javascript">
+        //<![CDATA[
+        function callAffirmModalCheckout(params) {
+            new Ajax.Request('<?php echo Mage::getUrl("affirm/payment/processCheckoutQuoteObject", array('_secure' => true));?>', {
+                    method: 'post',
+                    parameters: params,
+                    onSuccess: function(transport){
+                        try{
+                            response = eval('(' + transport.responseText + ')');
+                        } catch (e) {
+                            response = {};
+                        }
+                        affirm.checkout(response.checkout);
+                        affirm.ui.error.on("close", function () {
+                            window.location = "<?php echo $this->helper('checkout/url')->getCheckoutUrl(); ?> ";
+                        });
+                        affirm.checkout.open({
+                            onFail: function () {
+                                checkout.setLoadWaiting(false);
+                                console.log("User cancelled the Affirm checkout flow")
+                            },
+                            onSucces: function (a) {
+                                checkout.setLoadWaiting(false);
+                                console.log("Affirm checkout successful");
+                            }
+                        });
+                        return;
+                    },
+                    onFailure: '',
+                    on403: function(){
+                        document.location.reload();
+                    }
+                }
+            );
+        }
+
+        /* Start - For Amasty One Step Checkout */
+        function callAmastyCheckoutForAffirm() {
+            if (amscheckoutForm.validator.validate() && !checkoutRunning) {
+                showLoading();
+                checkoutRunning = true;
+                var params = Form.serialize($('amscheckout-onepage'));
+                console.log(params);
+                if ($('checkout-agreements')) {
+                    var checkboxes = $$('#checkout-agreements input');
+                    for (var i = 0, l = checkboxes.length; i < l; i++) {
+                        if (!checkboxes[i].checked) {
+                            hideLoading();
+                            checkoutRunning = false;
+                            alert("<?php echo $this->jsQuoteEscape($this->__('Please agree to all Terms and Conditions before placing the orders.')) ?>");
+                            return false;
+                        }
+                    }
+                }
+                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                        method: 'post',
+                        parameters: params,
+                        onSuccess: function(transport){
+                            callAffirmModalCheckout(params);
+                            hideLoading();
+                        },
+                        on403: function(){
+                            document.location.reload();
+                        }
+                    }
+                );
+            }
+
+        }
+        /* End - For Amasty One Step Checkout */
+
+        /* Start - For MageStore One Step Checkout */
+        function callMageStoreOneStepCheckoutForAffirm() {
+            var validator = new Validation('one-step-checkout-form');
+            if (validator.validate()) {
+                disableOscButton();
+                var params = Form.serialize($('one-step-checkout-form'));
+                if ($('terms_conditions_checkbox_id')) {
+                    if (!$('terms_conditions_checkbox_id').checked) {
+                        enableOscButton();
+                        alert("<?php echo $this->jsQuoteEscape($this->__('Please agree to all Terms and Conditions before placing the orders.')) ?>");
+                        return false;
+                    } else {
+                        params += '&'+ jQuery.param({agreement: {1:1}});
+                    }
+                }
+                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                        method: 'post',
+                        parameters: params,
+                        onSuccess: function(transport){
+                            console.log(JSON.stringify(transport));
+                            if (transport.status == 200) {
+                                if (transport.responseText && transport.responseText.isJSON) {
+                                    var response = JSON.parse(transport.responseText);
+                                    $('checkout-' + response.update_section.name + '-load').update(response.update_section.html);
+                                    if(response && !response.success) {
+                                        enableOscButton();
+                                        if(response.error_messages) {
+                                            alert(response.error_messages);
+                                        }
+                                        return false;
+                                    }
+                                }
+                                callAffirmModalCheckout(params);
+                                enableOscButton();
+                                return;
+                            }
+                        },
+                        on403: function(){
+                            document.location.reload();
+                        }
+                    }
+                );
+            }
+
+        }
+
+        function disableOscButton(){
+            $('onestepcheckout-place-order-loading').show();
+            $('onestepcheckout-button-place-order').disabled = true;
+            $('onestepcheckout-button-place-order').removeClassName('onestepcheckout-btn-checkout');
+            $('onestepcheckout-button-place-order').addClassName('place-order-loader');
+        }
+
+        function enableOscButton(){
+            $('onestepcheckout-place-order-loading').style.display = 'none';
+            $('onestepcheckout-button-place-order').removeAttribute('onclick');
+            $('onestepcheckout-button-place-order').observe('click', formsubmit());
+            $('onestepcheckout-button-place-order').disabled = false;
+            $('onestepcheckout-button-place-order').addClassName('onestepcheckout-btn-checkout');
+            $('onestepcheckout-button-place-order').removeClassName('place-order-loader');
+        }
+        /* End - For MageStore One Step Checkout */
+
+        /* Start - For MageCheckout SecuredCheckout */
+        function callMagecheckoutSecuredCheckoutForAffirm() {
+            var formData = Form.serialize($('one-step-checkout-form'), true);
+            var validator = new Validation('one-step-checkout-form');
+            var isValidatedShipping = MagecheckoutSecuredCheckoutForm.prototype._validateShippingMethod(formData);
+            if (validator.validate() && isValidatedShipping) {
+                disableMScButton();
+                if ($('one_step_checkout_agreement')) {
+                    if (!$('one_step_checkout_agreement').checked) {
+                        enableMScButton();
+                        alert("<?php echo $this->jsQuoteEscape($this->__('Please agree to all Terms and Conditions before placing the orders.')) ?>");
+                        return false;
+                    } else {
+                        formData += '&' + jQuery.param({agreement: {1: 1}});
+                    }
+                }
+                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                        method: 'post',
+                        parameters: formData,
+                        onSuccess: function (transport) {
+                            callAffirmModalCheckout(formData);
+                            enableMScButton();
+                            return;
+                        },
+                        on403: function () {
+                            document.location.reload();
+                        }
+                    }
+                );
+            }
+
+        }
+
+        function enableMScButton(){
+            $$('.one-step-checkout-place-order-please-wait').first().hide();
+            $('place-order-button').disabled = false;
+            $('place-order-button').removeClassName('place-order-button-disabled');
+        }
+
+        function disableMScButton(){
+            $$('.one-step-checkout-place-order-please-wait').first().show();
+            $('place-order-button').disabled = true;
+            $('place-order-button').addClassName('place-order-button-disabled');
+        }
+        /* End - For MageCheckout SecuredCheckout */
+
+        /* Start - For Mageworld One Step Checkout */
+        function callMageWorldCheckoutForAffirm() {
+            var formData = Form.serialize($('onestep_form'), true);
+            var validator = new Validation('onestep_form');
+            if (validator.validate()) {
+                disableMWButton();
+                if ($('checkout-agreements')) {
+                    var checkboxes = $$('#checkout-agreements input');
+                    for (var i = 0, l = checkboxes.length; i < l; i++) {
+                        if (!checkboxes[i].checked) {
+                            enableMWButton();
+                            alert("<?php echo $this->jsQuoteEscape($this->__('Please agree to all Terms and Conditions before placing the orders.')) ?>");
+                            return false;
+                        }
+                    }
+                }
+                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                        method: 'post',
+                        parameters: formData,
+                        onSuccess: function (transport) {
+                            callAffirmModalCheckout(formData);
+                            enableMWButton();
+                            return;
+                        },
+                        on403: function () {
+                            document.location.reload();
+                        }
+                    }
+                );
+            }
+
+        }
+
+        function enableMWButton(){
+            $('review-please-wait').hide();
+            $$('.btn-checkout').disabled = false;
+        }
+
+        function disableMWButton(){
+            $('review-please-wait').show();
+            $$('.btn-checkout').disabled = true;
+        }
+
+        //]]>
+    </script>
+    <?php
+}
+?>

@@ -321,8 +321,14 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getAffirmJs()
     {
-        $url = $this->getAffirmJsUrl();
-        $affirmJs = '<script type="text/javascript" src="'.$url.'"></script>';
+        $affirmJs = '<script type="text/javascript">
+        if (!AFFIRM_AFFIRM.promos.getIsInitialized()) {
+            AFFIRM_AFFIRM.promos.initialize("'.  $this->getApiKey() .'","'. $this->getAffirmJsUrl() .'");
+        }
+        if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {
+            AFFIRM_AFFIRM.promos.loadScript();
+        }
+        </script>';
         return $affirmJs;
     }
 
@@ -566,5 +572,26 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
             return 'js/affirm/checkout.js';
         }
         return '';
+    }
+
+    /**
+     * Returns a checkout object instance
+     *
+     * @return Mage_Checkout_Model_Type_Onepage
+     */
+    public function _getCheckout()
+    {
+        return Mage::getSingleton('checkout/type_onepage');
+    }
+
+    /**
+     * Get OPC save order URL
+     *
+     * @return string
+     */
+    public function getOPCCheckoutUrl()
+    {
+        $paramHttps  = (Mage::app()->getStore()->isCurrentlySecure()) ? array('_forced_secure' => true) : array();
+        return Mage::getUrl('checkout/onepage/saveOrder/form_key/' . Mage::getSingleton('core/session')->getFormKey(), $paramHttps);
     }
 }
