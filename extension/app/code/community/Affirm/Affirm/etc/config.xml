@@ -65,6 +65,15 @@
                     </affirm_affirm_model_order_observer>
                 </observers>
             </controller_action_predispatch_checkout_onepage_saveOrder>
+            <controller_action_predispatch_onestepcheckout_index_saveOrder><!-- Added for MW Onestepcheckout -->
+                <observers>
+                    <affirm_affirm_model_order_observer>
+                        <type>singleton</type>
+                        <class>affirm/order_observer</class>
+                        <method>preDispatchSaveOrderAction</method>
+                    </affirm_affirm_model_order_observer>
+                </observers>
+            </controller_action_predispatch_onestepcheckout_index_saveOrder>
             <checkout_type_onepage_save_order>
                 <observers>
                     <affirm_affirm_model_pre_order_observer>

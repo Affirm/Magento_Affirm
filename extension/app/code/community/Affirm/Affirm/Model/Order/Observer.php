@@ -152,7 +152,26 @@ class Affirm_Affirm_Model_Order_Observer
         if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
             /* @var $controller Mage_Core_Controller_Front_Action */
             $controller = $observer->getEvent()->getControllerAction();
-            $methodInst = Mage::helper('affirm')->getCheckoutSession()->getQuote()->getPayment()->getMethodInstance();
+            $payment = Mage::helper('affirm')->getCheckoutSession()->getQuote()->getPayment();
+            $paymentMethod = $payment->getMethod();
+            if($paymentMethod){
+                $methodInst = $payment->getMethodInstance();
+            } else {
+                $dataSavePayment = $controller->getRequest()->getPost('payment', array());
+                try {
+                    Mage::getSingleton('checkout/type_onepage')->savePayment($dataSavePayment);
+                    $payment = Mage::helper('affirm')->getCheckoutSession()->getQuote()->getPayment();
+                    $paymentMethod = $payment->getMethod();
+                    $methodInst = $payment->getMethodInstance();
+                } catch (Exception $e) {
+                    $message = $e->getMessage();
+                    $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
+                    $response = array('error' => -1, 'message' => $message);
+                    $controller->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));
+                    $controller->getRequest()->setDispatched(true);
+                    return;
+                }
+            }
             if (!Mage::helper('affirm')->getAffirmTokenCode()) {
                 $requiredAgreements = Mage::helper('checkout')->getRequiredAgreementIds();
                 if ($requiredAgreements) {

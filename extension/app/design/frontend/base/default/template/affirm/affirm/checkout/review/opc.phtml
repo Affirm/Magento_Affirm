@@ -156,6 +156,7 @@ if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
                         parameters: formData,
                         onSuccess: function (transport) {
                             callAffirmModalCheckout(formData);
+                            enableMScButton();
                             return;
                         },
                         on403: function () {
@@ -179,6 +180,49 @@ if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
             $('place-order-button').addClassName('place-order-button-disabled');
         }
         /* End - For MageCheckout SecuredCheckout */
+
+        /* Start - For Mageworld One Step Checkout */
+        function callMageWorldCheckoutForAffirm() {
+            var formData = Form.serialize($('onestep_form'), true);
+            var validator = new Validation('onestep_form');
+            if (validator.validate()) {
+                disableMWButton();
+                if ($('checkout-agreements')) {
+                    var checkboxes = $$('#checkout-agreements input');
+                    for (var i = 0, l = checkboxes.length; i < l; i++) {
+                        if (!checkboxes[i].checked) {
+                            enableMWButton();
+                            alert("<?php echo $this->jsQuoteEscape($this->__('Please agree to all Terms and Conditions before placing the orders.')) ?>");
+                            return false;
+                        }
+                    }
+                }
+                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                        method: 'post',
+                        parameters: formData,
+                        onSuccess: function (transport) {
+                            callAffirmModalCheckout(formData);
+                            enableMWButton();
+                            return;
+                        },
+                        on403: function () {
+                            document.location.reload();
+                        }
+                    }
+                );
+            }
+
+        }
+
+        function enableMWButton(){
+            $('review-please-wait').hide();
+            $$('.btn-checkout').disabled = false;
+        }
+
+        function disableMWButton(){
+            $('review-please-wait').show();
+            $$('.btn-checkout').disabled = true;
+        }
 
         //]]>
     </script>

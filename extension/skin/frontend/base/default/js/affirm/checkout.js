@@ -61,6 +61,21 @@ document.observe('dom:loaded', function () {
             }
         }
     }
+});
 
+window.addEventListener('load', function() {
+    if ($('onestep_form')) {
+        if (typeof window.OneStep.Views.Init.prototype.updateOrder == 'function') {
+            window.OneStep.Views.Init.prototype.updateOrder = window.OneStep.Views.Init.prototype.updateOrder.wrap(
+                function (parentMethod) {
+                    if (isAffirmMethod()) {
+                        callMageWorldCheckoutForAffirm();
+                    } else {
+                        return parentMethod();
+                    }
 
+                }
+            )
+        }
+    }
 });
