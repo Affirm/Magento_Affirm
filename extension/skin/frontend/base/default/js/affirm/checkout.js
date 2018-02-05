@@ -61,6 +61,40 @@ document.observe('dom:loaded', function () {
             }
         }
     }
+
+    if($('iwd_opc_place_order_button')){
+        if (typeof OnePage.prototype.saveOrder == 'function') {     // This is for IWD OPC
+            OnePage.prototype.saveOrder = OnePage.prototype.saveOrder.wrap(
+                function (parentMethod) {
+                    if (isAffirmMethod()) {
+                        callIWDOneStepCheckoutForAffirm();
+                    } else {
+                        return parentMethod();
+                    }
+
+                }
+            );
+        }
+    }
+
+    // This is for Firecheckout
+    // And Venedor Theme 1.6.3
+    if ($('firecheckout-form') || $('onepagecheckout_orderform')) {
+        if (typeof checkout.save == 'function') {     // This is for TM Firecheckout
+            checkout.save = checkout.save.wrap(
+                function (parentMethod) {
+                    if (isAffirmMethod()) {
+                        var createAccount = $('billing:register_account');
+                        billing.setCreateAccount(createAccount ? createAccount.checked : 1); // create account if checkbox is missing
+                        callTMFireCheckoutForAffirm();
+                    } else {
+                        return parentMethod();
+                    }
+
+                }
+            );
+        }
+    }
 });
 
 window.addEventListener('load', function() {
