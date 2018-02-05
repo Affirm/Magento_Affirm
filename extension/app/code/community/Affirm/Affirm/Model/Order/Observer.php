@@ -174,7 +174,7 @@ class Affirm_Affirm_Model_Order_Observer
             }
             if (!Mage::helper('affirm')->getAffirmTokenCode()) {
                 $requiredAgreements = Mage::helper('checkout')->getRequiredAgreementIds();
-                if ($requiredAgreements) {
+                if ($requiredAgreements && $controller->getRequest()->getPost('agreement', array())) {
                     $postedAgreements = array_keys($controller->getRequest()->getPost('agreement', array()));
                     $diff = array_diff($requiredAgreements, $postedAgreements);
                     if ($diff) {
@@ -209,13 +209,14 @@ class Affirm_Affirm_Model_Order_Observer
                 }
                 #ok record the current controller that we are using...
                 $request = Mage::app()->getRequest();
+                $post = (Mage::app()->getRequest()->getPost()) ? Mage::app()->getRequest()->getPost() : null;
                 $orderRequest = array('action' => $request->getActionName(),
                     'controller' => $request->getControllerName(),
                     'module' => $request->getModuleName(),
                     'params' => $request->getParams(),
                     'method' => $request->getMethod(),
                     'xhr' => $request->isXmlHttpRequest(),
-                    'POST' => Mage::app()->getRequest()->getPost(), //need post for some cross site issues
+                    'POST' => $post, //need post for some cross site issues
                     'quote_id' => Mage::helper('affirm')->getCheckoutSession()->getQuote()->getId()
                 );
                 Mage::helper('affirm')->getCheckoutSession()->setAffirmOrderRequest(serialize($orderRequest));
