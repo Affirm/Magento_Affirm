@@ -13,23 +13,24 @@ if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
                         } catch (e) {
                             response = {};
                         }
-                        affirm.checkout(response.checkout);
-                        affirm.ui.error.on("close", function () {
-                            window.location = "<?php echo $this->helper('checkout/url')->getCheckoutUrl(); ?> ";
-                        });
-                        affirm.checkout.open({
-                            onFail: function () {
-                                checkout.setLoadWaiting(false);
-                                console.log("User cancelled the Affirm checkout flow")
-                            },
-                            onSucces: function (a) {
-                                checkout.setLoadWaiting(false);
-                                console.log("Affirm checkout successful");
+                        if (response.success) {
+                            affirm.checkout(response.checkout);
+                            affirm.ui.error.on("close", function () {
+                                window.location = "<?php echo $this->helper('checkout/url')->getCheckoutUrl(); ?> ";
+                            });
+                            affirm.checkout.open();
+                            return;
+                        } else {
+                            var msg = response.messages;
+                            if (msg) {
+                                alert(msg);
+                                return false;
                             }
-                        });
-                        return;
+                        }
                     },
-                    onFailure: '',
+                    onFailure: function(){
+                        document.location.reload();
+                    },
                     on403: function(){
                         document.location.reload();
                     }
@@ -158,7 +159,7 @@ if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
                             callAffirmModalCheckout(formData);
                             enableMScButton();
                             return;
-                         },
+                        },
                         on403: function () {
                             document.location.reload();
                         }
@@ -229,19 +230,19 @@ if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
         /* Start - For IWD One Step Checkout */
         function callIWDOneStepCheckoutForAffirm() {
             //if (OnePage.prototype.isCheckoutValid()) {
-                //var params = OnePage.prototype.getSaveData();
-                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
-                        method: 'post',
-                        //parameters: params,
-                        onSuccess: function(transport){
-                            callAffirmModalCheckout(null);
-                            hideLoading();
-                        },
-                        on403: function(){
-                            document.location.reload();
-                        }
+            //var params = OnePage.prototype.getSaveData();
+            new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                    method: 'post',
+                    //parameters: params,
+                    onSuccess: function(transport){
+                        callAffirmModalCheckout(null);
+                        hideLoading();
+                    },
+                    on403: function(){
+                        document.location.reload();
                     }
-                );
+                }
+            );
             //}
 
         }
@@ -290,6 +291,28 @@ if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
             $('review-please-wait').show();
         }
         /* End - For Tm Firecheckout */
+
+        /* Start - For AW OneStepCheckout */
+        function callAWOneStepCheckoutForAffirm() {
+            var formData = Form.serialize($('aw-onestepcheckout-general-form'), true);
+            var validator = new Validation('aw-onestepcheckout-general-form');
+            if (validator.validate()) {
+                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                        method: 'post',
+                        parameters: formData,
+                        onSuccess: function (transport) {
+                            callAffirmModalCheckout(formData);
+                            return;
+                        },
+                        on403: function () {
+                            document.location.reload();
+                        }
+                    }
+                );
+            }
+
+        }
+        /* End - For AW OneStepCheckout */
 
         //]]>
     </script>

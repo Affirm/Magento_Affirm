@@ -95,6 +95,27 @@ document.observe('dom:loaded', function () {
             );
         }
     }
+
+    // This is for One Step Checkout by AheadWorks
+    if ($('aw-onestepcheckout-general-form')) {
+        if (typeof AWOnestepcheckoutForm.prototype._sendPlaceOrderRequest == 'function') {
+            AWOnestepcheckoutForm.prototype._sendPlaceOrderRequest = AWOnestepcheckoutForm.prototype._sendPlaceOrderRequest.wrap(
+                function (parentMethod) {
+                    if (isAffirmMethod()) {
+                        var params = Form.serialize($('aw-onestepcheckout-general-form'), true);
+                        if (AWOnestepcheckoutCore.validateParams(params)) {
+                            callAWOneStepCheckoutForAffirm();
+                            AWOnestepcheckoutForm.prototype.hideOverlay();
+                            AWOnestepcheckoutForm.prototype.hidePleaseWaitNotice();
+                            AWOnestepcheckoutForm.prototype.enablePlaceOrderButton();
+                        }
+                    } else {
+                        return parentMethod();
+                    }
+                }
+            );
+        }
+    }
 });
 
 window.addEventListener('load', function() {
