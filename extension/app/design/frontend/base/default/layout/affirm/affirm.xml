@@ -121,4 +121,15 @@
             </action>
         </reference>
     </firecheckout_index_index>
+    <aw_onestepcheckout_index_index> <!-- For AW OneStepCheckout extension -->
+        <reference name="content">
+            <block type="core/template" name="affirm.js.checkout" after="-" template="affirm/affirm/checkout/review/opc.phtml"/>
+        </reference>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name helper="affirm/getAffirmCheckoutJsScript" />
+            </action>
+        </reference>
+    </aw_onestepcheckout_index_index>
 </layout>

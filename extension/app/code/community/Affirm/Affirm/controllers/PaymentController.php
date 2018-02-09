@@ -222,30 +222,36 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
         $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
         $checkoutSession->setCartWasUpdated(false);
         if($post) {
-            $updatedSection = $this->getRequest()->getPost('updated_section', null);
-            switch ($updatedSection) {
-                case "billing":
-                    $this->_saveBilling();
-                    break;
-                case "shipping":
-                    $this->_saveShipping();
-                    break;
-                case "shipping_method":
-                    $this->_saveShippingMethod();
-                    break;
-                case "payment_method":
-                    $this->_savePaymentMethod();
-                    break;
-                default:
-                    $this->_saveBilling();
-                    $this->_saveShipping();
-                    $this->_saveShippingMethod();
-                    $this->_savePaymentMethod();
-                    break;
+            $billingData  = $this->getRequest()->getPost('billing', array());
+            $result       = $this->createAccountWhenCheckout($billingData);
+            if ($result['success']) {
+                $updatedSection = $this->getRequest()->getPost('updated_section', null);
+                switch ($updatedSection) {
+                    case "billing":
+                        $this->_saveBilling();
+                        break;
+                    case "shipping":
+                        $this->_saveShipping();
+                        break;
+                    case "shipping_method":
+                        $this->_saveShippingMethod();
+                        break;
+                    case "payment_method":
+                        $this->_savePaymentMethod();
+                        break;
+                    default:
+                        $this->_saveBilling();
+                        $this->_saveShippingMethod();
+                        $this->_savePaymentMethod();
+                        break;
+                }
+            } else {
+                $result['success']    = false;
+                $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($result));
+                return;
             }
         }
         $this->getOnepage()->getQuote()->setTotalsCollectedFlag(false);
-
         $quote = $checkoutSession->getQuote();
         $shippingAddress = $quote->getShippingAddress();
         $shipping = null;
@@ -411,5 +417,55 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
 
     protected function _savePaymentMethod(){
         $this->savePaymentAction();
+    }
+
+    /**
+     * Create accont when customer checkout
+     *
+     * @return array
+     */
+    public function createAccountWhenCheckout($billingData)
+    {
+        $result = array(
+            'success'  => true,
+            'messages' => array(),
+        );
+        if (!$this->getOnepage()->getCustomerSession()->isLoggedIn()) {
+            if (isset($billingData['create_account'])) {
+                $this->getOnepage()->saveCheckoutMethod(Mage_Checkout_Model_Type_Onepage::METHOD_REGISTER);
+            } else {
+                $this->getOnepage()->saveCheckoutMethod(Mage_Checkout_Model_Type_Onepage::METHOD_GUEST);
+            }
+        }
+
+        if (!$this->getOnepage()->getQuote()->getCustomerId() &&
+            Mage_Checkout_Model_Type_Onepage::METHOD_REGISTER == $this->getOnepage()->getQuote()->getCheckoutMethod()
+        ) {
+            if ($this->_customerEmailExists($billingData['email'], Mage::app()->getWebsite()->getId())) {
+                $result['success']    = false;
+                $result['messages'][] = $this->__('There is already a customer registered using this email address. Please login using this email address or enter a different email address to register your account.');
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @reference Mage_Checkout_OnepageController
+     * @param string $email
+     * @param int    $websiteId
+     * @return false|Mage_Customer_Model_Customer
+     */
+    protected function _customerEmailExists($email, $websiteId = null)
+    {
+        $customer = Mage::getModel('customer/customer');
+        if ($websiteId) {
+            $customer->setWebsiteId($websiteId);
+        }
+        $customer->loadByEmail($email);
+        if ($customer->getId()) {
+            return $customer;
+        }
+
+        return false;
     }
 }
