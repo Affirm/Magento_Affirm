@@ -273,6 +273,9 @@
                 <plain_text_title_enabled>0</plain_text_title_enabled>
                 <allowspecific>1</allowspecific>
                 <specificcountry>US</specificcountry>
+                <notification_feed>https://github.com/Affirm/Magento_Affirm/releases.atom</notification_feed>
+                <notification_check_frequency>86400</notification_check_frequency>
+                <notification_update>1</notification_update>
             </affirm>
         </payment>
         <affirmpromo>
