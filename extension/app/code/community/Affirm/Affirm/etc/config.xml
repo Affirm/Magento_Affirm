@@ -168,6 +168,14 @@
     </frontend>
     <adminhtml>
         <events>
+            <controller_action_predispatch>
+                <observers>
+                    <adminnotification>
+                        <class>affirm/adminhtml_observer</class>
+                        <method>preDispatch</method>
+                    </adminnotification>
+                </observers>
+            </controller_action_predispatch>
             <controller_action_predispatch_adminhtml_sales_order_create_save>
                 <observers>
                     <affirm_affirm_model_before_order_save_admin>
