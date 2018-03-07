@@ -44,11 +44,6 @@ class Affirm_Affirm_Block_Adminhtml_Rule_Edit_Tab_General extends Mage_Adminhtml
 			'required'  => true,
         ));             
         
-//        $fldInfo->addField('message', 'text', array(
-//            'label'     => $hlp->__('Error Message'),
-//            'name'      => 'message',
-//        ));
-        
         //set form values
         $form->setValues(Mage::registry('affirm_rule')->getData());
         

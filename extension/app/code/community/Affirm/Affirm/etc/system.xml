@@ -13,7 +13,7 @@
                     <expanded>1</expanded>
                     <fields>
                         <version translate="label">
-                            <label>Affirm Extension Version</label>
+                            <label>Extension Version</label>
                             <frontend_type>select</frontend_type>
                             <frontend_model>Affirm_Affirm_Block_Adminhtml_Version</frontend_model>
                             <sort_order>4</sort_order>
@@ -215,15 +215,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </notification_update>
-                        <notification_feed translate="label">
-                            <label>Notification Feed</label>
-                            <comment><![CDATA[]]></comment>
-                            <frontend_type>text</frontend_type>
-                            <sort_order>255</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </notification_feed>
                     </fields>
                 </affirm>
             </groups>

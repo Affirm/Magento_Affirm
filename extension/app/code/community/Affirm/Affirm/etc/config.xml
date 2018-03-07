@@ -170,10 +170,10 @@
         <events>
             <controller_action_predispatch>
                 <observers>
-                    <adminnotification>
+                    <affirm_adminnotification>
                         <class>affirm/adminhtml_observer</class>
                         <method>preDispatch</method>
-                    </adminnotification>
+                    </affirm_adminnotification>
                 </observers>
             </controller_action_predispatch>
             <controller_action_predispatch_adminhtml_sales_order_create_save>
