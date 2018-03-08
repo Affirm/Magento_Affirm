@@ -483,4 +483,57 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
         $assetPath = "images/banners";
         return 'https://' . $prefix . '.' . $domain . '/' . $assetPath ;
     }
+
+    public function getAllGroups()
+    {
+        $customerGroups = Mage::getResourceModel('customer/group_collection')
+            ->load()->toOptionArray();
+
+        $found = false;
+        foreach ($customerGroups as $group) {
+            if ($group['value']==0) {
+                $found = true;
+            }
+        }
+        if (!$found) {
+            array_unshift($customerGroups, array('value'=>0, 'label'=>Mage::helper('salesrule')->__('NOT LOGGED IN')));
+        }
+
+        return $customerGroups;
+    }
+    
+    public function getAllMethods()
+    {
+        $hash = array();
+        foreach (Mage::getStoreConfig('payment') as $code=>$config){
+            if (!empty($config['title'])){
+                $label = '';
+                if (!empty($config['group'])){
+                    $label = ucfirst($config['group']) . ' - ';
+                }
+                $label .= $config['title'];
+                /*if (!empty($config['allowspecific']) && !empty($config['specificcountry'])){
+                    $label .= ' in ' . $config['specificcountry'];
+                }*/
+                $hash[$code] = $label;
+
+            }
+        }
+        asort($hash);
+
+        $methods = array();
+        foreach ($hash as $code => $label){
+            $methods[] = array('value' => $code, 'label' => $label);
+        }
+
+        return $methods;
+    }
+
+    public function getStatuses()
+    {
+        return array(
+            '1' => Mage::helper('salesrule')->__('Active'),
+            '0' => Mage::helper('salesrule')->__('Inactive'),
+        );
+    }
 }

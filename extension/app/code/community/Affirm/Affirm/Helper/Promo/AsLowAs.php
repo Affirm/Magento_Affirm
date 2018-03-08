@@ -79,6 +79,8 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
      */
     const MPP_MIN_DISPLAY_VALUE = 'affirmpromo/as_low_as/min_mpp_display_value';
 
+    protected $_allRules = null;
+
     /**
      * Check is visible on PDP
      *
@@ -169,7 +171,8 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
         if (null === $this->_affirmDisabledBackOrderedCart) {
             $this->_affirmDisabledBackOrderedCart = Mage::helper('affirm')->isDisableQuoteBackOrdered() ||
                     Mage::helper('affirm')->isDisableModuleFunctionality() ||
-                    !$this->isVisibleOnCart() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled();
+                    !$this->isVisibleOnCart() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled() ||
+                    !$this->isQuoteItemsDisabledByPaymentRestRules();
         }
         return $this->_affirmDisabledBackOrderedCart;
     }
@@ -185,7 +188,7 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
             $this->_affirmDisabledBackOrderedPdp = Mage::helper('affirm')->isDisableProductBackOrdered() ||
                     Mage::helper('affirm')->isDisableModuleFunctionality() ||
                     !$this->isVisibleOnPDP() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled() ||
-                    $this->_isSkipProductByType();
+                    $this->_isSkipProductByType() || !$this->isProductDisabledByPaymentRestRules();
         }
         return $this->_affirmDisabledBackOrderedPdp;
     }
@@ -226,5 +229,76 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
         } else {
             return $mfpHelper->getPromoIdDefault();
         }
+    }
+
+    public function isProductDisabledByPaymentRestRules()
+    {
+        foreach ($this->getRules() as $rule){
+            if ($rule->restrictByName(Affirm_Affirm_Model_Payment::METHOD_CODE)){
+                $product = Mage::helper('catalog')->getProduct();
+
+                $tempQuote = new Varien_Object; // workaround since rule expects cart items containing products, not products directly
+
+                $allItems = array();
+                $product->setQty(1); // we want to test a fixed qty of 1, but this can be made more dynamic
+                $product = $product->load($product->getId());
+                $product->setProductId($product->getId());
+                $product->setProduct($product);
+                $allItems[] = $product;
+                $tempQuote->setAllItems($allItems);
+                $tempQuote->setAllVisibleItems($allItems);
+                $tempQuote->setSubtotal($product->getPrice());
+
+                $isValid = (bool) $rule->validate($tempQuote);
+                if ($isValid) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public function isQuoteItemsDisabledByPaymentRestRules()
+    {
+        foreach ($this->getRules() as $rule){
+            if ($rule->restrictByName(Affirm_Affirm_Model_Payment::METHOD_CODE)){
+                $quote = Mage::helper('checkout/cart')->getQuote();
+
+                $isValid = (bool) $rule->validate($quote);
+                if ($isValid) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public function getRules()
+    {
+        if (is_null($this->_allRules)){
+            $this->_allRules = Mage::getModel('affirm/rule')
+                ->getCollection()
+                ->addFieldToFilter('is_active', 1);
+            if ($this->_isAdmin()){
+                $this->_allRules->addFieldToFilter('for_admin', 1);
+            }
+
+            $this->_allRules->load();
+            foreach ($this->_allRules as $rule){
+                $rule->afterLoad();
+            }
+        }
+
+        return  $this->_allRules;
+    }
+
+    protected function _isAdmin()
+    {
+        if (Mage::app()->getStore()->isAdmin())
+            return true;
+        if (Mage::app()->getRequest()->getControllerName() == 'sales_order_create')
+            return true;
+
+        return false;
     }
 }

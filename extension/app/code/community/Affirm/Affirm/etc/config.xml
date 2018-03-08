@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>3.5.1</version>
+            <version>3.5.2</version>
         </Affirm_Affirm>
     </modules>
     <global>
@@ -20,18 +20,48 @@
             <affirm>
                 <class>Affirm_Affirm_Helper</class>
             </affirm>
+            <payment>
+                <rewrite>
+                    <data>Affirm_Affirm_Helper_Payment_Data</data>
+                </rewrite>
+            </payment>
         </helpers>
         <models>
             <affirm>
                 <class>Affirm_Affirm_Model</class>
+                <resourceModel>affirm_mysql4</resourceModel>
             </affirm>
+            <affirm_mysql4>
+                <class>Affirm_Affirm_Model_Mysql4</class>
+                <entities>
+                    <rule>
+                        <table>affirm_payrestriction_rule</table>
+                    </rule>
+                    <attribute>
+                        <table>affirm_payrestriction_attribute</table>
+                    </attribute>
+                </entities>
+            </affirm_mysql4>
         </models>
         <resources>
             <affirm_setup>
                 <setup>
                     <module>Affirm_Affirm</module>
                 </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
             </affirm_setup>
+            <affirm_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </affirm_write>
+            <affirm_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </affirm_read>
         </resources>
         <events>
             <affirm_action_saveorder>
@@ -43,6 +73,14 @@
                     </controller_action_postdispatch_affirm_payment_confirm>
                 </observers>
             </affirm_action_saveorder>
+            <sales_quote_config_get_product_attributes>
+                <observers>
+                    <affirm>
+                        <class>affirm/rule_observer</class>
+                        <method>addProductAttributes</method>
+                    </affirm>
+                </observers>
+            </sales_quote_config_get_product_attributes>
         </events>
     </global>
     <frontend>
@@ -130,6 +168,14 @@
     </frontend>
     <adminhtml>
         <events>
+            <controller_action_predispatch>
+                <observers>
+                    <affirm_adminnotification>
+                        <class>affirm/adminhtml_observer</class>
+                        <method>preDispatch</method>
+                    </affirm_adminnotification>
+                </observers>
+            </controller_action_predispatch>
             <controller_action_predispatch_adminhtml_sales_order_create_save>
                 <observers>
                     <affirm_affirm_model_before_order_save_admin>
@@ -156,6 +202,46 @@
                 </affirm>
             </updates>
         </layout>
+        <menu>
+            <promo>
+                <children>
+                    <affirm module="affirm" translate="title">
+                        <title>Manage Payment Restrictions Rules</title>
+                        <sort_order>3</sort_order>
+                        <action>adminhtml/rule</action>
+                    </affirm>
+                </children>
+            </promo>
+        </menu>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <promo>
+                            <children>
+                                <affirm module="affirm" translate="title">
+                                    <title>Manage Payment Restrictions Rules</title>
+                                </affirm>
+                            </children>
+                        </promo>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <affirm translate="title">
+                                            <title>Manage Payment Restrictions Rules</title>
+                                        </affirm>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
     </adminhtml>
     <admin>
         <routers>
@@ -176,7 +262,7 @@
                 <pre_order>1</pre_order>
                 <model>affirm/payment</model>
                 <!-- WARNING: default value for title removed to prevent it from appearing on checkout page on MCE 1.4.0.1 -->
-                <title>Affirm: Monthly Payments</title>
+                <title>Affirm</title>
                 <label_html_custom><![CDATA[<img src="https://cdn-assets.affirm.com/images/blue_logo-transparent_bg.png" width="52" height="16" class="v-middle">&nbsp;Monthly Payments]]></label_html_custom>
                 <checkout_button_active>0</checkout_button_active>
                 <checkout_button_code>https://cdn-assets.affirm.com/images/buttons/30_148-white.png</checkout_button_code>
@@ -195,6 +281,9 @@
                 <plain_text_title_enabled>0</plain_text_title_enabled>
                 <allowspecific>1</allowspecific>
                 <specificcountry>US</specificcountry>
+                <notification_feed>https://github.com/Affirm/Magento_Affirm/releases.atom</notification_feed>
+                <notification_check_frequency>86400</notification_check_frequency>
+                <notification_update>1</notification_update>
             </affirm>
         </payment>
         <affirmpromo>
