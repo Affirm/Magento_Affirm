@@ -262,7 +262,7 @@
                 <pre_order>1</pre_order>
                 <model>affirm/payment</model>
                 <!-- WARNING: default value for title removed to prevent it from appearing on checkout page on MCE 1.4.0.1 -->
-                <title>Affirm: Monthly Payments</title>
+                <title>Affirm</title>
                 <label_html_custom><![CDATA[<img src="https://cdn-assets.affirm.com/images/blue_logo-transparent_bg.png" width="52" height="16" class="v-middle">&nbsp;Monthly Payments]]></label_html_custom>
                 <checkout_button_active>0</checkout_button_active>
                 <checkout_button_code>https://cdn-assets.affirm.com/images/buttons/30_148-white.png</checkout_button_code>

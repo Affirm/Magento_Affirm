@@ -512,9 +512,9 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
                     $label = ucfirst($config['group']) . ' - ';
                 }
                 $label .= $config['title'];
-                if (!empty($config['allowspecific']) && !empty($config['specificcountry'])){
+                /*if (!empty($config['allowspecific']) && !empty($config['specificcountry'])){
                     $label .= ' in ' . $config['specificcountry'];
-                }
+                }*/
                 $hash[$code] = $label;
 
             }
