@@ -1,11 +1,11 @@
 <?php
 return array(
 'base_dir'             => realpath('../var/'),
-'archive_files'        => 'Affirm_Affirm-3.6.5.tgz',
+'archive_files'        => 'Affirm_Affirm-3.6.6.tgz',
 'extension_name'       => 'Affirm_Magento',
 'skip_version_compare' => true,
-'extension_version'    => '3.6.5',
-'archive_connect'      => 'Affirm_Affirm-3.6.5.tgz',
+'extension_version'    => '3.6.6',
+'archive_connect'      => 'Affirm_Affirm-3.6.6.tgz',
 'path_output'          => realpath('../var/'),
 
 'stability'            => 'stable',
@@ -13,7 +13,7 @@ return array(
 'channel'              => 'community',
 'summary'              => 'Affirm provides instant, flexible financing for your customers at checkout',
 'description'          => 'Affirm provides flexible financing for your customers at checkout to increase sales and conversion. Your customers will be instantly approved for a loan with Affirm during checkout and will use Affirm as their form of payment. They can then pay off their balance in easy monthly payments with a low interest rate. Affirm assumes all credit risk and will settle full payment with you right away. You will need an Affirm account to use this extension. For more information and to sign up for an Affirm account, please visit https://www.affirm.com/merchants/',
-'notes'                => 'Initial Release',
+'notes'                => 'Extension updates and bug fixes release',
 
 'author_name'          => 'Affirm, Inc.',
 'author_user'          => 'affirm',
