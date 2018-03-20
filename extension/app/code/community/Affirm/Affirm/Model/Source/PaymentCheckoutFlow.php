@@ -31,8 +31,9 @@ class Affirm_Affirm_Model_Source_PaymentCheckoutFlow
             ),
             array(
                 'value' => Affirm_Affirm_Model_Payment::CHECKOUT_FLOW_MODAL,
-                'label' => Mage::helper('affirm')->__('Checkout flow using Modal')
+                'label' => Mage::helper('affirm')->__('Checkout flow using Modal (Beta)')
             )
         );
     }
 }
+

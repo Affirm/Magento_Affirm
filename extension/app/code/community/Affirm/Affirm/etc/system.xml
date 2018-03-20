@@ -175,7 +175,7 @@
                             </depends>
                         </checkout_button_code>
                         <checkout_flow_type translate="label">
-                            <label>Checkout Flow Type</label>
+                            <label>Checkout Flow Type (Beta)</label>
                             <comment>
                                 <![CDATA[Checkout flow using redirect or modal]]></comment>
                             <frontend_type>select</frontend_type>
@@ -184,6 +184,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
+                            <tooltip>Modal checkout flow is currently in beta. After enabling this, if you encounter any issues with the checkout flow, reach out to Affirm.</tooltip>
                         </checkout_flow_type>
                         <detect_xhr_checkout translate="label">
                             <label>Checkout uses xhr</label>
