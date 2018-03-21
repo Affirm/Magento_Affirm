@@ -57,6 +57,11 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     const PAYMENT_AFFIRM_DISABLE_BACK_ORDERED_ITEMS = 'payment/affirm/disable_for_backordered_items';
 
     /**
+     * Checkout Flow Type
+     */
+    const PAYMENT_AFFIRM_CHECKOUT_FLOW_TYPE = 'payment/affirm/checkout_flow_type';
+
+    /**
      * Disabled module
      *
      * @var bool
@@ -261,6 +266,36 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     }
 
     /**
+     * Checkout flow type
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return string
+     */
+    public function getCheckoutFlowType($store = null)
+    {
+        if($store == null) {
+            $store = Mage::app()->getStore()->getStoreId();
+        }
+        return Mage::getStoreConfig(self::PAYMENT_AFFIRM_CHECKOUT_FLOW_TYPE, $store);
+    }
+
+    /**
+     * Is Checkout flow type Modal
+     *
+     * @param Mage_Core_Model_Store $store
+     * @return bool
+     */
+    public function isCheckoutFlowTypeModal($store = null)
+    {
+        $configCheckoutType = Mage::helper('affirm')->getCheckoutFlowType();
+        if ($configCheckoutType == Affirm_Affirm_Model_Payment::CHECKOUT_FLOW_MODAL) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Get affirm js url
      *
      * @return string
@@ -277,6 +312,24 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
             $prefix = 'cdn1-';
         }
         return 'https://' . $prefix . '' . $domain . '/js/v2/affirm.js';
+    }
+
+    /**
+     * Get affirm js text
+     *
+     * @return string
+     */
+    public function getAffirmJs()
+    {
+        $affirmJs = '<script type="text/javascript">
+        if (!AFFIRM_AFFIRM.promos.getIsInitialized()) {
+            AFFIRM_AFFIRM.promos.initialize("'.  $this->getApiKey() .'","'. $this->getAffirmJsUrl() .'");
+        }
+        if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {
+            AFFIRM_AFFIRM.promos.loadScript();
+        }
+        </script>';
+        return $affirmJs;
     }
 
     /**
@@ -482,6 +535,64 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
         $domain = "affirm.com";
         $assetPath = "images/banners";
         return 'https://' . $prefix . '.' . $domain . '/' . $assetPath ;
+    }
+
+    /**
+     * Get template for button in order review page if Affirm method was selected and checkout flow type is modal
+     *
+     * @param string $name template name
+     * @param string $block buttons block name
+     * @return string
+     */
+    public function getReviewButtonTemplate($name, $block)
+    {
+        $quote = Mage::getSingleton('checkout/session')->getQuote();
+        if ($quote) {
+            $payment = $quote->getPayment();
+            if ($payment && ($payment->getMethod() == Affirm_Affirm_Model_Payment::METHOD_CODE) && $this->isCheckoutFlowTypeModal()) {
+                return $name;
+            }
+        }
+
+        if ($blockObject = Mage::getSingleton('core/layout')->getBlock($block)) {
+            return $blockObject->getTemplate();
+        }
+
+        return '';
+    }
+
+    /**
+     * Get Affirm modal checkout js
+     *
+     * @return string
+     */
+    public function getAffirmCheckoutJsScript()
+    {
+        if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+            return 'js/affirm/checkout.js';
+        }
+        return '';
+    }
+
+    /**
+     * Returns a checkout object instance
+     *
+     * @return Mage_Checkout_Model_Type_Onepage
+     */
+    public function _getCheckout()
+    {
+        return Mage::getSingleton('checkout/type_onepage');
+    }
+
+    /**
+     * Get OPC save order URL
+     *
+     * @return string
+     */
+    public function getOPCCheckoutUrl()
+    {
+        $paramHttps = (Mage::app()->getStore()->isCurrentlySecure()) ? array('_forced_secure' => true) : array();
+        return Mage::getUrl('checkout/onepage/saveOrder/form_key/' . Mage::getSingleton('core/session')->getFormKey(), $paramHttps);
     }
 
     public function getAllGroups()
