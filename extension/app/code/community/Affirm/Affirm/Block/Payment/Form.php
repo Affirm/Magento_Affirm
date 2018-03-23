@@ -23,6 +23,7 @@ class Affirm_Affirm_Block_Payment_Form extends Mage_Payment_Block_Form
     protected function _construct()
     {
         parent::_construct();
+        $this->setData('area','frontend');
         $this->setTemplate('affirm/affirm/payment/form/affirm.phtml');
         $this->_replaceLabel();
     }

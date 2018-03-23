@@ -28,6 +28,7 @@ class Affirm_Affirm_Block_Payment_Info extends Mage_Payment_Block_Info
     protected function _construct()
     {
         parent::_construct();
+        $this->setData('area','frontend');
         $this->setTemplate('affirm/affirm/payment/info/affirm.phtml');
     }
 
