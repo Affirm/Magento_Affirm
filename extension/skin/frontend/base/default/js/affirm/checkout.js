@@ -120,17 +120,29 @@ document.observe('dom:loaded', function () {
 
 window.addEventListener('load', function() {
     if ($('onestep_form')) {
-        if (typeof window.OneStep.Views.Init.prototype.updateOrder == 'function') {
-            window.OneStep.Views.Init.prototype.updateOrder = window.OneStep.Views.Init.prototype.updateOrder.wrap(
-                function (parentMethod) {
-                    if (isAffirmMethod()) {
-                        callMageWorldCheckoutForAffirm();
-                    } else {
-                        return parentMethod();
-                    }
+        if(checkNested(window, 'OneStep', 'Views', 'Init', 'prototype')) {
+            if (typeof window.OneStep.Views.Init.prototype.updateOrder == 'function') {
+                window.OneStep.Views.Init.prototype.updateOrder = window.OneStep.Views.Init.prototype.updateOrder.wrap(
+                    function (parentMethod) {
+                        if (isAffirmMethod()) {
+                            callMageWorldCheckoutForAffirm();
+                        } else {
+                            return parentMethod();
+                        }
 
-                }
-            )
+                    }
+                )
+            }
         }
     }
 });
+
+function checkNested(obj /*, level1, level2, ... levelN*/) {
+    for (var i = 1; i < arguments.length; i++) {
+        if (!obj.hasOwnProperty(arguments[i])) {
+            return false;
+        }
+        obj = obj[arguments[i]];
+    }
+    return true;
+}
