@@ -287,5 +287,15 @@ class Affirm_Affirm_Adminhtml_RuleController extends Mage_Adminhtml_Controller_A
     protected function _title($text = null, $resetIfExists = true)
     {
         return parent::_title($text, $resetIfExists);
-    }     
+    }
+
+    /**
+     * Acl check for admin
+     *
+     * @return bool
+     */
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')->isAllowed('system/config/affirm');
+    }
 }
