@@ -32,9 +32,11 @@ class Affirm_Affirm_Model_Order_Observer_BeforeOrderEditSaveAdmin
         $orderId = Mage::getSingleton('adminhtml/session_quote')->getOrderId();
         $payment = Mage::getModel('sales/order')->load($orderId)->getPayment();
         $oldPaymentMethod = $payment->getMethod();
+        $telesalesEnabled = Mage::helper('core')->isModuleEnabled('Affirm_Telesales') ? true : false;
         if ($paymentData && isset($paymentData['method']) &&
             $paymentData['method'] == Affirm_Affirm_Model_Payment::METHOD_CODE &&
-            $paymentData['method'] != $oldPaymentMethod
+            $paymentData['method'] != $oldPaymentMethod &&
+            !$telesalesEnabled
         ) {
             $request->initForward()
                 ->setModuleName('admin')
