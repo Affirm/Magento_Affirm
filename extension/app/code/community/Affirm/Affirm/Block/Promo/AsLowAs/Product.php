@@ -34,7 +34,8 @@ class Affirm_Affirm_Block_Promo_AsLowAs_Product extends Mage_Core_Block_Template
 
         $mpp = $this->helper('affirm/promo_asLowAs')->getMinMPP();
         if (!empty($mpp)) {
-            if ($this->getFinalPrice() < $mpp) {
+            $mpp_formatted = $this->helper('affirm/util')->formatCents($mpp);
+            if ($this->getFinalPrice() < $mpp_formatted) {
                 return "";
             }
         }

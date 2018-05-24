@@ -46,9 +46,10 @@ class Affirm_Affirm_Model_Order_Observer_AfterSaveOrder
         $serializedRequest = $session->getAffirmOrderRequest();
         $proxyRequest = unserialize($serializedRequest);
         $checkoutToken = Mage::registry('affirm_token_code');
+        $lastOrderId = $session->getLastOrderId();
         //Return, if order was placed before confirmation
         if (!($serializedRequest && $checkoutToken) || !Mage::helper('affirm')->isXhrRequest($proxyRequest)
-            || !$this->_isAffirmPaymentMethod($proxyRequest)) {
+            || !$this->_isAffirmPaymentMethod($proxyRequest) || !$lastOrderId) {
             return;
         }
 

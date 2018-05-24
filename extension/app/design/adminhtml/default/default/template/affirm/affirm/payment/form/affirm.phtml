@@ -1,0 +1,21 @@
+<?php
+/** @var Affirm_Affirm_Block_Payment_Form $this **/
+?>
+<style type="text/css">
+    .affirm-module-version {
+        display: none;
+    }
+
+    .affirm_payment_info {
+        color: #6f6f6f;
+        font-size: 14px;
+    }
+</style>
+<ul class="form-list affirm" id="payment_form_affirm" style="display:none;">
+    <li class="form-alt">
+            <div class="affirm_payment_info">
+                <p><?php echo $this->__('If you have Affirm Telesales enabled, User will be sent Affirm checkout link to securely complete the purchase and will be redirected back to your site after confirmation or cancellation.'); ?></p>
+            </div>
+    </li>
+</ul>
+<span class="affirm-module-version"><?php echo $this->helper('affirm')->getModuleConfigVersion(); ?></span>

@@ -75,6 +75,8 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     protected $_allowCurrencyCode       = array('USD');
     /**#@-*/
 
+    protected $_affirmHelperClass = 'affirm';
+
     /**
      * Check method for processing with base currency
      *
@@ -177,8 +179,9 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $json = json_encode($data);
             $client->setRawData($json, 'application/json');
         }
-        $client->setAuth(Mage::helper('affirm')->getApiKey($storeId),
-            Mage::helper('affirm')->getSecretKey($storeId), Zend_Http_Client::AUTH_BASIC
+        $helperClass = $this->_affirmHelperClass;
+        $client->setAuth(Mage::helper($helperClass)->getApiKey($storeId),
+            Mage::helper($helperClass)->getSecretKey($storeId), Zend_Http_Client::AUTH_BASIC
         );
         $rawResult = $client->request($method)->getRawBody();
         try {
@@ -275,6 +278,10 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $order = $payment->getOrder();
         if($order) {
             $storeId = $order->getStoreId();
+            if($payment->getAdditionalInformation('affirm_telesales')){
+                $methodInst = $payment->getMethodInstance();
+                $methodInst->setHelperClass('affirm_telesales');
+            }
         }
         if (!$storeId) {
             $storeId = null;
@@ -319,6 +326,10 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $order = $payment->getOrder();
         if($order) {
             $storeId = $order->getStoreId();
+            if($payment->getAdditionalInformation('affirm_telesales')){
+                $methodInst = $payment->getMethodInstance();
+                $methodInst->setHelperClass('affirm_telesales');
+            }
         }
         if (!$storeId) {
             $storeId = null;
@@ -357,6 +368,10 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $order = $payment->getOrder();
         if($order) {
             $storeId = $order->getStoreId();
+            if($payment->getAdditionalInformation('affirm_telesales')){
+                $methodInst = $payment->getMethodInstance();
+                $methodInst->setHelperClass('affirm_telesales');
+            }
         }
         if (!$storeId) {
             $storeId = null;
@@ -451,6 +466,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $payment = $order->getPayment();
 
         $payment->setAdditionalInformation(self::CHECKOUT_TOKEN, $checkoutToken);
+        $payment->setAdditionalInformation('affirm_telesales', false);
         $action = $this->getConfigData('payment_action');
 
         //authorize the total amount.
@@ -905,5 +921,9 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         }
 
         return true;
+    }
+
+    public function setHelperClass($class = 'affirm'){
+        $this->_affirmHelperClass = $class;
     }
 }

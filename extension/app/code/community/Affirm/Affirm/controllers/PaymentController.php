@@ -97,7 +97,7 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
         $checkoutToken = $this->getRequest()->getParam('checkout_token');
         $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
         if (!$checkoutToken) {
-            $checkoutSession->addError($this->__('Confirm has no checkout token.'));
+            $checkoutSession->addError($this->__('Error encountered during checkout. Confirm has no checkout token.'));
             $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart'))->sendResponse();
             return;
         }
@@ -174,7 +174,7 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
     {
         $checkoutSession = Mage::helper('affirm')->getCheckoutSession();
         if (!$checkoutToken) {
-            $checkoutSession->addError($this->__('Confirm has no checkout token.'));
+            $checkoutSession->addError($this->__('Error encountered during checkout. Confirm has no checkout token.'));
             $this->getResponse()->setRedirect(Mage::getUrl('checkout/cart'))->sendResponse();
             return;
         }

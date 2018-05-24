@@ -29,8 +29,10 @@ class Affirm_Affirm_Model_Order_Observer_BeforeOrderSaveAdmin
     {
         $request = Mage::app()->getRequest();
         $paymentData = $request->getPost('payment');
+        $telesalesEnabled = Mage::helper('core')->isModuleEnabled('Affirm_Telesales');
         if ($paymentData && isset($paymentData['method']) &&
-            $paymentData['method'] == Affirm_Affirm_Model_Payment::METHOD_CODE
+            $paymentData['method'] == Affirm_Affirm_Model_Payment::METHOD_CODE &&
+            !$telesalesEnabled
         ) {
             $request->initForward()
                 ->setModuleName('admin')

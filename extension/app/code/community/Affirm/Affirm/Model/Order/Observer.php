@@ -135,7 +135,12 @@ class Affirm_Affirm_Model_Order_Observer
         $this->_isAffirmOrderSaveAfter = true;
         $quote = $observer->getQuote();
         $methodInst = $quote->getPayment()->getMethodInstance();
-        if (($methodInst->getCode() == Affirm_Affirm_Model_Payment::METHOD_CODE) && !$methodInst->redirectPreOrder()) {
+        if (!Mage::helper('affirm')->getAffirmTokenCode()) {
+            Mage::log('Confirm has no checkout token.');
+            Mage::getSingleton('core/session')->addError('Payment has failed, please reload checkout page and try again. Checkout token is not available.');
+            Mage::app()->getResponse()->setRedirect(Mage::getUrl('checkout/cart'))->sendResponse();
+            return;
+        } else if (($methodInst->getCode() == Affirm_Affirm_Model_Payment::METHOD_CODE) && !$methodInst->redirectPreOrder()) {
             $quote->setIsActive(true);
             $quote->save();
         }

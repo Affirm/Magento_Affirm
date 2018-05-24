@@ -54,5 +54,4 @@ try {
 }
 
 $installer->endSetup();
-?>
 
