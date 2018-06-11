@@ -359,6 +359,7 @@
             <as_low_as>
                 <apr_value>0.10</apr_value>
                 <promo_months>12</promo_months>
+                <learn_more>1</learn_more>
             </as_low_as>
         </affirmpromo>
     </default>
