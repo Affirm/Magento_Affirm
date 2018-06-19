@@ -1,8 +1,9 @@
 <?php
-    $mfpValue = $this->getMFPValue();
+$mfpValue = $this->getMFPValue();
+$learnMore = ($this->helper('affirm/promo_asLowas')->isVisibleLearnMore()) ? 'true' : 'false';
 ?>
 <div>
-    <?php echo '<div class="affirm-as-low-as" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->getCheckoutGrandTotal() .'"></div>'; ?>
+    <?php echo '<div class="affirm-as-low-as" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->getCheckoutGrandTotal() .'" data-learnmore-show="'.$learnMore.'"></div>'; ?>
 </div>
 
 <script type="text/javascript">

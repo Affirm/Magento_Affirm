@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>3.5.4</version>
+            <version>3.5.5</version>
         </Affirm_Affirm>
     </modules>
     <global>
@@ -359,6 +359,7 @@
             <as_low_as>
                 <apr_value>0.10</apr_value>
                 <promo_months>12</promo_months>
+                <learn_more>1</learn_more>
             </as_low_as>
         </affirmpromo>
     </default>

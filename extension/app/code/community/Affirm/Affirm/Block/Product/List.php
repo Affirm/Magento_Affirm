@@ -72,7 +72,8 @@ class Affirm_Affirm_Block_Product_List extends Mage_Catalog_Block_Product_List
 
             $mfpValue = $this->helper('affirm/promo_asLowAs')->getAffirmMFPValue(array($productItemMFP), $categoryIds);
 
-            $html .= '<div class="affirm-as-low-as" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->helper('affirm/util')->formatCents($price) .'"></div>';
+            $learnMore = ($this->helper('affirm/promo_asLowas')->isVisibleLearnMore()) ? 'true' : 'false';
+            $html .= '<div class="affirm-as-low-as" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->helper('affirm/util')->formatCents($price) .'" data-learnmore-show="'.$learnMore.'"></div>';
         }
 
         return $html;

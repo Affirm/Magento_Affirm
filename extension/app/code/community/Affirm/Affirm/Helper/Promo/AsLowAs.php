@@ -79,6 +79,11 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
      */
     const MPP_MIN_DISPLAY_VALUE = 'affirmpromo/as_low_as/min_mpp_display_value';
 
+    /**
+     * Visibility of learn more with ala
+     */
+    const AFFIRM_PROMO_LEARN_MORE = 'affirmpromo/as_low_as/learn_more';
+
     protected $_allRules = null;
 
     /**
@@ -300,5 +305,16 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
             return true;
 
         return false;
+    }
+
+    /**
+     * Check is learn-more visible on ala
+     *
+     * @param null|Mage_Core_Model_Store $store
+     * @return boolean
+     */
+    public function isVisibleLearnMore($store = null)
+    {
+        return Mage::getStoreConfig(self::AFFIRM_PROMO_LEARN_MORE, $store);
     }
 }
