@@ -38,7 +38,7 @@ $productId = $this->getProductId();
 $learnMore = ($this->helper('affirm/promo_asLowas')->isVisibleLearnMore()) ? 'true' : 'false';
 ?>
 <div>
-    <?php echo '<div style="margin-bottom:5px;" class="affirm-as-low-as" id="as-low-as-refreshable" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->getFinalPrice() .'" data-learnmore-show="'.$learnMore.'"></div>'; ?>
+    <?php echo '<div style="margin-bottom:5px;" class="affirm-as-low-as" id="as-low-as-refreshable" data-page-type="product" ' . (!empty($mfpValue) ? 'data-promo-id="' . $mfpValue . '"' : '') . ' data-amount="' . $this->getFinalPrice() .'" data-learnmore-show="'.$learnMore.'"></div>'; ?>
 </div>
 
 <script type="text/javascript">
