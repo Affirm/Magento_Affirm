@@ -69,6 +69,11 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
     const AFFIRM_PROMO_DEV_SETTINGS_CONTAINER = 'affirmpromo/developer_settings/container_';
 
     /**
+     * Affirm pixel for confirmation page
+     */
+    const AFFIRM_PROMO_PIXEL_CONFIRM = 'affirmpromo/pixel/active_confirm';
+
+    /**
      * PDP handle
      */
     const PDP_HANDLE = 'catalogproductview';
@@ -241,5 +246,30 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
             return 'js/affirm/aslowas.js';
         }
         return 'js/affirm/noconf.js';
+    }
+
+    /**
+     * Returns is pixel placement for confirmation page enabled
+     *
+     * @param null|Mage_Core_Model_Store $store
+     * @return bool
+     */
+    public function isConfirmPixelEnabled($store = null)
+    {
+        return Mage::getStoreConfigFlag(self::AFFIRM_PROMO_PIXEL_CONFIRM, $store);
+    }
+
+    /**
+     * get Date with Microtime.
+     *
+     * @return string
+     */
+    public function getDateMicrotime()
+    {
+        $microtime = explode(' ', microtime());
+        $msec = $microtime[0];
+        $msecArray = explode('.', $msec);
+        $date = date('Y-m-d-H-i-s') . '-' . $msecArray[1];
+        return $date;
     }
 }
