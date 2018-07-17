@@ -169,4 +169,28 @@ class Affirm_Affirm_Block_Promo_Promo extends Mage_Core_Block_Template
 
         return Mage::helper('affirm/promo_asLowAs')->getAffirmMFPValue($productItemMFP, $categoryIds, $this->helper('checkout/cart')->getQuote()->getGrandTotal());
     }
+
+    /**
+     * Get Page type
+     *
+     * @return string
+     */
+    public function getPageType()
+    {
+        $currentController = Mage::app()->getFrontController()->getRequest()->getControllerName();
+        switch($currentController) {
+            case 'product':
+                return 'product';
+                break;
+            case 'category':
+                return 'category';
+                break;
+            case 'cart':
+                return 'cart';
+                break;
+            default:
+                return 'homepage';
+                break;
+        }
+    }
 }

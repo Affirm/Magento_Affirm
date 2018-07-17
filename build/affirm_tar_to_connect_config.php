@@ -1,11 +1,11 @@
 <?php
 return array(
 'base_dir'             => realpath('../var/'),
-'archive_files'        => 'Affirm_Affirm-3.5.5.tgz',
+'archive_files'        => 'Affirm_Affirm-3.5.6.tgz',
 'extension_name'       => 'Affirm_Magento',
 'skip_version_compare' => true,
-'extension_version'    => '3.5.5',
-'archive_connect'      => 'Affirm_Affirm-3.5.5.tgz',
+'extension_version'    => '3.5.6',
+'archive_connect'      => 'Affirm_Affirm-3.5.6.tgz',
 'path_output'          => realpath('../var/'),
 
 'stability'            => 'stable',
