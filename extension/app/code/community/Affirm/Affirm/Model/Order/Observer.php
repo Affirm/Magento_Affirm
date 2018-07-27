@@ -156,11 +156,11 @@ class Affirm_Affirm_Model_Order_Observer
      */
     public function preDispatchSaveOrderAction(Varien_Event_Observer $observer)
     {
-        if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+        $payment = Mage::helper('affirm')->getCheckoutSession()->getQuote()->getPayment();
+        $paymentMethod = $payment->getMethod();
+        if (Mage::helper('affirm')->isCheckoutFlowTypeModal() && $paymentMethod == Affirm_Affirm_Model_Payment::METHOD_CODE) {
             /* @var $controller Mage_Core_Controller_Front_Action */
             $controller = $observer->getEvent()->getControllerAction();
-            $payment = Mage::helper('affirm')->getCheckoutSession()->getQuote()->getPayment();
-            $paymentMethod = $payment->getMethod();
             if($paymentMethod){
                 $methodInst = $payment->getMethodInstance();
             } else {
