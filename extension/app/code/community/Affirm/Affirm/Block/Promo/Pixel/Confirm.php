@@ -50,14 +50,14 @@ class Affirm_Affirm_Block_Promo_Pixel_Confirm extends Mage_Core_Block_Template
         $result = array();
         foreach ($collection as $order) {
             $result[] = sprintf("affirm.analytics.trackOrderConfirmed({
-'affiliation': '%s',
+'storeName': '%s',
 'orderId': '%s',
 'currency': '%s',
 'total': '%s',
 'tax': '%s',
 'shipping': '%s',
 'paymentMethod': '%s'
-});",
+},[",
                 $this->jsQuoteEscape(Mage::app()->getStore()->getFrontendName()),
                 $order->getIncrementId(),
                 $order->getOrderCurrencyCode(),
@@ -66,6 +66,22 @@ class Affirm_Affirm_Block_Promo_Pixel_Confirm extends Mage_Core_Block_Template
                 Mage::helper('affirm/util')->formatCents($order->getBaseShippingAmount()),
                 $order->getPayment()->getMethod()
             );
+            foreach ($order->getAllVisibleItems() as $item) {
+                $result[] = sprintf("{
+'productId': '%s',
+'name': '%s',
+'category': '%s',
+'price': '%s',
+'quantity': '%s'
+},",
+                    $this->jsQuoteEscape($item->getSku()),
+                    $this->jsQuoteEscape($item->getName()),
+                    null, // there is no "category" defined for the order item
+                    Mage::helper('affirm/util')->formatCents($item->getBasePrice()),
+                    $item->getQtyOrdered()
+                );
+            }
+            $result[] = sprintf("]);");
         }
         return implode("\n", $result);
     }
