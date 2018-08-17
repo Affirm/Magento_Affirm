@@ -76,10 +76,12 @@ var AFFIRM_AFFIRM = AFFIRM_AFFIRM || {};
          * @param {String} affirmJsUrl
          * @returns {AFFIRM_AFFIRM.promos}
          */
-        initialize: function(apiKey, affirmJsUrl) {
+        initialize: function(apiKey, affirmJsUrl, sessionId) {
+            sessionId = (typeof sessionId !== 'undefined') ? sessionId : 'null';
             this.config = {
                 public_api_key: apiKey,
-                script:         affirmJsUrl
+                script:         affirmJsUrl,
+                session_id:     sessionId
             };
             this.setIsInitialized(true);
 
