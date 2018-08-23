@@ -56,7 +56,8 @@ class Affirm_Affirm_Block_Promo_Pixel_Confirm extends Mage_Core_Block_Template
 'total': '%s',
 'tax': '%s',
 'shipping': '%s',
-'paymentMethod': '%s'
+'paymentMethod': '%s',
+'checkoutId': '%s'
 },[",
                 $this->jsQuoteEscape(Mage::app()->getStore()->getFrontendName()),
                 $order->getIncrementId(),
@@ -64,7 +65,8 @@ class Affirm_Affirm_Block_Promo_Pixel_Confirm extends Mage_Core_Block_Template
                 Mage::helper('affirm/util')->formatCents($order->getBaseGrandTotal()),
                 Mage::helper('affirm/util')->formatCents($order->getBaseTaxAmount()),
                 Mage::helper('affirm/util')->formatCents($order->getBaseShippingAmount()),
-                $order->getPayment()->getMethod()
+                $order->getPayment()->getMethod(),
+                $order->getQuoteId()
             );
             foreach ($order->getAllVisibleItems() as $item) {
                 $result[] = sprintf("{
@@ -93,7 +95,7 @@ class Affirm_Affirm_Block_Promo_Pixel_Confirm extends Mage_Core_Block_Template
      */
     protected function _isAvailable()
     {
-        return Mage::helper('affirm/promo_data')->isConfirmPixelEnabled();
+        return Mage::helper('affirm/promo_data')->isCheckoutSuccessPixelEnabled();
     }
 
     /**

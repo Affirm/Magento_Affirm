@@ -1,0 +1,178 @@
+<?php
+/**
+ *
+ *  * BSD 3-Clause License
+ *  *
+ *  * Copyright (c) 2018, Affirm
+ *  * All rights reserved.
+ *  *
+ *  * Redistribution and use in source and binary forms, with or without
+ *  * modification, are permitted provided that the following conditions are met:
+ *  *
+ *  *  Redistributions of source code must retain the above copyright notice, this
+ *  *   list of conditions and the following disclaimer.
+ *  *
+ *  *  Redistributions in binary form must reproduce the above copyright notice,
+ *  *   this list of conditions and the following disclaimer in the documentation
+ *  *   and/or other materials provided with the distribution.
+ *  *
+ *  *  Neither the name of the copyright holder nor the names of its
+ *  *   contributors may be used to endorse or promote products derived from
+ *  *   this software without specific prior written permission.
+ *  *
+ *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ *  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ *  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ *  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ *  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ *  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ *  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+  $enableSearchTrack = Mage::helper('affirm/promo_data')->isSearchTrackPixelEnabled();
+  $enableProductListTrack = Mage::helper('affirm/promo_data')->isProductListTrackPixelEnabled();
+  $enableProductViewTrack = Mage::helper('affirm/promo_data')->isProductViewTrackPixelEnabled();
+  $enableAddCartTrack = Mage::helper('affirm/promo_data')->isAddCartTrackPixelEnabled();
+  $enableAddChkStartTrack = Mage::helper('affirm/promo_data')->isAddChkStartTrackPixelEnabled();
+?>
+<!-- Start Affirm Pixel Code -->
+<script type="text/javascript">
+    if (!AFFIRM_AFFIRM.promos.getIsInitialized()) {
+        AFFIRM_AFFIRM.promos.initialize("<?php echo $this->helper('affirm')->getApiKey(); ?>",
+            "<?php echo $this->helper('affirm')->getAffirmJsUrl(); ?>", "");
+    }
+    if (!AFFIRM_AFFIRM.promos.getIsScriptLoaded()) {
+        AFFIRM_AFFIRM.promos.loadScript();
+    }
+    affirm.ui.ready(function() {
+        <?php
+        $request = $this->getRequest();
+        $module = $request->getModuleName();
+        $controller = $request->getControllerName();
+        $action = $request->getActionName();
+        $pageIdentifier = Mage::app()->getFrontController()->getAction()->getFullActionName();
+
+        // Search
+        if (($controller == 'result' || $controller == 'advanced') && ($enableSearchTrack)) {
+            $queryString = Mage::app()->getRequest()->getParam('q');
+            if($queryString) {
+                $queryString = isset($queryString) ? urlencode($queryString) : '';
+                echo "affirm.analytics.trackProductsSearched(\"" . $queryString . "\");";
+            }
+        }
+
+        //Product List Or Category Page Or Search results viewed
+        if (($pageIdentifier == 'catalog_category_view' || $pageIdentifier == 'catalogsearch_result_index') && $enableProductListTrack ) {
+            $productListData = $this->getCategoryData();
+            if($productListData) {
+                $categoryId = isset($productListData['categoryId']) ? $productListData['categoryId'] : '';
+                $categoryName = isset($productListData['categoryName']) ? $productListData['categoryName'] : '';
+                echo "affirm.analytics.trackProductListViewed(
+                    {
+                        \"listId\":\"" . $categoryId . "\", 
+                        \"category\":\"" . $categoryName . "\"
+                    }, [{}]);";
+            }
+        }
+
+        // Product detail view
+        if (Mage::registry('current_product') && $enableProductViewTrack) {
+            $productData = $this->getProductData();
+            if($productData) {
+                $name = isset($productData['name']) ? $productData['name'] : '';
+                $productId = isset($productData['productId']) ? $productData['productId'] : '';
+                $currency = isset($productData['currency']) ? $productData['currency'] : '';
+                $price = isset($productData['price']) ? $productData['price'] : '';
+                echo "affirm.analytics.trackProductViewed(
+                    {
+                        \"name\":\"" . $name . "\", 
+                        \"productId\":\"" . $productId . "\",
+                        \"currency\":\"" . $currency . "\",
+                        \"price\":\"" . $price . "\"
+                    });";
+            }
+        }
+
+        // Add to cart and Cart viewed
+        if (($module == 'checkout' && $controller == 'cart' && $action == 'index') && ($enableAddCartTrack)) {
+            // Add to cart
+            $addToCartProductData = $this->getAddToCartData();
+            if($addToCartProductData) {
+                $name = isset($addToCartProductData['name']) ? $addToCartProductData['name'] : '';
+                $productId = isset($addToCartProductData['productId']) ? $addToCartProductData['productId'] : '';
+                $currency = isset($addToCartProductData['currency']) ? $addToCartProductData['currency'] : '';
+                $price = isset($addToCartProductData['price']) ? $addToCartProductData['price'] : '';
+                echo "affirm.analytics.trackProductAdded(
+                    {
+                        \"name\":\"" . $name . "\", 
+                        \"productId\":\"" . $productId . "\",
+                        \"currency\":\"" . $currency . "\",
+                        \"price\":\"" . $price . "\",
+                    }, {});";
+            }
+            echo "\n";
+            //Cart viewed
+            $cartProductsData = $this->getCartData();
+            if($cartProductsData) {
+                echo "affirm.analytics.trackCartViewed([";
+                foreach ($cartProductsData as $cartProduct) {
+                    $name = isset($cartProduct['name']) ? $cartProduct['name'] : '';
+                    $productId = isset($cartProduct['productId']) ? $cartProduct['productId'] : '';
+                    $currency = isset($cartProduct['currency']) ? $cartProduct['currency'] : '';
+                    $price = isset($cartProduct['price']) ? $cartProduct['price'] : '';
+                    $quantity = isset($cartProduct['quantity']) ? $cartProduct['quantity'] : '';
+                    echo "{
+                            \"name\":\"" . $name . "\", 
+                            \"productId\":\"" . $productId . "\",
+                            \"currency\":\"" . $currency . "\",
+                            \"price\":\"" . $price . "\",
+                            \"quantity\":\"" . $quantity . "\"
+                            },";
+                }
+                echo "], {});";
+            }
+
+        }
+
+        // Checkout start
+        if ((Mage::getURL('checkout/onepage') == Mage::helper('core/url')->getCurrentUrl()) && ($enableAddChkStartTrack)) {
+            $quoteData = $this->getQuoteData();
+            if($quoteData) {
+                $checkoutId = isset($quoteData['checkoutId']) ? $quoteData['checkoutId'] : '';
+                $orderId = isset($quoteData['orderId']) ? $quoteData['orderId'] : '';
+                $currency = isset($quoteData['currency']) ? $quoteData['currency'] : '';
+                $total = isset($quoteData['total']) ? $quoteData['total'] : '';
+                $paymentMethod = isset($quoteData['paymentMethod']) ? $quoteData['paymentMethod'] : '';
+                echo "affirm.analytics.trackCheckoutStarted({
+                    \"checkoutId\":\"" . $checkoutId . "\", 
+                    \"currency\":\"" . $currency . "\",
+                    \"total\":\"" . $total . "\",
+                },[";
+                $quoteProductsData = $this->getQuoteProductsData();
+                if($quoteProductsData) {
+                    foreach ($quoteProductsData as $cartProduct) {
+                        $name = isset($cartProduct['name']) ? $cartProduct['name'] : '';
+                        $productId = isset($cartProduct['productId']) ? $cartProduct['productId'] : '';
+                        $currency = isset($cartProduct['currency']) ? $cartProduct['currency'] : '';
+                        $price = isset($cartProduct['price']) ? $cartProduct['price'] : '';
+                        $quantity = isset($cartProduct['quantity']) ? $cartProduct['quantity'] : '';
+                        echo "{
+                            \"name\":\"" . $name . "\", 
+                            \"productId\":\"" . $productId . "\",
+                            \"currency\":\"" . $currency . "\",
+                            \"price\":\"" . $price . "\",
+                            \"quantity\":\"" . $quantity . "\"
+                            },";
+                    }
+                }
+                echo "]);";
+            }
+        }
+        ?>
+    });
+</script> 
+
+<!-- End Affirm Pixel Code -->
