@@ -33,7 +33,7 @@
  *
  */
 
-if (Mage::helper('affirm/promo_data')->isConfirmPixelEnabled()) :?>
+if (Mage::helper('affirm/promo_data')->isCheckoutSuccessPixelEnabled()) :?>
     <script type="text/javascript">
         if (!AFFIRM_AFFIRM.promos.getIsInitialized()) {
             AFFIRM_AFFIRM.promos.initialize("<?php echo $this->helper('affirm')->getApiKey(); ?>",

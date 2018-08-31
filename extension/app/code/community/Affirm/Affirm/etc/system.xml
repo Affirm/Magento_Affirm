@@ -689,15 +689,84 @@
                     <show_in_store>0</show_in_store>
                     <expanded>0</expanded>
                     <fields>
-                        <active_confirm translate="label">
-                            <label>Enable pixel for confirmation page</label>
+                        <enabled translate="label">
+                            <label>Enable Affirm pixel</label>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
                             <sort_order>220</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
-                        </active_confirm>
+                            <comment>Enable affirm tracking pixels</comment>
+                        </enabled>
+                        <enable_pixel_actions translate="label">
+                            <label>Enable Affirm pixel for following pages :</label>
+                            <frontend_model>adminhtml/system_config_form_field_heading</frontend_model>
+                            <sort_order>230</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enable_pixel_actions>
+                        <add_cart translate="label">
+                            <label>Add to Cart</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>240</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable add to cart tracking</comment>
+                        </add_cart>
+                        <add_search translate="label">
+                            <label>Search</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>260</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable search tracking</comment>
+                        </add_search>
+                        <add_product_view translate="label">
+                            <label>Product</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>270</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable product tracking</comment>
+                        </add_product_view>
+                        <add_product_list translate="label">
+                            <label>Product List</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>280</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable product list tracking</comment>
+                        </add_product_list>
+                        <add_checkout_start translate="label">
+                            <label>Checkout Start</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>290</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment>Enable checkout start tracking</comment>
+                        </add_checkout_start>
+                        <add_checkout_success translate="label">
+                            <label>Checkout Success</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>300</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>Enable checkout success tracking</comment>
+                        </add_checkout_success>
                     </fields>
                 </pixel>
             </groups>

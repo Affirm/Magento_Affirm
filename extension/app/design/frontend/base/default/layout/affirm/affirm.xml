@@ -12,6 +12,13 @@
                 </action>
             </block>
         </reference>
+        <reference name="after_body_start">
+            <block type="affirm/promo_pixel_code" name="affirm_pixel_code">
+                <action method="setTemplate" ifconfig="affirmpromo/pixel/enabled">
+                    <template>affirm/promo/pixel/code.phtml</template>
+                </action>
+            </block>
+        </reference>
     </default>
     <checkout_cart_index>
         <reference name="head">
