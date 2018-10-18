@@ -314,6 +314,27 @@ if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
         }
         /* End - For AW OneStepCheckout */
 
+        /* Start - For GoMage Checkout */
+        function callGoMageCheckoutForAffirm(){
+            var formData = Form.serialize($('gcheckout-onepage-form'), true);
+            var validator = new Validation('gcheckout-onepage-form');
+            if (validator.validate()) {
+                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                        method: 'post',
+                        parameters: formData,
+                        onSuccess: function (transport) {
+                            callAffirmModalCheckout(formData);
+                            return;
+                        },
+                        on403: function () {
+                            document.location.reload();
+                        }
+                    }
+                );
+            }
+        }
+        /* End - For GoMage Checkout */
+
         //]]>
     </script>
     <?php

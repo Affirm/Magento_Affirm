@@ -116,6 +116,22 @@ document.observe('dom:loaded', function () {
             );
         }
     }
+
+    // This is for GoMage checkout
+    if ($('gcheckout-onepage-form')) {
+        if (typeof Lightcheckout.prototype.saveorder == 'function') {
+            Lightcheckout.prototype.saveorder = Lightcheckout.prototype.saveorder.wrap(
+                function (parentMethod) {
+                    if (isAffirmMethod()) {
+                        callGoMageCheckoutForAffirm();
+                    } else {
+                        return parentMethod();
+                    }
+
+                }
+            );
+        }
+    }
 });
 
 window.addEventListener('load', function() {
