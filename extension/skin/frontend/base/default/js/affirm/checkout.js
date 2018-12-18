@@ -82,13 +82,13 @@ document.observe('dom:loaded', function () {
     if ($('firecheckout-form') || $('onepagecheckout_orderform')) {
         if (typeof checkout.save == 'function') {     // This is for TM Firecheckout
             checkout.save = checkout.save.wrap(
-                function (parentMethod) {
+                function (parentMethod, urlSuffix, forceSave) {
                     if (isAffirmMethod()) {
                         var createAccount = $('billing:register_account');
                         billing.setCreateAccount(createAccount ? createAccount.checked : 1); // create account if checkbox is missing
                         callTMFireCheckoutForAffirm();
                     } else {
-                        return parentMethod();
+                        return parentMethod(urlSuffix, forceSave);
                     }
 
                 }
