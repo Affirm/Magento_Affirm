@@ -414,6 +414,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $amountToAuthorize = $this->_getCheckoutTotalFromToken($token);
         $this->_validateAmountResult($amountCents, $amountToAuthorize);
         $order = $payment->getOrder();
+        $orderId = $order->getIncrementId();
         if($order) {
             $storeId = $order->getStoreId();
         }
@@ -421,7 +422,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $storeId = null;
         }
         $result = $this->_apiRequest(Varien_Http_Client::POST, '', array(
-                self::CHECKOUT_TOKEN => $token), $storeId
+                self::CHECKOUT_TOKEN => $token,'order_id' =>$id), $storeId
         );
 
         $this->_setChargeResult($result);
