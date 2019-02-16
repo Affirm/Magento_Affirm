@@ -710,7 +710,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
                 'display_name' => $orderItem->getName(),
                 'item_url' => $product->getProductUrl(),
                 'item_image_url' => $product->getImageUrl(),
-                'qty' => intval($orderItem->getQtyOrdered()),
+                'qty' => intval($orderItem->getQty()),
                 'unit_price' => Mage::helper('affirm/util')->formatCents($orderItem->getPrice())
             );
 
