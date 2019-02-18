@@ -422,7 +422,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
             $storeId = null;
         }
         $result = $this->_apiRequest(Varien_Http_Client::POST, '', array(
-                self::CHECKOUT_TOKEN => $token,'order_id' =>$id), $storeId
+                self::CHECKOUT_TOKEN => $token,'order_id' =>$orderId), $storeId
         );
 
         $this->_setChargeResult($result);
