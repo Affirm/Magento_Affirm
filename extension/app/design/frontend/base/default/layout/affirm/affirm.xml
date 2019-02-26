@@ -182,15 +182,6 @@
             <block type="core/template" name="affirm.js.checkout" template="affirm/affirm/checkout/review/opc.phtml"/>
         </reference>
     </gomage_checkout_onepage_index>
-        <onestepcheckout_index_index> <!-- For iDev One Step Checkout-->
-        <reference name="head">
-            <action method="addItem">
-                <type>skin_js</type>
-                <name helper="affirm/getAffirmCheckoutJsScript" />
-            </action>
-            <block type="core/template" name="affirm.js.checkout" template="affirm/affirm/checkout/review/opc.phtml"/>
-        </reference>
-    </onestepcheckout_index_index>
     <checkout_onepage_success> <!-- To add pixel for enhanced analytics -->
         <reference name="head" before="-">
             <block type="affirm/promo_pixel_confirm" name="affirm_pixel_javascript" template="affirm/promo/pixel/confirm.phtml"/>
