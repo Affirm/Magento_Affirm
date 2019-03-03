@@ -136,26 +136,24 @@ document.observe('dom:loaded', function () {
     // This is for iDev One Page Checkout
     if ($('onestepcheckout-form')) {
          if ($('onestepcheckout-place-order')) {
-
             jQuery('.onestepcheckout-place-order-wrapper').append('<img id="affirmCheckout" style="display: none" onclick ="calliDevCheckoutForAffirm()" src ="https://cdn-assets.affirm.com/images/buttons/checkout/42x205-blue.png">')
-
-            if(jQuery('#p_method_affirm').is(':checked')){
-                jQuery('#onestepcheckout-place-order').hide()
-                jQuery('#affirmCheckout').css('display', 'inline')
-            }
-
-            jQuery('.payment-methods').change(function(){
-                jQuery('#p_method_affirm').is(':checked')
+            $('onestepcheckout-form').change(function(){
                 if(jQuery('#p_method_affirm').is(':checked')){
                     jQuery('#onestepcheckout-place-order').hide()
                     jQuery('#affirmCheckout').css('display', 'inline')
-                    jQuery('#onestepcheckout-form').unbind('submit')
-                } else {
-                    jQuery('#onestepcheckout-place-order').show()
-                    jQuery('#affirmCheckout').hide()
                 }
+                jQuery('.payment-methods').change(function(){
+                    jQuery('#p_method_affirm').is(':checked')
+                    if(jQuery('#p_method_affirm').is(':checked')){
+                        jQuery('#onestepcheckout-place-order').hide()
+                        jQuery('#affirmCheckout').css('display', 'inline')
+                        jQuery('#onestepcheckout-form').unbind('submit')
+                    } else {
+                        jQuery('#onestepcheckout-place-order').show()
+                        jQuery('#affirmCheckout').hide()
+                    }
+                })
             })
-
          }
      }
 });
