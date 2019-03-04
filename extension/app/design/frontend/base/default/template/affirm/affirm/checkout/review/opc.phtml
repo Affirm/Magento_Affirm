@@ -335,6 +335,30 @@ if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
         }
         /* End - For GoMage Checkout */
 
+        /* Start - For iDev One Step Checkout*/
+        function calliDevCheckoutForAffirm () {
+            var form = new VarienForm('onestepcheckout-form');
+            if(form.validator.validate()){
+
+                jQuery('.onestepcheckout-place-order-wrapper').append('<div class="loading-ajax"></div>')
+                var formData = Form.serialize($('onestepcheckout-form'), true);
+
+                new Ajax.Request('<?php echo Mage::helper("affirm")->getOPCCheckoutUrl();?>', {
+                        method: 'post',
+                        parameters: formData,
+                        onSuccess: function (transport) {
+                            callAffirmModalCheckout(formData);
+                            hideLoading();
+                        },
+                        on403: function () {
+                            document.location.reload();
+                        }
+                    }
+                );
+            }
+        }
+        /* End - For iDev One Step Checkout*/
+
         //]]>
     </script>
     <?php

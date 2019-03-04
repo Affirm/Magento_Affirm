@@ -36,7 +36,7 @@
 <config>
     <modules>
         <Affirm_Affirm>
-            <version>3.6.0</version>
+            <version>3.6.1</version>
         </Affirm_Affirm>
     </modules>
     <global>
@@ -366,7 +366,7 @@
                 <disable_for_backordered_items>0</disable_for_backordered_items>
                 <plain_text_title_enabled>0</plain_text_title_enabled>
                 <allowspecific>1</allowspecific>
-                <specificcountry>US</specificcountry>
+                <specificcountry>US,PR,GU,MP,VI,AS</specificcountry>
                 <notification_feed>https://github.com/Affirm/Magento_Affirm/releases.atom</notification_feed>
                 <notification_check_frequency>86400</notification_check_frequency>
                 <notification_update>1</notification_update>
