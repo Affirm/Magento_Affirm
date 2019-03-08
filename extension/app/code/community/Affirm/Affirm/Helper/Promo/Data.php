@@ -236,13 +236,11 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
                 $position = Mage::getStoreConfig('affirmpromo/' . $pageCode . '/position');
                 list($positionHorizontal, $positionVertical) = explode('-', $position);
                 $display = Mage::getStoreConfig('affirmpromo/' . $pageCode . '/display');
-                $color = Mage::getStoreConfig('affirmpromo/' . $pageCode . '/color');
                 $config->setPageCode($pageCode)
                     ->setDisplay($display)
                     ->setSize($size)
                     ->setPositionHorizontal($positionHorizontal)
-                    ->setPositionVertical($positionVertical)
-                    ->setColor($color);
+                    ->setPositionVertical($positionVertical);
 
                 // each fetch container for a given page
                 $config->setContainer($this->getContainerSettings(null, $pageCode));
