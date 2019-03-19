@@ -411,6 +411,15 @@
                 <promo_months>12</promo_months>
                 <learn_more>1</learn_more>
             </as_low_as>
+            <pixel>
+                <enabled>1</enabled>
+                <add_cart>1</add_cart>
+                <add_search>1</add_search>
+                <add_product_view>1</add_product_view>
+                <add_product_list>1</add_product_list>
+                <add_checkout_start>1</add_checkout_start>
+                <add_checkout_success>1</add_checkout_success>
+            </pixel>
         </affirmpromo>
     </default>
 </config>
