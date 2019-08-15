@@ -80,6 +80,11 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     const MPP_MIN_DISPLAY_VALUE = 'affirmpromo/as_low_as/min_mpp_display_value';
 
     /**
+     * Affirm logo color
+     */
+    const AFFIRM_PROMO_AS_LOW_AS_COLOR = 'affirmpromo/as_low_as/as_low_as_color';
+
+    /**
      * Visibility of learn more with ala
      */
     const AFFIRM_PROMO_LEARN_MORE = 'affirmpromo/as_low_as/learn_more';
@@ -316,5 +321,10 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
     public function isVisibleLearnMore($store = null)
     {
         return Mage::getStoreConfig(self::AFFIRM_PROMO_LEARN_MORE, $store);
+    }
+
+    public function asLowAsColor()
+    {
+        return Mage::getStoreConfig(self::AFFIRM_PROMO_AS_LOW_AS_COLOR, $store);
     }
 }

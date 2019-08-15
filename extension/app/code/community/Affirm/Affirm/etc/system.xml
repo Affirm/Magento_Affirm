@@ -565,6 +565,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>0</show_in_store>
                         </as_low_as_cart>
+                        <as_low_as_color translate="label">
+                            <label>Affirm Logo Color</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>affirm/promo_system_config_color</source_model>
+                            <sort_order>35</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </as_low_as_color>
                         <min_mpp_display_value translate="label">
                             <label>MPP min amount</label>
                             <frontend_type>text</frontend_type>
