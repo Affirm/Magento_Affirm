@@ -36,12 +36,12 @@
 <layout>
     <default>
         <reference name="head">
-            <action method="addItem">
+            <action method="addItem" ifconfig="payment/affirm/active">
                 <type>skin_js</type>
                 <name>js/affirm/promos.js</name>
             </action>
             <block type="core/text" name="affirm.cdn.javascript">
-                <action method="setText">
+                <action method="setText" ifconfig="payment/affirm/active">
                     <text helper="affirm/getAffirmJs" />
                 </action>
             </block>
@@ -56,7 +56,7 @@
     </default>
     <checkout_cart_index>
         <reference name="head">
-            <action method="addItem">
+            <action method="addItem" ifconfig="payment/affirm/active">
                 <type>skin_js</type>
                 <name helper="affirm/promo_data/getCheckoutAffirmJsScript" />
             </action>
@@ -81,7 +81,7 @@
 
     <catalog_product_view>
         <reference name="head">
-            <action method="addItem">
+            <action method="addItem" ifconfig="payment/affirm/active">
                 <type>skin_js</type>
                 <name helper="affirm/promo_data/getPDPAffirmJsScript" />
             </action>
@@ -93,7 +93,7 @@
     </catalog_product_view>
     <catalog_category_layered>
         <reference name="head">
-            <action method="addItem">
+            <action method="addItem" ifconfig="payment/affirm/active">
                 <type>skin_js</type>
                 <name helper="affirm/promo_data/getPLPAffirmJsScript" />
             </action>
@@ -104,7 +104,7 @@
     </catalog_category_layered>
     <catalogsearch_result_index>
         <reference name="head">
-            <action method="addItem">
+            <action method="addItem" ifconfig="payment/affirm/active">
                 <type>skin_js</type>
                 <name helper="affirm/promo_data/getPLPAffirmJsScript" />
             </action>
@@ -115,7 +115,7 @@
     </catalogsearch_result_index>
     <checkout_onepage_index>
         <reference name="head">
-            <action method="addItem">
+            <action method="addItem" ifconfig="payment/affirm/active">
                 <type>skin_js</type>
                 <name helper="affirm/getAffirmCheckoutJsScript" />
             </action>
@@ -126,7 +126,7 @@
     </checkout_onepage_index>
     <checkout_onepage_review>
         <reference name="checkout.onepage.review.button">
-            <action method="setTemplate"><template helper="affirm/getReviewButtonTemplate"><name>affirm/affirm/checkout/review/button.phtml</name><block>checkout.onepage.review.button</block></template></action>
+            <action method="setTemplate" ifconfig="payment/affirm/active"><template helper="affirm/getReviewButtonTemplate"><name>affirm/affirm/checkout/review/button.phtml</name><block>checkout.onepage.review.button</block></template></action>
         </reference>
     </checkout_onepage_review>
     <onestepcheckout_index_index>
@@ -134,7 +134,7 @@
             <block type="core/template" name="affirm.js.checkout" after="-" template="affirm/affirm/checkout/review/opc.phtml"/>
         </reference>
         <reference name="head">
-            <action method="addItem">
+            <action method="addItem" ifconfig="payment/affirm/active">
                 <type>skin_js</type>
                 <name helper="affirm/getAffirmCheckoutJsScript" />
             </action>
