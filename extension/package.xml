@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
     <name>Affirm_Affirm</name>
-    <version>3.6.1</version>
+    <version>3.6.2</version>
     <stability>stable</stability>
     <license uri="https://opensource.org/licenses/BSD-3-Clause">BSD 3-Clause</license>
     <channel>community</channel>
