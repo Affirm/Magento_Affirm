@@ -91,7 +91,8 @@ class Affirm_Affirm_Model_Order_Observer
      */
     public function preOrder($observer)
     {
-        if (!Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+        $request = Mage::app()->getRequest();
+        if (!Mage::helper('affirm')->isCheckoutFlowTypeModal() && $request->getRequestedRouteName() !== 'express' ) {
             $order = $observer->getEvent()->getOrder();
             $quote = $observer->getEvent()->getQuote();
             $methodInst = $order->getPayment()->getMethodInstance();
@@ -101,7 +102,6 @@ class Affirm_Affirm_Model_Order_Observer
             if ($this->_isCreateOrderAfterConf($methodInst)) {
                 if (!Mage::helper('affirm')->getAffirmTokenCode()) {
                     #ok record the current controller that we are using...
-                    $request = Mage::app()->getRequest();
                     $orderRequest = array('action' => $request->getActionName(),
                         'controller' => $request->getControllerName(),
                         'module' => $request->getModuleName(),
