@@ -550,7 +550,7 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
         $productItems = $products->getItems();
         foreach ($order->getAllVisibleItems() as $orderItem) {
             $product = $productItems[$orderItem->getProductId()];
-            if (!$product instanceof Mage_Sales_Model_Order) {
+            if (!$product instanceof Mage_Catalog_Model_Product) {
                 throw new Affirm_Affirm_Exception('Unable to find product entity in order');
             }
             if (Mage::helper('affirm')->isPreOrder() && $orderItem->getParentItem() &&
