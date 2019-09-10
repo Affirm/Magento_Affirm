@@ -27,20 +27,4 @@
             </admin>
         </resources>
     </acl>
-
-    <menu>
-        <system>
-            <children>
-                <tools>
-                    <children>
-                        <compatibility translate="title" module="affirm">
-                            <title>Affirm Compatibility Tool</title>
-                            <sort_order>2000</sort_order>
-                            <action>adminhtml/compatibility_tool</action>
-                        </compatibility>
-                    </children>
-                </tools>
-            </children>
-        </system>
-    </menu>
 </config>

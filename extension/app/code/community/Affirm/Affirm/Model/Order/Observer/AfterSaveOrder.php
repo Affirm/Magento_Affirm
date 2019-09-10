@@ -44,7 +44,7 @@ class Affirm_Affirm_Model_Order_Observer_AfterSaveOrder
         $response = $observer->getControllerAction()->getResponse();
         $session = Mage::helper('affirm')->getCheckoutSession();
         $serializedRequest = $session->getAffirmOrderRequest();
-        $proxyRequest = unserialize($serializedRequest);
+        $proxyRequest = json_decode($serializedRequest,true);
         $checkoutToken = Mage::registry('affirm_token_code');
         $lastOrderId = $session->getLastOrderId();
         //Return, if order was placed before confirmation
