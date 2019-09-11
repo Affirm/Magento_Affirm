@@ -7,12 +7,6 @@
                     <system>
                         <children>
                             <tools>
-                                <children>
-                                    <compatibility translate="title" module="affirm">
-                                        <title>Affirm Compatibility Tool</title>
-                                        <sort_order>0</sort_order>
-                                    </compatibility>
-                                </children>
                             </tools>
                             <config>
                                 <children>
