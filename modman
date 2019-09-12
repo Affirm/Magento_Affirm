@@ -1,6 +1,7 @@
 extension/app/code/community/Affirm/Affirm                     	               app/code/community/Affirm/Affirm
 extension/app/design/adminhtml/default/default/layout/affirm/affirm.xml        app/design/adminhtml/default/default/layout/affirm/affirm.xml
 extension/app/design/adminhtml/default/default/template/affirm/affirm          app/design/adminhtml/default/default/template/affirm/affirm
+extension/app/design/adminhtml/default/default/template/affirm/compatibility   app/design/adminhtml/default/default/template/affirm/compatibility
 extension/app/design/frontend/base/default/layout/affirm/affirm.xml            app/design/frontend/base/default/layout/affirm/affirm.xml
 extension/app/design/frontend/base/default/template/affirm/affirm              app/design/frontend/base/default/template/affirm/affirm
 extension/app/design/frontend/base/default/template/affirm/promo               app/design/frontend/base/default/template/affirm/promo

@@ -116,7 +116,7 @@ class Affirm_Affirm_Model_Order_Observer
                         'requested_controller' => $request->getRequestedControllerName(),
                         'requested_action' => $request->getRequestedActionName()
                     );
-                    Mage::helper('affirm')->getCheckoutSession()->setAffirmOrderRequest(json_encode($orderRequest));
+                    Mage::helper('affirm')->getCheckoutSession()->setAffirmOrderRequest(serialize($orderRequest));
                     $this->_callToPreOrderActionAndExit($order, $quote);
                 }
             } elseif ($this->_isCreateOrderBeforeConf($methodInst)) {
@@ -226,7 +226,7 @@ class Affirm_Affirm_Model_Order_Observer
                     'POST' => $post, //need post for some cross site issues
                     'quote_id' => Mage::helper('affirm')->getCheckoutSession()->getQuote()->getId()
                 );
-                Mage::helper('affirm')->getCheckoutSession()->setAffirmOrderRequest(json_encode($orderRequest));
+                Mage::helper('affirm')->getCheckoutSession()->setAffirmOrderRequest(serialize($orderRequest));
                 $controller->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
                 $controller->getRequest()->setDispatched(true);
                 return;

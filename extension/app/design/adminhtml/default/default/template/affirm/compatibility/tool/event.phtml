@@ -1,0 +1,14 @@
+<?php
+/** @var Affirm_Affirm_Block_Adminhtml_Compatibility_Tool_Event $this **/
+    $conflictList = $this->getDuplicateEventList();
+    if (count($conflictList) > 0) {
+        foreach ($conflictList as $eventName => $eventConfigs) {
+            foreach ($eventConfigs as $eventConfig) {
+                echo sprintf("[NOTICE]: Method %s  in class %s has observer on the event %s \n",
+                    $eventConfig['method'], $eventConfig['class'], $eventName);
+            }
+        }
+    } else {
+        echo sprintf('No others observers on affirm checkout events.');
+    }
+
