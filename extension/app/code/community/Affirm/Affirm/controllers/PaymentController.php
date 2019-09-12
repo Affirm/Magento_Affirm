@@ -53,7 +53,7 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
         $string = $this->getLayout()->createBlock('affirm/payment_redirect', 'affirm_redirect')
             ->setOrder($order)->toHtml();
         $serializedRequest = $checkoutSession->getAffirmOrderRequest();
-        $proxyRequest = json_decode($serializedRequest,true);
+        $proxyRequest = unserialize($serializedRequest);
         //only reserve this order id
         $modQuote = Mage::getModel('sales/quote')->load($quote->getId());
         $modQuote->setReservedOrderId($order->getIncrementId());
@@ -129,7 +129,8 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
             $this->_redirect('checkout/onepage/success');
             return;
         }
-        $proxyRequest = json_decode($serializedRequest,true);
+
+        $proxyRequest = unserialize($serializedRequest);
         $this->getRequest()->setPost($proxyRequest['POST']);
         Mage::register('affirm_token_code', $checkoutToken);
         $this->_forward($proxyRequest['action'], $proxyRequest['controller'], $proxyRequest['module'], $proxyRequest['params']);
@@ -150,7 +151,8 @@ class Affirm_Affirm_PaymentController extends Mage_Checkout_OnepageController
             $this->_redirect('checkout/onepage/success');
             return;
         }
-        $proxyRequest = json_decode($serializedRequest, true);
+
+        $proxyRequest = unserialize($serializedRequest);
         $this->getRequest()->setPost($proxyRequest['POST']);
         Mage::register('affirm_token_code', $checkoutToken);
         $this->_forward($proxyRequest['action'], $proxyRequest['controller'], $proxyRequest['module'], $proxyRequest['params']);
