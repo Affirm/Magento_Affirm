@@ -280,6 +280,15 @@
                     </affirm_affirm_model_before_order_edit_save_admin>
                 </observers>
             </controller_action_predispatch_adminhtml_sales_order_edit_save>
+            <sales_order_address_save_after>
+                <observers>
+                    <affirm_affirm_model_before_order_edit_save_admin>
+                        <type>singleton</type>
+                        <class>affirm/order_observer_afterShippingUpdate</class>
+                        <method>execute</method>
+                    </affirm_affirm_model_before_order_edit_save_admin>
+                </observers>
+            </sales_order_address_save_after>
         </events>
         <layout>
             <updates>
