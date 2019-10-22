@@ -932,6 +932,11 @@ class Affirm_Affirm_Model_Payment extends Mage_Payment_Model_Method_Abstract
     }
 
     public function orderUpdate($updatedAddress,$chargeId){
-        $result = $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/update", array('shipping' => $updatedAddress ) );
+        try{
+            $this->_apiRequest(Varien_Http_Client::POST, "{$chargeId}/update", array('shipping' => $updatedAddress ) );
+        } catch(exception $e){
+            Mage::logException($e);
+        }
+
     }
 }
