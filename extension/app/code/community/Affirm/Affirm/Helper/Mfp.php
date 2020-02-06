@@ -132,9 +132,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getMFPDefault($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_FINANCING_PROGRAM_VALUE_DEFAULT, $store);
     }
 
@@ -143,9 +148,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getPromoIdDefault($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_PROMO_ID_VALUE_DEFAULT, $store);
     }
 
@@ -154,9 +164,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getMFPDateRange($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_FINANCING_PROGRAM_VALUE, $store);
     }
 
@@ -166,9 +181,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getPromoIdDateRange($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_PROMO_ID_VALUE, $store);
     }
 
@@ -177,9 +197,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getMFPStartDate($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_START_DATE_MFP, $store);
     }
 
@@ -188,9 +213,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getMFPEndDate($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_END_DATE_MFP, $store);
     }
 
@@ -199,9 +229,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getMFPCartSizeValue($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_CART_SIZE_MFP_VALUE, $store);
     }
 
@@ -210,9 +245,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getPromoIdCartSizeValue($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_CART_SIZE_PROMO_ID_VALUE, $store);
     }
 
@@ -221,9 +261,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getMinOrderTotalMFP($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_MIN_ORDER_TOTAL_MFP, $store);
     }
 
@@ -232,9 +277,14 @@ class Affirm_Affirm_Helper_Mfp extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getMaxOrderTotalMFP($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PROMO_AFFIRM_MAX_ORDER_TOTAL_MFP, $store);
     }
 

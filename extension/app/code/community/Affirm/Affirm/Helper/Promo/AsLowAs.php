@@ -96,9 +96,14 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isVisibleOnPDP($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_AS_LOW_AS_PDP, $store);
     }
 
@@ -107,9 +112,14 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isVisibleOnPLP($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_AS_LOW_AS_PLP, $store);
     }
 
@@ -118,9 +128,14 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isVisibleOnCart($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_AS_LOW_AS_CART, $store);
     }
 
@@ -129,9 +144,14 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getAPRValue($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_AS_LOW_AS_APR_VALUE, $store);
     }
 
@@ -140,9 +160,14 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getPromoMonths($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_AS_LOW_AS_PROMO_MONTHS, $store);
     }
 
@@ -151,9 +176,14 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getMinMPP($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::MPP_MIN_DISPLAY_VALUE, $store);
     }
 
@@ -317,9 +347,14 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return boolean
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isVisibleLearnMore($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_LEARN_MORE, $store);
     }
 
