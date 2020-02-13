@@ -51,9 +51,14 @@ class Affirm_Affirm_Model_Credential_Sandbox extends Affirm_Affirm_Model_Credent
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getApiKey($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_API_KEY, $store);
     }
 
@@ -65,6 +70,10 @@ class Affirm_Affirm_Model_Credential_Sandbox extends Affirm_Affirm_Model_Credent
      */
     public function getSecretKey($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_SECRET_KEY, $store);
     }
 }

@@ -101,7 +101,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     public function isDisableForBackOrderedItems($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getStoreConfigFlag(self::PAYMENT_AFFIRM_DISABLE_BACK_ORDERED_ITEMS, $store);
     }
@@ -115,7 +115,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     public function isPlainTextEnabled($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getStoreConfigFlag(self::AFFIRM_PLAIN_TEXT_ENABLED, $store);
     }
@@ -155,7 +155,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     public function getLabelHtmlAfter($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getStoreConfig(self::LABEL_HTML_CUSTOM, $store);
     }
@@ -186,11 +186,12 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getApiKey($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getSingleton('affirm/credential')->getApiKey($store);
     }
@@ -200,11 +201,12 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getSecretKey($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getSingleton('affirm/credential')->getSecretKey($store);
     }
@@ -214,11 +216,12 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getDetectXHRCheckout($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_XHR_CHECKOUT, $store);
     }
@@ -228,11 +231,12 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getMinOrderThreshold($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_MIN_ORDER_TOTAL, $store);
     }
@@ -246,7 +250,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     public function getMaxOrderThreshold($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_MAX_ORDER_TOTAL, $store);
     }
@@ -260,7 +264,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     public function isPreOrder($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_PRE_ORDER, $store);
     }
@@ -274,7 +278,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     public function getCheckoutFlowType($store = null)
     {
         if($store == null) {
-            $store = Mage::app()->getStore()->getStoreId();
+            $store = Mage::app()->getStore()->getId();
         }
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_CHECKOUT_FLOW_TYPE, $store);
     }

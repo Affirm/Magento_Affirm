@@ -66,9 +66,14 @@ class Affirm_Affirm_Model_Credential
      * @param Mage_Core_Model_Store $store
      * @return mixed
      * @throws Affirm_Affirm_Exception
+     * @throws Mage_Core_Model_Store_Exception
      */
     protected function _getCredentialModel($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         $storeCacheId = $this->_getStoreIdForCache($store);
         if (!isset($this->_credentialModelsCache[$storeCacheId])) {
             $mode = Mage::getStoreConfig(self::PAYMENT_AFFIRM_ACCOUNT_MODE, $store);
@@ -87,9 +92,15 @@ class Affirm_Affirm_Model_Credential
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Affirm_Affirm_Exception
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getApiUrl($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return $this->_getCredentialModel($store)->getApiUrl();
     }
 
@@ -98,9 +109,15 @@ class Affirm_Affirm_Model_Credential
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Affirm_Affirm_Exception
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getApiKey($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return $this->_getCredentialModel($store)->getApiKey($store);
     }
 
@@ -109,9 +126,15 @@ class Affirm_Affirm_Model_Credential
      *
      * @param Mage_Core_Model_Store $store
      * @return string
+     * @throws Affirm_Affirm_Exception
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getSecretKey($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return $this->_getCredentialModel($store)->getSecretKey($store);
     }
 }

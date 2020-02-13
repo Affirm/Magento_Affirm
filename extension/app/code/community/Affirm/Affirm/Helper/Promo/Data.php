@@ -125,9 +125,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isPromoActive($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return !Mage::helper('affirm')->isDisableModuleFunctionality() &&
             Mage::getStoreConfigFlag(self::AFFIRM_PROMO_ACTIVE, $store) &&
             !Mage::registry('affirm_disabled_backordered');
@@ -138,9 +143,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isCheckoutButtonActive($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfigFlag(self::PAYMENT_AFFIRM_CHECKOUT_BUTTON_ACTIVE, $store);
     }
 
@@ -149,9 +159,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getCheckoutButtonCode($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::PAYMENT_AFFIRM_CHECKOUT_BUTTON_CODE, $store);
     }
 
@@ -160,9 +175,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getCatalogProductPath($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_CATALOG_PRODUCT_PATH, $store);
     }
 
@@ -171,9 +191,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getCatalogCategoryPath($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_CATALOG_CATEGORY_PATH, $store);
     }
 
@@ -182,9 +207,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getHomepagePath($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_HOMEPAGE_PATH, $store);
     }
 
@@ -193,9 +223,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getCheckoutCartPath($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_CHECKOUT_CART_PATH, $store);
     }
 
@@ -205,9 +240,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      * @param null|Mage_Core_Model_Store $store
      * @param string $pageCode
      * @return string
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function getContainerSettings($store = null, $pageCode)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfig(self::AFFIRM_PROMO_DEV_SETTINGS_CONTAINER . $pageCode, $store);
     }
 
@@ -295,9 +335,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isCheckoutSuccessPixelEnabled($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfigFlag(self::AFFIRM_PROMO_PIXEL_CHECKOUT_SUCCESS, $store);
     }
 
@@ -306,9 +351,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isSearchTrackPixelEnabled($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfigFlag(self::AFFIRM_PROMO_PIXEL_SEARCH, $store);
     }
 
@@ -317,9 +367,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isProductListTrackPixelEnabled($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfigFlag(self::AFFIRM_PROMO_PIXEL_PRODUCT_LIST, $store);
     }
 
@@ -328,9 +383,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isProductViewTrackPixelEnabled($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfigFlag(self::AFFIRM_PROMO_PIXEL_PRODUCT_VIEW, $store);
     }
 
@@ -339,9 +399,14 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      *
      * @param null|Mage_Core_Model_Store $store
      * @return bool
+     * @throws Mage_Core_Model_Store_Exception
      */
     public function isAddCartTrackPixelEnabled($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfigFlag(self::AFFIRM_PROMO_PIXEL_ADD_CART, $store);
     }
 
@@ -353,6 +418,10 @@ class Affirm_Affirm_Helper_Promo_Data extends Mage_Core_Helper_Abstract
      */
     public function isAddChkStartTrackPixelEnabled($store = null)
     {
+        if ($store === null) {
+            $store = Mage::app()->getStore()->getId();
+        }
+
         return Mage::getStoreConfigFlag(self::AFFIRM_PROMO_PIXEL_CHECKOUT_START, $store);
     }
 
