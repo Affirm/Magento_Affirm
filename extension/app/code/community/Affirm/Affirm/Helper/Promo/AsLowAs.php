@@ -323,7 +323,7 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
         return Mage::getStoreConfig(self::AFFIRM_PROMO_LEARN_MORE, $store);
     }
 
-    public function asLowAsColor()
+    public function asLowAsColor($store = null)
     {
         return Mage::getStoreConfig(self::AFFIRM_PROMO_AS_LOW_AS_COLOR, $store);
     }
