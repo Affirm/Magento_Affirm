@@ -291,7 +291,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isCheckoutFlowTypeModal($store = null)
     {
-        $configCheckoutType = Mage::helper('affirm')->getCheckoutFlowType();
+        $configCheckoutType = $this->getCheckoutFlowType();
         if ($configCheckoutType == Affirm_Affirm_Model_Payment::CHECKOUT_FLOW_MODAL) {
             return true;
         } else {
@@ -345,7 +345,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     public function isXhrRequest($proxyRequest)
     {
         $detectedXhr = isset($proxyRequest['xhr']) && $proxyRequest['xhr'];
-        $configXhr = Mage::helper('affirm')->getDetectXHRCheckout();
+        $configXhr = $this->getDetectXHRCheckout();
         if ($configXhr == Affirm_Affirm_Model_Payment::CHECKOUT_REDIRECT) {
             return false;
         } elseif ($configXhr == Affirm_Affirm_Model_Payment::CHECKOUT_XHR) {
@@ -425,7 +425,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     {
         if (null === $this->_disabledBackOrderedPdp) {
             $this->_disabledBackOrderedPdp = false;
-            if (!Mage::helper('affirm')->isDisableForBackOrderedItems()) {
+            if (!$this->isDisableForBackOrderedItems()) {
                 $this->_disabledBackOrderedPdp = false;
                 return $this->_disabledBackOrderedPdp;
             }
@@ -461,7 +461,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
     public function isDisableQuoteBackOrdered($quote = null)
     {
         if (null === $this->_disabledBackOrderedCart) {
-            if (!Mage::helper('affirm')->isDisableForBackOrderedItems()) {
+            if (!$this->isDisableForBackOrderedItems()) {
                 $this->_disabledBackOrderedCart = false;
                 return $this->_disabledBackOrderedCart;
             }
@@ -572,7 +572,7 @@ class Affirm_Affirm_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getAffirmCheckoutJsScript()
     {
-        if (Mage::helper('affirm')->isCheckoutFlowTypeModal()) {
+        if ($this->isCheckoutFlowTypeModal()) {
             return 'js/affirm/checkout.js';
         }
         return '';
