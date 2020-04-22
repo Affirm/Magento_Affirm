@@ -211,8 +211,7 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
         if (null === $this->_affirmDisabledBackOrderedCart) {
             $this->_affirmDisabledBackOrderedCart = Mage::helper('affirm')->isDisableQuoteBackOrdered() ||
                     Mage::helper('affirm')->isDisableModuleFunctionality() ||
-                    !$this->isVisibleOnCart() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled() ||
-                    !$this->isQuoteItemsDisabledByPaymentRestRules();
+                    !$this->isVisibleOnCart() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled();
         }
         return $this->_affirmDisabledBackOrderedCart;
     }
@@ -228,7 +227,7 @@ class Affirm_Affirm_Helper_Promo_AsLowAs extends Mage_Core_Helper_Abstract
             $this->_affirmDisabledBackOrderedPdp = Mage::helper('affirm')->isDisableProductBackOrdered() ||
                     Mage::helper('affirm')->isDisableModuleFunctionality() ||
                     !$this->isVisibleOnPDP() || !Mage::helper('affirm')->isAffirmPaymentMethodEnabled() ||
-                    $this->_isSkipProductByType() || !$this->isProductDisabledByPaymentRestRules();
+                    $this->_isSkipProductByType();
         }
         return $this->_affirmDisabledBackOrderedPdp;
     }
